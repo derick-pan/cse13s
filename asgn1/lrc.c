@@ -7,10 +7,24 @@ int main()
 	int seed;
 	printf("Random seed: ");
 	scanf("%u", &seed);
+	srandom(seed);
 
 	int players;
 	printf("How many players? ");
 	scanf("%u", &players);
+	
+
+	typedef struct variables{
+		char name[35];
+		int cash;
+	       	int pos;
+	} variables;
+	
+
+
+	uint64_t i;
+	for (i =1; i<players; i++){
+			
 }
 
 /*
