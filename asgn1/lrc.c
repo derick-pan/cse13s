@@ -1,31 +1,35 @@
 #include <stdio.h>
-#include "philos.h" /*Does this work? */
-
+#include "philos.h"
+#include <string.h>
+#include <stdlib.h>
 int main()
-	
 {
 	int seed;
 	printf("Random seed: ");
 	scanf("%u", &seed);
 	srandom(seed);
-
+	
 	int players;
 	printf("How many players? ");
 	scanf("%u", &players);
 	
 
-	typedef struct variables{
-		char name[35];
+	typedef struct {
+		char name[50];
 		int cash;
 	       	int pos;
-	} variables;
+	}variables ;
 	
+	variables ppl[players];
 
-
-	uint64_t i;
-	for (i =1; i<players; i++){
-			
-}
+	int i;
+	for (i =0; i<players; i++){
+		
+		strcpy(ppl[i].name, philosophers[i]);
+		ppl[i].cash = 3;
+		ppl[i].pos = i;
+	}		
+	printf("WSUPPPP %s", ppl[3].name);
 
 /*
 	//returns the position of the player on the left
@@ -43,7 +47,6 @@ static inline unit8_t right(unit8_t pos, unit8_t players) {
 
         //The following two lines are from the asgn1.pdf lab1 documentation.
 typedef enum faciem { PASS, LEFT, RIGHT, CENTER } faces;
-	faces die[] = { LEFT, RIGHT, CENTER, PASS, PASS, PASS };}
-
-	while () //While 1 >= # of players with $
-	*/
+	faces die[] = { LEFT, RIGHT, CENTER, PASS, PASS, PASS };
+*/	
+}
