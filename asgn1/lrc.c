@@ -49,7 +49,7 @@ void money(int a, int players , variables ppl[14], int pot){ //give money to l/r
 }
 
 int check(int players, variables ppl[14]){ //Check if the game should keep going
-	int i;
+	int i = 0;
 	int cashtest = 0;
 	for (i=0; i<players; i++){
 		if (ppl[i].cash > 0){ //if only one person has cash then cashtest =1
@@ -66,7 +66,7 @@ int check(int players, variables ppl[14]){ //Check if the game should keep going
 	}	
 int main(){
 	//Ask for the random seed and the amount of players
-	int seed;
+	unsigned int seed;
 	printf("Random seed: ");
 	scanf("%u", &seed);
 	srandom(seed);
@@ -89,7 +89,7 @@ int main(){
 		int a;
 		for (a=0; a<players; a++){
 			if (ppl[a].cash == 0){	
-				break;
+				continue;
 				}
 			else if (ppl[a].cash ==2){
 				//roll 2 dice
@@ -110,6 +110,17 @@ int main(){
 				money(a,players, ppl,pot);
 				printf("\n");
 				}
+			if (check(players,ppl) ==1){
+				int j;
+				for (j=0; j<players; j++){
+					if (ppl[j].cash >= 1){		
+						printf("%s wins %d", ppl[j].name, ppl[j].cash);
+						return 0 ;
+						}
+					}
+				}
 			}
+			
 		}
+	
 }
