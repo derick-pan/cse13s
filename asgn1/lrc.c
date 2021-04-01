@@ -27,7 +27,7 @@ int main(){
 	int players;
 	printf("How many players? ");
 	scanf("%u", &players);
-	
+	int pot;
 	typedef struct {
 		char name[50];
 		int cash;
@@ -57,27 +57,46 @@ int main(){
 		int a;
 		for (a=0; a<players; a++){
 			if (ppl[a].cash == 0){	
-				//pass
+				break
 			else if (ppl[a].cash ==2){
 				//roll 2 dice
-
-				//call int money
-			else if (ppl[a].cash ==1){
-				//roll 1 dice
+				print("%s rolls...", ppl[a].name); //Name rolls... 
+				money(a);
+				money(a);
+				printf("\n");
+			}
+			else if (ppl[a].cash == 1){ 
+				print("%s rolls...", ppl[a].name); //Name rolls... 
+                                money(a);
+				printf("\n");
+				}
 			else{
-				//roll 3 dice
-			
-	int money(int a){ //give money to l/r/pot/pass
+                                print("%s rolls...", ppl[a].name); //Name rolls... 
+                                money(a);
+                                money(a);
+				money(a);
+				printf("\n");
+				}
+	void money(int a){ //give money to l/r/pot/pass
 		int rando = rand() % 6;
-
 		if (die[rando] == "LEFT" ){
-			unit8_t leftt = left(a, players)
+			unit8_t leftt = left(a, players);//Get person on left position
+			ppl[leftt].cash = ppl[leftt].cash + 1; //Give a dollar
+			ppl[a].cash = ppl[a].cash -1;//Lose a dollar
+			printf("gives $1 to %s", ppl[leftt].name);
+			}
 		else if (die[rando] == "RIGHT"){
-			unit8_t rightt = right(a, players)
+			unit8_t rightt = right(a, players);
+			ppl[rightt].cash = ppl[rightt].cash + 1;
+			ppl[a].cash = ppl[a].cash - 1;
+			printf("gives $1 to %s", ppl[rightt].name);
+			}
 		else if (die[rando] == "CENTER"){
-			
+			pot = pot + 1;
+			ppl[a].cash = ppl[a].cash -1;
+			printf("puts $1 in the pot\n");
+			}
 		else{
-
-
-	}
+			printf("gets a pass");
+			}
 }
