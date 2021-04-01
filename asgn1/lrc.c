@@ -2,8 +2,24 @@
 #include "philos.h"
 #include <string.h>
 #include <stdlib.h>
-int main()
-{
+
+        //returns the position of the player on the left
+        //pos: Position of the current player
+        //players: The number of players in the game.
+        //The following two lines are from the asgn1.pdf lab1 documentation.
+static inline uint8_t left(unit8_t pos, unit8_t players) {
+        return ((pos + players - 1) % players);
+
+        //returns the position of the player on the right
+        //The following two lines are from the asgn1.pdf lab1 documentation.
+static inline unit8_t right(unit8_t pos, unit8_t players) {
+        return ((pos + 1) % players);
+
+        //The following two lines are from the asgn1.pdf lab1 documentation
+typedef enum faciem { PASS, LEFT, RIGHT, CENTER } faces;
+        faces die[] = { LEFT, RIGHT, CENTER, PASS, PASS, PASS };
+int main(){
+	//Ask for the random seed and the amount of players
 	int seed;
 	printf("Random seed: ");
 	scanf("%u", &seed);
@@ -37,50 +53,31 @@ int main()
 			return 1;}
 		}
 
-	int diceroll(){
-			int r = rand() % 6;
-			return r;
-			}
-
-
 	while(check() ==1)
 		int a;
 		for (a=0; a<players; a++){
-	
 			if (ppl[a].cash == 0){	
 				//pass
 			else if (ppl[a].cash ==2){
 				//roll 2 dice
-				int rando = diceroll();
-			
 
+				//call int money
 			else if (ppl[a].cash ==1){
 				//roll 1 dice
 			else{
 				//roll 3 dice
 			
-	
-	typedef enum faciem { PASS, LEFT, RIGHT, CENTER } faces;
-        faces die[] = { LEFT, RIGHT, CENTER, PASS, PASS, PASS };
+	int money(int a){ //give money to l/r/pot/pass
+		int rando = rand() % 6;
+
+		if (die[rando] == "LEFT" ){
+			unit8_t leftt = left(a, players)
+		else if (die[rando] == "RIGHT"){
+			unit8_t rightt = right(a, players)
+		else if (die[rando] == "CENTER"){
+			
+		else{
 
 
+	}
 }
-/*
-	//returns the position of the player on the left
-	//pos: Position of the current player
-	//players: The number of players in the game.
-
-	//The following two lines are from the asgn1.pdf lab1 documentation.
-static inline uint8_t left (unit8_t pos, unit8_t players) {
-	return ((pos + players - 1) % players);
-
-	//returns the position of the player on the right
-        //The following two lines are from the asgn1.pdf lab1 documentation.
-static inline unit8_t right(unit8_t pos, unit8_t players) {
-	return ((pos + 1) % players);
-
-        //The following two lines are from the asgn1.pdf lab1 documentation
-	////typedef enum faciem { PASS, LEFT, RIGHT, CENTER } faces;
-	faces die[] = { LEFT, RIGHT, CENTER, PASS, PASS, PASS };
-*/	        ////typedef enum faciem { PASS, LEFT, RIGHT, CENTER } faces;
-        
