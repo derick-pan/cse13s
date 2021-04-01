@@ -3,6 +3,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdint.h>
+typedef struct {
+	char name[50];
+	int cash;
+	int pos;
+		}variables ;
         //returns the position of the player on the left
         //pos: Position of the current player
         //players: The number of players in the game.
@@ -17,7 +22,7 @@ static inline uint8_t right(uint8_t pos, uint8_t players) {
 	}
         //The following two lines are from the asgn1.pdf lab1 documentation
 
-void money(int a, int players ){ //give money to l/r/pot/pass
+void money(int a, int players , variables ppl[14], int pot){ //give money to l/r/pot/pass
 	typedef enum faciem { PASS, LEFT, RIGHT, CENTER } faces;
 		faces die[] = { LEFT, RIGHT, CENTER, PASS, PASS, PASS };
 	int rando = rand() % 6;
@@ -43,17 +48,22 @@ void money(int a, int players ){ //give money to l/r/pot/pass
 		}
 }
 
-int check(struct variables ppl){ //Check if the game should keep going
+int check(int players, variables ppl[14]){ //Check if the game should keep going
 	int i;
 	int cashtest = 0;
 	for (i=0; i<players; i++){
 		if (ppl[i].cash > 0){ //if only one person has cash then cashtest =1
 		    cashtest = cashtest +1;
-		}	    
+			}	    
+		}
 	if (cashtest ==1){
-		return 1;}
+		return 1;
+		}
+	else{
+		return 0;
+		}
+	
 	}	
-}
 int main(){
 	//Ask for the random seed and the amount of players
 	int seed;
@@ -63,14 +73,9 @@ int main(){
 	int players;
 	printf("How many players? ");
 	scanf("%u", &players);
-	int pot;
-	typedef struct {
-		char name[50];
-		int cash;
-	       	int pos;
-			}variables ;
+	int pot = 0;
+	
 	variables ppl[players];
-
 	int i;
 	for (i =0; i<players; i++){ //Create an array of data		
 		strcpy(ppl[i].name, philosophers[i]);
@@ -80,7 +85,7 @@ int main(){
 	
 
 
-	while(check() ==1){
+	while(check(players, ppl) ==0) {
 		int a;
 		for (a=0; a<players; a++){
 			if (ppl[a].cash == 0){	
@@ -89,20 +94,20 @@ int main(){
 			else if (ppl[a].cash ==2){
 				//roll 2 dice
 				printf("%s rolls...", ppl[a].name); //Name rolls... 
-				money(a);
-				money(a);
+				money(a,players, ppl,pot);
+				money(a,players, ppl,pot);
 				printf("\n");
 				}
 			else if (ppl[a].cash == 1){ 
 				printf("%s rolls...", ppl[a].name); //Name rolls... 
-                                money(a);
+                                money(a,players, ppl,pot);
 				printf("\n");
 				}
 			else{
                                 printf("%s rolls...", ppl[a].name); //Name rolls... 
-                                money(a);
-                                money(a);
-				money(a);
+                                money(a,players, ppl,pot);
+                                money(a,players, ppl,pot);
+				money(a,players, ppl,pot);
 				printf("\n");
 				}
 			}
