@@ -1,3 +1,4 @@
+//Derick Pan | dpan7
 #include "philos.h"
 
 #include <stdint.h>
@@ -80,7 +81,7 @@ int main() {
 
     unsigned int players;
     printf("How many players? ");
-    if (scanf("%u", &players) == EOF || players > 14 || players < 1) {
+    if (scanf("%u", &players) == EOF || players > 14 || players < 2) {
         //Check for invalid input
         printf("Number of players must be from 1 to 14.\n");
         return 0;
@@ -93,11 +94,6 @@ int main() {
         strcpy(ppl[i].name, philosophers[i]);
         ppl[i].cash = 3;
         ppl[i].pos = i;
-    }
-
-    if (players == 1) { //Condition if there's only one player
-        printf("%s wins the $%d pot with $%d left in the bank!\n", ppl[0].name, pot, ppl[0].cash);
-        return 0;
     }
 
     /*While loop only runs if game can keep running> loop over all the players>
