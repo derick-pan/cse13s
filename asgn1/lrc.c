@@ -74,17 +74,21 @@ int check(unsigned int players, variables ppl[14]) {
 
 int main() {
     //Ask for the random seed and the amount of players
-    unsigned int seed;
+    int seed = 0;
     printf("Random seed: ");
-    scanf("%u", &seed);
+    scanf("%d", &seed);
+    if (seed < 1) {
+        fprintf(stderr, "Psuedorandom seed must be non-negative (%d).\n", seed);
+        return 1;
+    }
     srandom(seed);
 
     unsigned int players;
     printf("How many players? ");
     if (scanf("%u", &players) == EOF || players > 14 || players < 2) {
         //Check for invalid input
-        printf("Number of players must be from 1 to 14.\n");
-        return 0;
+        fprintf(stderr, "Number of players must be from 1 to 14.\n");
+        return 1;
     }
     int pot = 0; // Holds the amount in the center pot
     variables ppl[players];
