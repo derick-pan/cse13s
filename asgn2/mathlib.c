@@ -15,7 +15,7 @@ double ffactorial(double base) { //Function to simplify Factorials
     }
     return ans;
 }
-*/
+
 double paower(double base, double top) { //Function to simplify to powers
     double ans = base;
     int exp= (int)top;
@@ -28,6 +28,7 @@ double paower(double base, double top) { //Function to simplify to powers
     }
     return ans;
 }
+*/
 //temporary Will create own
 double abss(double val) {
 	return val < 0 ? -val : val;
@@ -35,32 +36,32 @@ double abss(double val) {
 
 
 
-double epsilonn = 0.00001;
+double epsilonn = 0.000000001;
 
 
 double arcSin(double x) {
-    //double x = -1;
-    //for (x = -1; x < 1; x + 0.1) { //Increment X from -1 to 1, step 0.1
-    //double Finalans = x;
-    //double k = 0;
     double Finalans = x;
     double k = 0;
-    double factk = 1;
-    double facttk = 1;
+    double top = 1;
+    double bot = 2;
+    double ex = x*x*x;
+    double exbot = 3;
+    double leftpass = 1;
+    double testans = 0;
     for (;;) { //Taylor Expansion
+
+	leftpass = leftpass * (top/bot);
+	Finalans = Finalans+(leftpass * (ex/exbot));
+
 	k = k + 1; 
-        double tk = 2 * k;
-        factk = factk * k;
-        facttk = facttk * (2*k);
-        double numerator = (facttk) * paower(x, tk + 1);
-        double denominator = paower(2, tk) * paower(factk, 2) * (tk + 1);
-        double tempans = numerator / denominator;
-        Finalans = tempans + Finalans;
-	printf("welp, arcsin");
-        if (abss(x)- abss(Finalans) < epsilonn) {
-	    //Finalans = tempans+ Finalans;
+	ex = ex*x*x;
+	exbot = exbot+2;
+	bot = bot +2;
+	top = top +2;
+        if (abss(abss(Finalans) - abss(testans)) < epsilonn) {
             return Finalans;
-        }
+	}
+    testans = Finalans;
     }
     return 1;
 }
