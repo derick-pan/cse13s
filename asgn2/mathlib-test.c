@@ -7,12 +7,10 @@ int main(int argc, char *argv[]) {
 
     while ((choice = getopt(argc, argv, "ascti")) != -1) {
         double x;
-        double increment = 0.1;
         switch (choice) {
         case 'a':
-            for (x = -1; x < 1; x += increment) {
-		double arcout = arcSin(x);
-                printf("%lf\n", arcout);
+            for (x = -1; x < 1; x += 0.100000000) {
+                printf("%.8lf\n", arcSin(x));
             }
             break;
 

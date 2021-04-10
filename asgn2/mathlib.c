@@ -29,7 +29,8 @@ double abss(double val) {
 
 
 
-double epsilonn = 1 / 10000000000000;
+double epsilonn = 0.000000001;
+
 
 double arcSin(double x) {
     //double x = -1;
@@ -47,7 +48,8 @@ double arcSin(double x) {
         double denominator = paower(2, tk) * paower(factk, 2) * (tk + 1);
         double tempans = numerator / denominator;
         Finalans = tempans + Finalans;
-        if (x- abss(Finalans) < epsilonn) {
+        if (abss(x)- abss(Finalans) < epsilonn) {
+	    //Finalans = tempans+ Finalans;
             return Finalans;
         }
     }
