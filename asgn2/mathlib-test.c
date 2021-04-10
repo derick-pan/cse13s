@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <unistd.h>
+#include "mathlib.h"
 int main(int argc, char *argv[]) {
 
     int choice;
@@ -10,7 +11,8 @@ int main(int argc, char *argv[]) {
         switch (choice) {
         case 'a':
             for (x = -1; x < 1; x += increment) {
-                printf("%lf", x);
+		double arcout = arcSin(x);
+                printf("%lf\n", arcout);
             }
             break;
 

@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
+#include "mathlib.h"
+//mathlib.c//
 double ffactorial(double base) { //Function to simplify Factorials
     double ans = 1;
     double i = 1;
@@ -20,8 +22,14 @@ double paower(double base, double top) { //Function to simplify to powers
     }
     return ans;
 }
+//temporary Will create own
+double abss(double val) {
+	return val < 0 ? -val : val;
+}
 
-double epsilonn = 1 / 10000000000;
+
+
+double epsilonn = 1 / 10000000000000;
 
 double arcSin(double x) {
     //double x = -1;
@@ -30,7 +38,8 @@ double arcSin(double x) {
     //double k = 0;
     double Finalans = x;
     double k = 0;
-    for (k = 0; 0; k++) { //Taylor Expansion
+    for (;;) { //Taylor Expansion
+	k = k + 1; 
         double tk = 2 * k;
         double factk = ffactorial(k);
         double facttk = ffactorial(tk);
@@ -38,7 +47,7 @@ double arcSin(double x) {
         double denominator = paower(2, tk) * paower(factk, 2) * (tk + 1);
         double tempans = numerator / denominator;
         Finalans = tempans + Finalans;
-        if (x - Finalans <= epsilonn) {
+        if (x- abss(Finalans) < epsilonn) {
             return Finalans;
         }
     }
