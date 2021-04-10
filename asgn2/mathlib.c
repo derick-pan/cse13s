@@ -5,20 +5,26 @@
 #include <stdio.h>
 #include "mathlib.h"
 //mathlib.c//
+/*
 double ffactorial(double base) { //Function to simplify Factorials
     double ans = 1;
     double i = 1;
     for (i = 1; i <= base; i++) {
         ans = ans * i;
+	//printf("kms ffactorial");
     }
     return ans;
 }
-
+*/
 double paower(double base, double top) { //Function to simplify to powers
-    double ans = 1;
-    double i = 1;
-    for (i = 1; i <= top; i++) {
+    double ans = base;
+    int exp= (int)top;
+    for (;;) {
+	if (exp <= 0) {
+		return ans; }
+	exp = exp - 1;
         ans = ans * base;
+	printf("kms paower");
     }
     return ans;
 }
@@ -29,7 +35,7 @@ double abss(double val) {
 
 
 
-double epsilonn = 0.000000001;
+double epsilonn = 0.00001;
 
 
 double arcSin(double x) {
@@ -39,15 +45,18 @@ double arcSin(double x) {
     //double k = 0;
     double Finalans = x;
     double k = 0;
+    double factk = 1;
+    double facttk = 1;
     for (;;) { //Taylor Expansion
 	k = k + 1; 
         double tk = 2 * k;
-        double factk = ffactorial(k);
-        double facttk = ffactorial(tk);
-        double numerator = facttk * paower(x, tk + 1);
+        factk = factk * k;
+        facttk = facttk * (2*k);
+        double numerator = (facttk) * paower(x, tk + 1);
         double denominator = paower(2, tk) * paower(factk, 2) * (tk + 1);
         double tempans = numerator / denominator;
         Finalans = tempans + Finalans;
+	printf("welp, arcsin");
         if (abss(x)- abss(Finalans) < epsilonn) {
 	    //Finalans = tempans+ Finalans;
             return Finalans;
