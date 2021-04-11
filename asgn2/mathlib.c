@@ -33,12 +33,7 @@ double paower(double base, double top) { //Function to simplify to powers
 double abss(double val) {
 	return val < 0 ? -val : val;
 }
-
-
-
 double epsilonn = 0.000000001;
-
-
 double arcSin(double x) {
     double Finalans = x;
     double k = 0;
@@ -49,10 +44,8 @@ double arcSin(double x) {
     double leftpass = 1;
     double testans = 0;
     for (;;) { //Taylor Expansion
-
 	leftpass = leftpass * (top/bot);
 	Finalans = Finalans+(leftpass * (ex/exbot));
-
 	k = k + 1; 
 	ex = ex*x*x;
 	exbot = exbot+2;
@@ -66,10 +59,16 @@ double arcSin(double x) {
     return 1;
 }
 
-double arcCos() {
+double arcCos(double x) {
+	return ((M_PI/2) - arcSin(x));
     return 0;
 }
-double arcTan() {
+double arcTan(double x) {
+	
+	for(;;) {//something * something = under sqrt.  difference of epsilon  
+
+
+	return ((arcSin(x/botsq)));
     return 0;
 }
 double Log() {

@@ -4,7 +4,7 @@ CFLAGS = -Wall -Wextra -Werror -Wpedantic
 all: mathlib 
 
 mathlib: mathlib.o 
-	$(CC) -o mathlib mathlib.o mathlib-test.o 
+	$(CC) -o mathlib mathlib.o mathlib-test.o -lm 
 
 mathlib.o: 
 	$(CC) $(CFLAGS) -c mathlib.c mathlib-test.c
