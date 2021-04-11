@@ -10,15 +10,7 @@ int main(int argc, char *argv[]) {
 	int flagl = 0;
     double libr;
     int choice;
-    if (argc < 2) {
-
-	    printf("Program usage: ./mathlib - [asctl]\n");
-	    printf("   -a   Runs all tests (arcsin, arccos, arctan, log\n");
-	    printf("   -s   Runs arcsin tests\n");
-	    printf("   -c   Runs arccos tests\n");
-	    printf("   -t   Runs arctan tests\n");
-	    fprintf(stderr,"   -l   Runs log tests\n");
-    }
+    
     while ((choice = getopt(argc, argv, "asctl")) != -1) {
         switch (choice) {
         case 'a':
@@ -48,6 +40,14 @@ int main(int argc, char *argv[]) {
 	    fprintf(stderr, "pls send help");
 	    break;
         }
+    }
+    if (argv[optind] == NULL || argv[optind +1] == NULL) {
+	    printf("Program usage: ./mathlib - [asctl]\n");
+	    printf("   -a   Runs all tests (arcsin, arccos, arctan, log\n");
+	    printf("   -s   Runs arcsin tests\n");
+	    printf("   -c   Runs arccos tests\n");
+	    printf("   -t   Runs arctan tests\n");
+	    fprintf(stderr,"   -l   Runs log tests\n");
     }
   double x;
   if (flaga== 1 || flags ==1) { 
