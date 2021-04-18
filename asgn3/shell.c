@@ -4,31 +4,31 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "shell.h"
-#include <gaps.h>
+#include "gaps.h"
+#include <stdint.h>
+void shell_sort(uint32_t *A, uint32_t n) {
+	uint32_t temp;
+	uint32_t curr;
+	uint32_t gap;
+	uint32_t GapLen = sizeof(gaps)/sizeof(int);
 
-void shell_sort(unit32_t *A, unit32_t n) {
-	int temp;
-	int curr;
-	int gap;
-	int GapLen = sizeof(gaps)/sizeof(int);
-
-	for (int g = 0; g < GapLen; g+=1){  //gap represents the value
+	for (uint32_t g = 0; g < GapLen; g+=1){  //gap represents the value
 		//set gap to the value
 		gap = gaps[g];
 
-		for (int i=g ; i<=n ; i+=1) {  //i represents the index
+		for (uint32_t i = g ; i<=n ; i+=1) {  //i represents the index
 			curr = i;	
-			temp = *A[i];
+			temp = A[i];
 
-			while ( curr >= gap && temp < *A[curr-gap])  {
+			while ( curr >= gap && temp < A[curr-gap])  {
 				
-				*A = *[curr-gap];
-				*A[curr-gap] = curr;
+				*A = A[curr-gap];
+				A[curr-gap] = curr;
 
 			        curr = curr -gap;	
 			}
 		
-			*A[curr] = temp;
+			A[curr] = temp;
 		}
 	}
 }
