@@ -7,16 +7,18 @@
 #include "quick.h"
 #include "stack.h"
 #include "queue.h"
+#include <unistd.h>
+#include <stdio.h>
 
 int main() {
-	flaga = 0;//All sorting Algorithms
-	flagb = 0;//Bubble sort
-	flags = 0;//Shell Sort
-	flagq = 0;//Stack
-	flagQ = 0;//Queue
-		flagr = 13371453;//seed
-	flagn = 100;//Size
-	flagp = 100;//Elements to print
+	int flaga = 0;//All sorting Algorithms
+	int flagb = 0;//Bubble sort
+	int flags = 0;//Shell Sort
+	int flagq = 0;//Stack
+	int flagQ = 0;//Queue
+	int flagr = 13371453;//seed
+	int flagn = 100;//Size
+	int flagp = 100;//Elements to print
 	while((choice = getopt(argc,argv, "absqQr:n:p:")) != -1) {
 
 		switch(choice) {
@@ -49,8 +51,15 @@ int main() {
 		}
 	}
 	if(flagb ==1){
-		float x[8] = {123,16,89,632,1,97,45,29};
-		bubble_sort(sizeof(x), x)}
+		int x[8] = {123,16,89,632,1,97,45,29};
+		bubble_sort(x, sizeof(x)/sizeof(int);
+		
+		for (int i = 0; i< sizeof(x); i++) {
+			printf("Index: %p. Value: %d", x, *x[i]);
+		}		
+	}
+
+
 }
 		
 

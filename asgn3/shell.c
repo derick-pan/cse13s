@@ -14,7 +14,7 @@ void shell_sort(unit32_t *A, unit32_t n) {
 
 	for (int g = 0; g < GapLen; g+=1){  //gap represents the value
 		//set gap to the value
-		gap = *gaps[g];
+		gap = gaps[g];
 
 		for (int i=g ; i<=n ; i+=1) {  //i represents the index
 			curr = i;	
