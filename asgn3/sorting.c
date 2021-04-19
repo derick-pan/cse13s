@@ -64,14 +64,22 @@ int main(int argc, char **argv) {
 			break;
 		}
 	}
+	//To keep track of the # of moves and compares. I will add those two as elements in the list
 	srandom(seed);
 	uint32_t list[flagn];
 	int i;
 	for(int ind=0; ind < flagn ; ind= ind+1){ //Create a list
 		list[ind] = rand();
 	}
+	list[flagn] = 0;   //Keeps track of the # of moves in position flagn
+        list[flagn+1] = 0;	//Keeps track of compares in position flagn+1
+
+
+
 	if(flagb ==1){ //If Bubble sort is chosen 
 		bubble_sort(list, sizeof(list)/sizeof(uint32_t));
+		printf("Bubble Sort\n%d elements, %d moves, %d compares\n",flagn, list[flagn],list[flagn+1]); 
+
 		for (i = 0; i < flagp ; i = i+1) {
 			printf("%13d",list[i]);
 			if ((i+1) % 5 ==0) {

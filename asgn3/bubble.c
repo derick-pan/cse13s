@@ -12,8 +12,10 @@ void bubble_sort(uint32_t *A, uint32_t n) {
 	while (swapped) {
 		swapped = 0;
 		for( uint32_t i =1; i < n; i +=1) {
+			A[n+1] = A[n+1]+1;
 			if ( A[i] < A[i-1] ) {
-
+				A[n]= A[n]+1; //increment the moves counter
+			
 				int temp = A[i];
 				A[i] = A[i-1];
 				A[i-1] = temp;
