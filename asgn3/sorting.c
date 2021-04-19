@@ -20,7 +20,6 @@ int main(int argc, char **argv) {
 	int flagn = 100;//Size
 	int flagp = 100;//Elements to print
 	int choice;
-	int seed = 13371453;
 	while((choice = getopt(argc,argv, "absqQr:n:p:")) != -1) {
 
 		switch(choice) {
@@ -37,11 +36,11 @@ int main(int argc, char **argv) {
 			flagQ = 1;
 		case 'r':
 			if (optarg != NULL) {
-				seed = atoi(optarg);
-				srandom(seed);
+				srand(atoi(optarg));
+				break;
 			}
 			else{
-				srandom(seed);
+				srand(13371453);
 			}
 			break;
 		case 'n':
@@ -60,22 +59,32 @@ int main(int argc, char **argv) {
 	}
 	
 	uint32_t list[flagn];
-
+	int i;
+	int size;
 	for(int ind=0; ind <= flagn; ind= ind+1){ //Create a list
-		uint32_t rando = rand();
-		list[ind] = rando;
+		list[ind] = rand();
 	}
 
 	if(flagb ==1){ //If Bubble sort is chosen 
 
 		bubble_sort(list, sizeof(list)/sizeof(uint32_t));
 
-		int size = sizeof(list)/sizeof(int);
+		size = sizeof(list)/sizeof(int);
 
-		for (int i = 0; i < size ; i = i+1) {
-			printf("Value: %d\n", list[i]);
+		for (i = 0; i < size ; i = i+1) {
+			printf("bubble: %d\n", list[i]);
 		}		
 	}
+	if(flags ==1) {
+		shell_sort(list, sizeof(list)/sizeof(uint32_t));
+		size = sizeof(list)/sizeof(int);
+
+		for (i = 0; i < size ; i = i+1) {
+			printf("Shell: %d\n", list[i]);
+		}
+	}	
+
+
 	return 1;
 }
 
