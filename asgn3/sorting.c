@@ -69,7 +69,7 @@ int main(int argc, char **argv) {
 	if(flagb ==1){ //If Bubble sort is chosen 
 		bubble_sort(list, sizeof(list)/sizeof(uint32_t));
 		printf("%d\n",list[0]);
-		for (i = 0; i <= flagp ; i = i+1) {
+		for (i = 0; i < flagp ; i = i+1) {
 			
 			printf("bubble: %d\n", list[i]);
 		}		
@@ -78,7 +78,7 @@ int main(int argc, char **argv) {
 	if(flags ==1) {//If Shell sort is chosen
 		shell_sort(list, sizeof(list)/sizeof(uint32_t));
 			
-		for (i = 0; i <= flagp ; i = i+1) {
+		for (i = 0; i < flagp ; i = i+1) {
 			printf("Shell: %d\n", list[i]);
 		}
 	}	

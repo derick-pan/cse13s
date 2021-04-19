@@ -15,7 +15,7 @@ void shell_sort(uint32_t *A, uint32_t n) {
 		//set gap to the value
 		gap = gaps[g];
 
-		for (uint32_t i = gap ; i<=n ; i+=1) {  //i represents the index
+		for (uint32_t i = gap ; i<n ; i+=1) {  //i represents the index
 			curr = i;//Just a pointer/number	
 			temp = A[i];//Hold that value i
 
