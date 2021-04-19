@@ -8,22 +8,21 @@
 #include <stdint.h>
 void shell_sort(uint32_t *A, uint32_t n) {
 	uint32_t temp;
-	uint32_t curr;
-	uint32_t gap;
-	uint32_t GapLen = sizeof(gaps)/sizeof(int);
+	int curr;
+	int gap;
 
-	for (uint32_t g = 0; g < GapLen; g+=1){  //gap represents the value
+	for (int g = 0; g < GAPS; g= g+1){  //gap represents the value
 		//set gap to the value
 		gap = gaps[g];
 
-		for (uint32_t i = g ; i<=n ; i+=1) {  //i represents the index
-			curr = i;	
-			temp = A[i];
+		for (uint32_t i = gap ; i<=n ; i+=1) {  //i represents the index
+			curr = i;//Just a pointer/number	
+			temp = A[i];//Hold that value i
 
 			while ( curr >= gap && temp < A[curr-gap])  {
-				
-				*A = A[curr-gap];
-				A[curr-gap] = curr;
+
+				A[curr] = A[curr-gap];
+				A[curr-gap] = temp;
 
 			        curr = curr -gap;	
 			}

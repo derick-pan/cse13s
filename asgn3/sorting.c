@@ -30,6 +30,7 @@ int main(int argc, char **argv) {
 			break;
 		case 's':
 			flags = 1;
+			break;
 		case 'q':
 			flagq = 1;
 		case 'Q':
@@ -40,9 +41,9 @@ int main(int argc, char **argv) {
 				break;
 			}
 			else{
-				srand(13371453);
-			}
+				srandom(13371453);
 			break;
+			}
 		case 'n':
 			if (optarg != NULL) {
 				flagn = (uint32_t) strtoul(optarg,NULL,10);
@@ -60,25 +61,20 @@ int main(int argc, char **argv) {
 	
 	uint32_t list[flagn];
 	int i;
-	int size;
 	for(int ind=0; ind <= flagn; ind= ind+1){ //Create a list
 		list[ind] = rand();
 	}
+	int size = flagn;
 
 	if(flagb ==1){ //If Bubble sort is chosen 
-
 		bubble_sort(list, sizeof(list)/sizeof(uint32_t));
-
-		size = sizeof(list)/sizeof(int);
-
 		for (i = 0; i < size ; i = i+1) {
 			printf("bubble: %d\n", list[i]);
 		}		
 	}
-	if(flags ==1) {
-		shell_sort(list, sizeof(list)/sizeof(uint32_t));
-		size = sizeof(list)/sizeof(int);
 
+	if(flags ==1) {//If Shell sort is chosen
+		shell_sort(list, sizeof(list)/sizeof(uint32_t));
 		for (i = 0; i < size ; i = i+1) {
 			printf("Shell: %d\n", list[i]);
 		}
