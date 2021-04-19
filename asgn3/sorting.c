@@ -11,6 +11,8 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <inttypes.h>
+
 int main(int argc, char **argv) {
 	int flaga = 0;//All sorting Algorithms
 	int flagb = 0;//Bubble sort
@@ -34,8 +36,10 @@ int main(int argc, char **argv) {
 			break;
 		case 'q':
 			flagq = 1;
+			break;
 		case 'Q':
 			flagQ = 1;
+			break;
 		case 'r':
 			if (optarg != NULL) {
 				printf("%s\n",optarg);
@@ -68,22 +72,24 @@ int main(int argc, char **argv) {
 	}
 	if(flagb ==1){ //If Bubble sort is chosen 
 		bubble_sort(list, sizeof(list)/sizeof(uint32_t));
-		printf("%d\n",list[0]);
 		for (i = 0; i < flagp ; i = i+1) {
-			
-			printf("bubble: %d\n", list[i]);
+			printf("%13d",list[i]);
+			if ((i+1) % 5 ==0) {
+				printf("\n");
+			}
 		}		
 	}
-
 	if(flags ==1) {//If Shell sort is chosen
 		shell_sort(list, sizeof(list)/sizeof(uint32_t));
-			
 		for (i = 0; i < flagp ; i = i+1) {
 			printf("Shell: %d\n", list[i]);
 		}
 	}	
 
+	if(flagq ==1) { //if flag Quick Sort (Stack) is chosen
+	//	quick_sort_stack(list, sizeof(list)/sizeof(uint32_t));
+	}	
 
 	return 1;
-}
 
+}
