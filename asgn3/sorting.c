@@ -89,13 +89,27 @@ int main(int argc, char **argv) {
 	}
 	if(flags ==1) {//If Shell sort is chosen
 		shell_sort(list, sizeof(list)/sizeof(uint32_t));
+
+		printf("Shell Sort\n%d elements, %d moves, %d compares\n",flagn, list[flagn],list[flagn+1]); 
 		for (i = 0; i < flagp ; i = i+1) {
-			printf("Shell: %d\n", list[i]);
+			printf("%13d",list[i]);
+			if ((i+1) % 5 ==0) {
+				printf("\n");
+			}	
 		}
 	}	
-
 	if(flagq ==1) { //if flag Quick Sort (Stack) is chosen
-	//	quick_sort_stack(list, sizeof(list)/sizeof(uint32_t));
+		quick_sort_stack(list, sizeof(list)/sizeof(uint32_t));
+		printf("Quick Sort (Stack)\n%d elements, %d moves, %d compares\n"
+		,flagn, list[flagn],list[flagn+1]); 
+		printf("Max stack size: %d\n",stacksize);//Create a stacksize counter
+		
+		for (i = 0; i < flagp ; i = i+1) {
+			printf("%13d",list[i]);
+			if ((i+1) % 5 ==0) {
+				printf("\n");
+			}	
+		}
 	}	
 
 	return 1;
