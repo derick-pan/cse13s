@@ -6,6 +6,12 @@
 #include <stdint.h>
 #include "stack.h"
 
+struct Stack { //This struct is from the asg3_Doc.pdf
+	uint32_t top;		//Index of next mt slot
+	uint32_t capacity;	// # of items can push
+	int64_t *items;		// Array of items,
+};
+
 
 Stack *stack_create(uint32_t capacity);
 
