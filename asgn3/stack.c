@@ -12,7 +12,7 @@ struct Stack { //This struct is from the asg3_Doc.pdf
 	int64_t *items;		// Array of items,
 };
 
-
+//Creates function
 Stack *stack_create(uint32_t capacity) { //Function from asg3_Doc.pdf
 	Stack *s = (Stack *) malloc(sizeof(Stack));
 	if (s) {
@@ -26,7 +26,7 @@ Stack *stack_create(uint32_t capacity) { //Function from asg3_Doc.pdf
 	}
 	return s;
 }
-
+//Destructor Function
 void stack_delete(Stack **s) {//Function from asg3_Doc.pdf
 	if (*s && (*s)->items) {
 		free((*s)->items);
@@ -36,13 +36,14 @@ void stack_delete(Stack **s) {//Function from asg3_Doc.pdf
 	return;
 }
 
-bool stack_empty(Stack **s);
+bool stack_empty(Stack *s);
+	if (s->top ==0){
+		return 1;
+uint32_t stack_size(Stack *s);//Returns # of items in stack
+	
+bool stack_push(Stack *s, int64_t x);//Pushes x to top of stack if success return True, else F
 
-uint32_t stack_size(Stack *s);
-
-bool stack_push(Stack *s, int64_t x);
-
-bool stack_pop(Stack *s, int64_t *x);
+bool stack_pop(Stack *s, int64_t *x);//pops item off stack, return T or F for success or not
 
 void stack_print(Stack *s);
 

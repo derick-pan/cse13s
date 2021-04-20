@@ -36,13 +36,15 @@ void quick_sort_stack(uint32_t *A, uint32_t n) {
 	int low =0;
 	int high = n -1;
 
-	uint32_t stack[]
-	//stack.append(lo)
-	//stack.append(hi)
-	int n == sizeof(stack);
-	while(n != 0) {
-		//high = stack.pop()
-		//low = stack.pop()
+	uint32_t stack = Stack *stack_create(capacity);
+	stack[0] = lo;
+	stack_push(stack, 
+	stack[1] = hi;
+	int len == 2;
+	while(len != 0) {
+		high = stack[n];
+		low = stack[n-1];
+		len = len-2
 		p = partition(A,low,high);
 		if (low < p) {
 			//stack.append(lo)
