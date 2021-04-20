@@ -50,34 +50,36 @@ bool stack_empty(Stack *s){
 	return false;
 }
 uint32_t stack_size(Stack *s) {//Returns # of items in stack
-	return sizeof(s)/sizeof(uint32_t);	
+	return s->top;	
 }
 bool stack_push(Stack *s, int64_t x) {//Pushes x to top of stack if success return True, else F
 	//uint32_t spot = (s->top+1) % (s->capacity); //index of Next avaliable spot
 	if (stack_full(s)){
+		printf("The stack is full?\n");
 		return false;
 	}
 		s->items[s->top] = x ;
-		s->top += 1;
+		s->top += 1; //Next avaliable spot
+		printf("The stack pushed, %ld", s->items[s->top]);
 		return true;
-	
+		
 }
 bool stack_pop(Stack *s, int64_t *x){//pops item off stack, return T or F for success or not
 		
 	if (stack_empty(s)){
 		return false;
 	}
+	s->top -= 1;
 	//set value in memory x is pointing to popped item
 	*x = s->items[s->top]; //Line from asgn3_Doc.pdf
 	//So I changed the pointer, 
-	s->top -= 1;
 	return true;
 }
-/*
 void stack_print(Stack *s) {
 
 	for (uint32_t i=0; i<stack_size(s); i +=1){
-		printf("%u",s[i]);
+		printf("%ld\n", s->items[i]);
 	}
+	printf("-------------------------------------------------\n");
 	return;
-}*/
+}
