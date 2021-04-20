@@ -45,10 +45,12 @@ void quick_sort_stack(uint32_t *A, uint32_t n) {
 		//low = stack.pop()
 		p = partition(A,low,high);
 		if (low < p) {
-
+			//stack.append(lo)
+			//stack.append(p)
 		}
 		if (hi > p+1) {
-
+			//stack.append(p+1)
+			//stack.append(hi)
 		}
 
 
@@ -65,4 +67,4 @@ void quick_sort_stack(uint32_t *A, uint32_t n) {
 }
 
 
-void quick_sort_stack(uint32_t *A, uint32_t n);
+void quick_sort_queue(uint32_t *A, uint32_t n);

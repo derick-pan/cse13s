@@ -13,11 +13,28 @@ struct Stack { //This struct is from the asg3_Doc.pdf
 };
 
 
-Stack *stack_create(uint32_t capacity);
+Stack *stack_create(uint32_t capacity) { //Function from asg3_Doc.pdf
+	Stack *s = (Stack *) malloc(sizeof(Stack));
+	if (s) {
+		s->top = 0;
+		s->capacity = capacity;
+		s->items = (int64_t *) calloc(capacity, sizeof(int64_t));
+		if (!s->items) {
+			free(s);
+			s=NULL;
+		}
+	}
+	return s;
+}
 
-
-
-void stack_delete(Stack **s);
+void stack_delete(Stack **s) {//Function from asg3_Doc.pdf
+	if (*s && (*s)->items) {
+		free((*s)->items);
+		free(*s);
+		*s = NULL;
+	}
+	return;
+}
 
 bool stack_empty(Stack **s);
 

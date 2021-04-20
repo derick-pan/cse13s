@@ -20,7 +20,7 @@ void shell_sort(uint32_t *A, uint32_t n) {
 			temp = A[i];//Hold that value i
 			A[n+1] = A[n+1]+1;
 			while ( curr >= gap && temp < A[curr-gap])  {
-				A[n] = A[n]+1;
+				A[n] = A[n]+3;
 				A[curr] = A[curr-gap];
 				A[curr-gap] = temp;
 
