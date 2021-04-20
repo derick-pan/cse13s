@@ -58,9 +58,11 @@ bool stack_push(Stack *s, int64_t x) {//Pushes x to top of stack if success retu
 		printf("The stack is full?\n");
 		return false;
 	}
+		printf("%ld push's x\n",x);
 		s->items[s->top] = x ;
 		s->top += 1; //Next avaliable spot
-		printf("The stack pushed, %ld", s->items[s->top]);
+		printf("The stack pushed");
+		stack_print(s);
 		return true;
 		
 }
