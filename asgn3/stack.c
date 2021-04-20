@@ -53,7 +53,6 @@ uint32_t stack_size(Stack *s) {//Returns # of items in stack
 	return s->top;	
 }
 bool stack_push(Stack *s, int64_t x) {//Pushes x to top of stack if success return True, else F
-	//uint32_t spot = (s->top+1) % (s->capacity); //index of Next avaliable spot
 	if (stack_full(s)){
 		printf("The stack is full?\n");
 		return false;
@@ -61,7 +60,6 @@ bool stack_push(Stack *s, int64_t x) {//Pushes x to top of stack if success retu
 		printf("%ld push's x\n",x);
 		s->items[s->top] = x ;
 		s->top += 1; //Next avaliable spot
-		printf("The stack pushed");
 		stack_print(s);
 		return true;
 		
@@ -78,9 +76,8 @@ bool stack_pop(Stack *s, int64_t *x){//pops item off stack, return T or F for su
 	return true;
 }
 void stack_print(Stack *s) {
-
 	for (uint32_t i=0; i<stack_size(s); i +=1){
-		printf("%ld\n", s->items[i]);
+		printf("%ld\n",s->items[i]);
 	}
 	printf("-------------------------------------------------\n");
 	return;
