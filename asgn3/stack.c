@@ -36,6 +36,7 @@ void stack_delete(Stack **s) {//Function from asg3_Doc.pdf
 	}
 	return;
 }
+
 bool stack_full(Stack *s) {
 	//Not in the .h file
 	if (s->top ==s->capacity) {
@@ -54,13 +55,10 @@ uint32_t stack_size(Stack *s) {//Returns # of items in stack
 }
 bool stack_push(Stack *s, int64_t x) {//Pushes x to top of stack if success return True, else F
 	if (stack_full(s)){
-		printf("The stack is full?\n");
 		return false;
 	}
-		printf("%ld push's x\n",x);
 		s->items[s->top] = x ;
 		s->top += 1; //Next avaliable spot
-		stack_print(s);
 		return true;
 		
 }

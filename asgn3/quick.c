@@ -16,12 +16,14 @@ int64_t partition(uint32_t *A , int64_t lo , int64_t hi ) {
 
 	while (i < j) {
 		i += 1;
-		do{ i+=1;
-	   		} while (A[i] < pivot);
-		
+	   	 while (A[i] < pivot){
+			i+=1;
+		}
 		j -=1;
-		do { j-=1;
-			} while (A[j] > pivot);
+		while (A[j] > pivot) {
+	
+			 j-=1;
+		}
 		if (i< j) {
 			temp = A[i];
 			A[i] = A[j];
@@ -40,8 +42,10 @@ void quick_sort_stack(uint32_t *A, uint32_t n) {
 	stack_push(a, low);
 	stack_push(a, high);
 	while(!stack_empty(a)) {
-		high= stack_pop(a,&x);
-		low = stack_pop(a,&x);
+		stack_pop(a,&x);
+		high = x;
+		stack_pop(a,&x);
+		low = x;
 		p = partition(A,low,high);
 		if (low < p) {
 			stack_push(a,low);
@@ -51,10 +55,8 @@ void quick_sort_stack(uint32_t *A, uint32_t n) {
 			stack_push(a,p+1);
 			stack_push(a,high);
 		}
-		stack_print(a);
-		break;
-
 	}	
+	stack_delete(&a);
 }
 
 
