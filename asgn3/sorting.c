@@ -98,11 +98,11 @@ int main(int argc, char **argv) {
 			}	
 		}
 	}	
-/*	if(flagq ==1) { //if flag Quick Sort (Stack) is chosen
+	if(flagq ==1) { //if flag Quick Sort (Stack) is chosen
 		quick_sort_stack(list, sizeof(list)/sizeof(uint32_t));
-		printf("Quick Sort (Stack)\n%d elements, %d moves, %d compares\n"
-		,flagn, list[flagn],list[flagn+1]); 
-		printf("Max stack size: %d\n",stacksize);//Create a stacksize counter
+		//printf("Quick Sort (Stack)\n%d elements, %d moves, %d compares\n"
+		//,flagn, list[flagn],list[flagn+1]); 
+		//printf("Max stack size: %d\n",stacksize);//Create a stacksize counter
 		
 		for (i = 0; i < flagp ; i = i+1) {
 			printf("%13d",list[i]);
@@ -110,7 +110,7 @@ int main(int argc, char **argv) {
 				printf("\n");
 			}	
 		}
-	}*/	
+	}	
 
 	return 1;
 

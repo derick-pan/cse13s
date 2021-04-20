@@ -5,12 +5,11 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include "quick.h"
-
-
+#include "stack.h"
 //Gets immediate left and right value in array
 int64_t partition(uint32_t *A , int64_t lo , int64_t hi ) {
 	int64_t temp; 
-	int64_t pivot = A[lo+ floor((hi-lo) /2)];//FIX 
+	int64_t pivot = A[lo+ ((hi-lo) /2)];//FIX 
 	int64_t i = lo -1;//Gets the immediate to the left
 	int64_t j = hi +1;//Gets the immediate to the right
 
@@ -33,24 +32,26 @@ int64_t partition(uint32_t *A , int64_t lo , int64_t hi ) {
 }		
 
 void quick_sort_stack(uint32_t *A, uint32_t n) {
-	int low =0;
-	int high = n -1;
+	int64_t low =0;
+	int64_t high = n -1;
+	int64_t p;
+	Stack *s = stack_create();
+	stack_push(stack, low);
+	stack_push(stack, high);
 
-	uint32_t stack = Stack *stack_create(capacity);
-	stack[0] = lo;
-	stack_push(stack, 
-	stack[1] = hi;
-	int len == 2;
-	while(len != 0) {
+	while(stack_size(stack) != 0) {
 		high = stack[n];
 		low = stack[n-1];
-		len = len-2
 		p = partition(A,low,high);
 		if (low < p) {
+			stack_push(stack,low);
+			stack_push(stacl,p);
 			//stack.append(lo)
 			//stack.append(p)
 		}
-		if (hi > p+1) {
+		if (high > p+1) {
+			stack_push(stack,p+1);
+			stack_push(stack,high);
 			//stack.append(p+1)
 			//stack.append(hi)
 		}
