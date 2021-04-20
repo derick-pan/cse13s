@@ -27,6 +27,7 @@ Stack *stack_create(uint32_t capacity) { //Function from asg3_Doc.pdf
 	return s;
 }
 //Destructor Function
+//Frees  all memory allocated by the constructor
 void stack_delete(Stack **s) {//Function from asg3_Doc.pdf
 	if (*s && (*s)->items) {
 		free((*s)->items);
@@ -35,16 +36,26 @@ void stack_delete(Stack **s) {//Function from asg3_Doc.pdf
 	}
 	return;
 }
-
+//bool stack_full(Stack *s);
+	//Not in the .h file
+	//
 bool stack_empty(Stack *s);
 	if (s->top ==0){
 		return 1;
 uint32_t stack_size(Stack *s);//Returns # of items in stack
-	
+	return sizeof(s)/sizeof(uint32_t);	
+
 bool stack_push(Stack *s, int64_t x);//Pushes x to top of stack if success return True, else F
+	//uint32_t spot = (s->top+1) % (s->capacity); //index of Next avaliable spot
+	if (s[s->top] == NULL){
+		s[s->top] = x ;
+		s->top += 1;
+		return true;
+	}
+	return false;	
 
 bool stack_pop(Stack *s, int64_t *x);//pops item off stack, return T or F for success or not
-
+	
 void stack_print(Stack *s);
 
 
