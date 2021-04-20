@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <math.h>
 #include "quick.h"
 #include "stack.h"
 //Gets immediate left and right value in array
@@ -15,13 +16,12 @@ int64_t partition(uint32_t *A , int64_t lo , int64_t hi ) {
 
 	while (i < j) {
 		i += 1;
-		while (A[i] < pivot) {
-			i+=1;
-		}
+		do{ i+=1;
+	   		} while (A[i] < pivot);
+		
 		j -=1;
-		while (A[j] > pivot) {
-			j -= 1;
-		}
+		do { j-=1;
+			} while (A[j] > pivot);
 		if (i< j) {
 			temp = A[i];
 			A[i] = A[j];
