@@ -35,23 +35,24 @@ void quick_sort_stack(uint32_t *A, uint32_t n) {
 	int64_t low =0;
 	int64_t high = n -1;
 	int64_t p;
-	Stack *s = stack_create();
-	stack_push(stack, low);
-	stack_push(stack, high);
+	int64_t x;
+	Stack *s = stack_create(100);
+	stack_push(s, low);
+	stack_push(s, high);
 
-	while(stack_size(stack) != 0) {
-		high = stack[n];
-		low = stack[n-1];
+	while(stack_size(s) != 0) {
+		high= stack_pop(s,&x);
+		low = stack_pop(s,&x);
 		p = partition(A,low,high);
 		if (low < p) {
-			stack_push(stack,low);
-			stack_push(stacl,p);
+			stack_push(s,low);
+			stack_push(s,p);
 			//stack.append(lo)
 			//stack.append(p)
 		}
 		if (high > p+1) {
-			stack_push(stack,p+1);
-			stack_push(stack,high);
+			stack_push(s,p+1);
+			stack_push(s,high);
 			//stack.append(p+1)
 			//stack.append(hi)
 		}

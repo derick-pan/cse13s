@@ -47,6 +47,7 @@ bool stack_empty(Stack *s){
 	if (s->top ==0){
 		return true;
 	}
+	return false;
 }
 uint32_t stack_size(Stack *s) {//Returns # of items in stack
 	return sizeof(s)/sizeof(uint32_t);	
@@ -56,7 +57,7 @@ bool stack_push(Stack *s, int64_t x) {//Pushes x to top of stack if success retu
 	if (stack_full(s)){
 		return false;
 	}
-		s[s->top] = x ;
+		s->items[s->top] = x ;
 		s->top += 1;
 		return true;
 	
@@ -72,10 +73,11 @@ bool stack_pop(Stack *s, int64_t *x){//pops item off stack, return T or F for su
 	s->top -= 1;
 	return true;
 }
+/*
 void stack_print(Stack *s) {
 
-	for (int i=0; i<sizeof(s); i +=1){
-		print("%u",s[i]);
+	for (uint32_t i=0; i<stack_size(s); i +=1){
+		printf("%u",s[i]);
 	}
 	return;
-}
+}*/
