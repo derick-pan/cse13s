@@ -6,7 +6,7 @@
 #include "queue.h"
 #include <stdint.h>
 
-typedef struct Queue ;
+typedef struct Queue {
 	uint32_t head;
 	uint32_t tail;
 	uint32_t size;
@@ -55,11 +55,11 @@ uint32_t queue_size(Queue *q){
 
 bool enqueue(Queue *q, int64_t x) {
 	if(queue_full(q)){
-		return false
+		return false;
 	}
 	
 	q->items[q->tail]= x;
-	q->tail+1;
+	q->tail   += 1;
 	return true;
 }
 
@@ -67,12 +67,12 @@ bool dequeue(Queue *q, int64_t *x) {
 	if (queue_empty(q)){
 		return false; }
 	q->head += 1;
-	*x = q->items[q->head] 
+	*x = q->items[q->head]; 
 	return true;
 }
 void queue_print(Queue *q) {
-        for (uint32_t i=0; i<stack_size(s); i +=1){
-                printf("%ld\n",s->items[i]);
+        for (uint32_t i=0; i<queue_size(q); i +=1){
+                printf("%ld\n",q->items[i]);
         }
         printf("-------------------------------------------------\n");
         return;

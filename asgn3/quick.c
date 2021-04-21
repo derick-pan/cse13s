@@ -7,6 +7,7 @@
 #include <math.h>
 #include "quick.h"
 #include "stack.h"
+#include "queue.h"
 //Gets immediate left and right value in array
 int64_t partition(uint32_t *A , int64_t lo , int64_t hi ) {
 	int64_t temp; 
@@ -60,4 +61,41 @@ void quick_sort_stack(uint32_t *A, uint32_t n) {
 }
 
 
-void quick_sort_queue(uint32_t *A, uint32_t n);
+void quick_sort_queue(uint32_t *A, uint32_t n) {
+	int64_t low =0;
+	int64_t high = n -1;
+	int64_t p; //for partition
+	int64_t x; //Pointer
+	Queue *a = queue_create(n);
+	enqueue(a, low);
+	enqueue(a, high);
+	while(!queue_empty(a)) {
+		dequeue(a,&x);
+		high = x;
+		dequeue(a,&x);
+		low = x;
+		p = partition(A,low,high);
+		if (low < p) {
+			enqueue(a,low);
+			enqueue(a,p);
+		}
+		if (high > p+1) {
+			enqueue(a,p+1);
+			enqueue(a,high);
+		}
+	}	
+	queue_delete(&a);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
