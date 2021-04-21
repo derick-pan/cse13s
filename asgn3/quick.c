@@ -8,7 +8,10 @@
 #include "quick.h"
 #include "stack.h"
 #include "queue.h"
+int quickmoves;
+int quickcompares;
 //Gets immediate left and right value in array
+
 int64_t partition(uint32_t *A , int64_t lo , int64_t hi ) {
 	int64_t temp; 
 	int64_t pivot = A[lo+ ((hi-lo) /2)];//FIX 
@@ -16,6 +19,7 @@ int64_t partition(uint32_t *A , int64_t lo , int64_t hi ) {
 	int64_t j = hi +1;//Gets the immediate to the right
 
 	while (i < j) {
+		globalcompares +=1;
 		i += 1;
 	   	 while (A[i] < pivot){
 			i+=1;
@@ -26,7 +30,7 @@ int64_t partition(uint32_t *A , int64_t lo , int64_t hi ) {
 			 j-=1;
 		}
 		if (i< j) {
-			A[sizeof(A)-2] = A[sizeof(A)-1] +3; //Moves counter
+			globalmoves +=3;
 			temp = A[i];
 			A[i] = A[j];
 			A[j] = temp;
@@ -36,6 +40,8 @@ int64_t partition(uint32_t *A , int64_t lo , int64_t hi ) {
 }		
 
 void quick_sort_stack(uint32_t *A, uint32_t n) {
+	quickmoves=0;
+	quickcompares=0;
 	int64_t low =0;
 	int64_t high = n -1;
 	int64_t p; //for partition
@@ -59,10 +65,13 @@ void quick_sort_stack(uint32_t *A, uint32_t n) {
 		}
 	}	
 	stack_delete(&a);
+	printf("Quick Sort (Stack)\n%d elements, %d moves, %d compares\n",flagn, quickmoves,quickcompares); 
 }
 
 
 void quick_sort_queue(uint32_t *A, uint32_t n) {
+	quickmoves=0;
+	quickcompares=0;
 	int64_t low =0;
 	int64_t high = n -1;
 	int64_t p; //for partition
@@ -86,6 +95,8 @@ void quick_sort_queue(uint32_t *A, uint32_t n) {
 		}
 	}	
 	queue_delete(&a);
+	printf("Quick Sort (Queue)\n%d elements, %d moves, %d compares\n",flagn, quickmoves,quickcompares); 
+}
 }
 
 
