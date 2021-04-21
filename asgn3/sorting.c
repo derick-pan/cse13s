@@ -74,8 +74,6 @@ int main(int argc, char **argv) {
 	list[flagn] = 0;   //Keeps track of the # of moves in position flagn
         list[flagn+1] = 0;	//Keeps track of compares in position flagn+1
 
-
-
 	if(flagb ==1){ //If Bubble sort is chosen 
 		bubble_sort(list, sizeof(list)/sizeof(uint32_t));
 		printf("Bubble Sort\n%d elements, %d moves, %d compares\n",flagn, list[flagn],list[flagn+1]); 
@@ -100,8 +98,8 @@ int main(int argc, char **argv) {
 	}	
 	if(flagq ==1) { //if flag Quick Sort (Stack) is chosen
 		quick_sort_stack(list, sizeof(list)/sizeof(uint32_t));
-		//printf("Quick Sort (Stack)\n%d elements, %d moves, %d compares\n"
-		//,flagn, list[flagn],list[flagn+1]); 
+		printf("Quick Sort (Stack)\n%d elements, %d moves, %d compares\n"
+		,flagn, list[flagn],list[flagn+1]); 
 		//printf("Max stack size: %d\n",stacksize);//Create a stacksize counter
 		
 		for (i = 0; i < flagp ; i = i+1) {
@@ -112,6 +110,19 @@ int main(int argc, char **argv) {
 		}
 	}	
 
+	if(flagQ ==1) { //if flag Quick Sort (Queue) is chosen
+		quick_sort_queue(list, sizeof(list)/sizeof(uint32_t));
+		printf("Quick Sort (Queue)\n%d elements, %d moves, %d compares\n"
+		,flagn, list[flagn],list[flagn+1]); 
+		//printf("Max stack size: %d\n",stacksize);//Create a stacksize counter
+		
+		for (i = 0; i < flagp ; i = i+1) {
+			printf("%13d",list[i]);
+			if ((i+1) % 5 ==0) {
+				printf("\n");
+			}	
+		}
+	}	
 	return 1;
 
 }

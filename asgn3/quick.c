@@ -26,6 +26,7 @@ int64_t partition(uint32_t *A , int64_t lo , int64_t hi ) {
 			 j-=1;
 		}
 		if (i< j) {
+			A[sizeof(A)-2] = A[sizeof(A)-1] +3; //Moves counter
 			temp = A[i];
 			A[i] = A[j];
 			A[j] = temp;
@@ -71,9 +72,9 @@ void quick_sort_queue(uint32_t *A, uint32_t n) {
 	enqueue(a, high);
 	while(!queue_empty(a)) {
 		dequeue(a,&x);
-		high = x;
-		dequeue(a,&x);
 		low = x;
+		dequeue(a,&x);
+		high = x;
 		p = partition(A,low,high);
 		if (low < p) {
 			enqueue(a,low);
