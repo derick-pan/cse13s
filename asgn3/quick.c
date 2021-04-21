@@ -10,8 +10,8 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-int quickmoves =0;
-int quickcompares=0;
+int quickmoves;
+int quickcompares;
 //Gets immediate left and right value in array
 
 int64_t partition(uint32_t *A, int64_t lo, int64_t hi) {
@@ -30,10 +30,12 @@ int64_t partition(uint32_t *A, int64_t lo, int64_t hi) {
         while (A[j] > pivot) {
 		quickcompares +=1;
             j -= 1;
-        }
+	}
+
 	quickcompares +=1;
         if (i < j) {
-            quickmoves += 3;//Correct
+            quickmoves += 3;
+	    
             temp = A[i];
             A[i] = A[j];
             A[j] = temp;
@@ -43,6 +45,8 @@ int64_t partition(uint32_t *A, int64_t lo, int64_t hi) {
 }
 
 void quick_sort_stack(uint32_t *A, uint32_t n) {
+    quickmoves = 0;
+    quickcompares =0;
     int64_t low = 0;
     int64_t high = n - 1;
     int64_t p; //for partition
@@ -69,11 +73,11 @@ void quick_sort_stack(uint32_t *A, uint32_t n) {
     stack_delete(&a);
     printf(
         "Quick Sort (Stack)\n%d elements, %d moves, %d compares\n", n, quickmoves, quickcompares);
-    quickmoves = 0;
-    quickcompares =0;
 }
 
 void quick_sort_queue(uint32_t *A, uint32_t n) {
+    quickmoves = 0;
+    quickcompares =0;
     int64_t low = 0;
     int64_t high = n - 1;
     int64_t p; //for partition
@@ -87,6 +91,7 @@ void quick_sort_queue(uint32_t *A, uint32_t n) {
         low = x;
         dequeue(a, &x);
         high = x;
+	//if (high < 0 || low <0) { printf("i loveu\n");}
         p = partition(A, low, high);
         if (low < p) {
             enqueue(a, low);
@@ -100,6 +105,4 @@ void quick_sort_queue(uint32_t *A, uint32_t n) {
     queue_delete(&a);
     printf(
         "Quick Sort (Queue)\n%d elements, %d moves, %d compares\n", n, quickmoves, quickcompares);
-    quickmoves = 0;
-    quickcompares =0;
 }

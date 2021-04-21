@@ -6,7 +6,7 @@
 #include "quick.h"
 #include "shell.h"
 #include "stack.h"
-
+#include "set.h"
 #include <inttypes.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -23,23 +23,24 @@ int main(int argc, char *argv[]) {
     int flagp = 100; //Elements to print
     int seed = 13371453;
     int choice;
+    uint32_t set = set_empty();
     while ((choice = getopt(argc, argv, "absqQr:n:p:")) != -1) {
         switch (choice) {
         case 'a': 
-	    flaga = 1; 
+	    set_insert(set, 16);
 	    break;
         case 'b':
-            flagb = 1;
-            break;
+	    set_insert(set, 1); 
+	    break;
         case 's':
-            flags = 1;
-            break;
+	    set_insert(set, 2); 
+	    break;
         case 'q':
-            flagq = 1;
-            break;
+	    set_insert(set, 4); 
+	    break;
         case 'Q':
-            flagQ = 1;
-            break;
+	    set_insert(set, 8); 
+	    break;
         case 'r':
             if (optarg != NULL) {
                 printf("%s\n", optarg);
@@ -66,14 +67,14 @@ int main(int argc, char *argv[]) {
         }
     }
     //To keep track of the # of moves and compares. I will add those two as elements in the list
-    srandom(seed);
     uint32_t list[flagn];
     int i;
+
+    if (flagb == 1 || flaga == 1) { //If Bubble sort is chosen
+    srandom(seed);
     for (int ind = 0; ind < flagn; ind = ind + 1) { //Create a list
         list[ind] = rand();
     }
-
-    if (flagb == 1 || flaga == 1) { //If Bubble sort is chosen
         bubble_sort(list, sizeof(list) / sizeof(uint32_t));
 
         for (i = 0; i < flagp; i = i + 1) {
@@ -84,6 +85,10 @@ int main(int argc, char *argv[]) {
         }
     }
     if (flags == 1 || flaga == 1) { //If Shell sort is chosen
+    srandom(seed);
+    for (int ind = 0; ind < flagn; ind = ind + 1) { //Create a list
+        list[ind] = rand();
+    }
         shell_sort(list, sizeof(list) / sizeof(uint32_t));
         for (i = 0; i < flagp; i = i + 1) {
             printf("%13" PRIu32, list[i]);
@@ -93,6 +98,10 @@ int main(int argc, char *argv[]) {
         }
     }
     if (flagq == 1 || flaga == 1) { //if flag Quick Sort (Stack) is chosen
+    srandom(seed);
+    for (int ind = 0; ind < flagn; ind = ind + 1) { //Create a list
+        list[ind] = rand();
+    }
         quick_sort_stack(list, sizeof(list) / sizeof(uint32_t));
         for (i = 0; i < flagp; i = i + 1) {
             printf("%13" PRIu32, list[i]);
@@ -101,7 +110,12 @@ int main(int argc, char *argv[]) {
             }
         }
     }
+
     if (flagQ == 1 || flaga == 1) { //if flag Quick Sort (Queue) is chosen
+    srandom(seed);
+    for (int ind = 0; ind < flagn; ind = ind + 1) { //Create a list
+        list[ind] = rand();
+    }
         quick_sort_queue(list, sizeof(list) / sizeof(uint32_t));
         for (i = 0; i < flagp; i = i + 1) {
             printf("%13" PRIu32, list[i]);
