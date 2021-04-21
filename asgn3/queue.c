@@ -48,7 +48,7 @@ bool queue_empty(Queue *q) {
 bool queue_full(Queue *q) {
     //	printf("size \n%" PRIu32 "\ncapacity %" PRIu32, q->size, q->capacity );
 
-    if (q->tail == q->capacity + 1) {
+    if (q->head  == q->capacity ) {
         return true;
     }
     return false;
@@ -62,9 +62,9 @@ bool enqueue(Queue *q, int64_t x) {
     if (queue_full(q)) {
         return false;
     }
-    q->items[q->tail] = x;
-    q->tail += 1;
-    q->size += 1;
+    q->items[q->head] = x;
+    q->head += 1;//next empty spot
+    q->size += 1;//current size
     return true;
 }
 
@@ -72,9 +72,8 @@ bool dequeue(Queue *q, int64_t *x) {
     if (queue_empty(q)) {
         return false;
     }
-
-    *x = q->items[q->head];
-    q->head += 1;
+    *x = q->items[q->tail];
+    q->tail += 1;//will have an item
     q->size -= 1;
     return true;
 }

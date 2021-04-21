@@ -9,8 +9,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 void shell_sort(uint32_t *A, uint32_t n) {
-    int globalmoves = 0;
-    int globalcompares = 0;
+    int moves = 0;
+    int compares = 0;
     uint32_t temp;
     int curr;
     int gap;
@@ -22,9 +22,9 @@ void shell_sort(uint32_t *A, uint32_t n) {
         for (uint32_t i = gap; i < n; i += 1) { //i represents the index
             curr = i; //Just a pointer/number
             temp = A[i]; //Hold that value i
-            globalcompares += 1;
+            compares += 1;
             while (curr >= gap && temp < A[curr - gap]) {
-                globalmoves += 3;
+                moves += 3;
                 A[curr] = A[curr - gap];
                 A[curr - gap] = temp;
 
@@ -34,5 +34,5 @@ void shell_sort(uint32_t *A, uint32_t n) {
             A[curr] = temp;
         }
     }
-    printf("Shell Sort\n%d elements, %d moves, %d compares\n", n, globalmoves, globalcompares);
+    printf("Shell Sort\n%d elements, %d moves, %d compares\n", n, moves, compares);
 }

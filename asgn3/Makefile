@@ -1,8 +1,10 @@
 CC = clang
 CFLAGS = -Wall -Wextra -Werror -Wpedantic
+
+all: sorting 
+
 format: 
 	clang-format -i -style=file *.c *.h
-all: sorting 
 
 sorting: sorting.o 
 	$(CC) -o sorting sorting.o shell.o bubble.o quick.o stack.o queue.o
