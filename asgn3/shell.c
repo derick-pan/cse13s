@@ -25,11 +25,9 @@ void shell_sort(uint32_t *A, uint32_t n) {
             while (curr >= gap && temp < A[curr - gap]) {
                 moves += 3;
                 A[curr] = A[curr - gap];
-                A[curr - gap] = temp;
 
                 curr = curr - gap;
             }
-
             A[curr] = temp;
         }
     }

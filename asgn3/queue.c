@@ -47,7 +47,7 @@ bool queue_empty(Queue *q) {
 bool queue_full(Queue *q) {
     //	printf("size \n%" PRIu32 "\ncapacity %" PRIu32, q->size, q->capacity );
 
-    if (q->tail ==  q->capacity ) {
+    if (q->tail == q->capacity+1 ) {
         return true;
     }
     return false;
@@ -59,7 +59,8 @@ uint32_t queue_size(Queue *q) {
 
 bool enqueue(Queue *q, int64_t x) {
     if (queue_full(q)) {
-        return false;
+	q->capacity *= 2;
+        q->items = (int64_t *)realloc(q->items, q->capacity* sizeof(int64_t));
     }
     q->items[q->tail] = x;
     q->tail += 1;//next empty spot
