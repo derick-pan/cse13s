@@ -8,6 +8,7 @@
 #include <stdlib.h>
 //Pointer      //Size
 void bubble_sort(uint32_t *A, uint32_t n) {
+    int length = n;
     int bmoves = 0;
     int bcompares = 0;
     int swapped = 1;
@@ -25,5 +26,5 @@ void bubble_sort(uint32_t *A, uint32_t n) {
         }
         n -= 1;
     }
-    printf("Bubble Sort\n%d elements, %d moves, %d compares\n", n, bmoves, bcompares);
+    printf("Bubble Sort\n%d elements, %d moves, %d compares\n", length, bmoves, bcompares);
 }

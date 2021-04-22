@@ -2,6 +2,7 @@
 //dpan7
 //Asgn3 2021
 #include "queue.h"
+
 #include <inttypes.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -47,7 +48,7 @@ bool queue_empty(Queue *q) {
 bool queue_full(Queue *q) {
     //	printf("size \n%" PRIu32 "\ncapacity %" PRIu32, q->size, q->capacity );
 
-    if (q->tail == q->capacity+1 ) {
+    if (q->tail == q->capacity + 1) {
         return true;
     }
     return false;
@@ -59,12 +60,12 @@ uint32_t queue_size(Queue *q) {
 
 bool enqueue(Queue *q, int64_t x) {
     if (queue_full(q)) {
-	q->capacity *= 2;
-        q->items = (int64_t *)realloc(q->items, q->capacity* sizeof(int64_t));
+        q->capacity *= 2;
+        q->items = (int64_t *) realloc(q->items, q->capacity * sizeof(int64_t));
     }
     q->items[q->tail] = x;
-    q->tail += 1;//next empty spot
-    q->size += 1;//current size
+    q->tail += 1; //next empty spot
+    q->size += 1; //current size
     return true;
 }
 
@@ -73,7 +74,7 @@ bool dequeue(Queue *q, int64_t *x) {
         return false;
     }
     *x = q->items[q->head];
-    q->head += 1;//will have an item
+    q->head += 1; //will have an item
     q->size -= 1;
     return true;
 }
