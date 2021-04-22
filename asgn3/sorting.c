@@ -53,27 +53,28 @@ int main(int argc, char *argv[]) {
         case 'n':
             if (optarg != NULL) {
                 flagn = (int) strtoul(optarg, &ntest, 10);
-		if(optarg == ntest){ fprintf(stderr,"Invalid array length.\n"); }
-            }
-	    break;
-        case 'p':
-            if (optarg != NULL) {
-		flagp = (int)strtoul(optarg, &test, 10);
+                if (optarg == ntest) {
+                    fprintf(stderr, "Invalid array length.\n");
+                }
             }
             break;
-	case '?':
-        	fprintf(stderr, "%s",usage);
+        case 'p':
+            if (optarg != NULL) {
+                flagp = (int) strtoul(optarg, &test, 10);
+            }
+            break;
+        case '?': fprintf(stderr, "%s", usage);
         }
     }
-    if (argv[optind] ==NULL ||argv[optind+1] ==NULL) {
-        	fprintf(stderr, "%s",usage);
-        }
+    if (argv[optind] == NULL || argv[optind + 1] == NULL) {
+        fprintf(stderr, "%s", usage);
+    }
     //To keep track of the # of moves and compares. I will add those two as elements in the list
     uint32_t list[flagn];
     int i;
     if (flagp > flagn) {
-	    flagp = flagn;}
-	
+        flagp = flagn;
+    }
 
     if (set_member(set, 1) || set_member(set, 16)) { //If Bubble sort is chosen
         srandom(seed);
