@@ -7,6 +7,7 @@
 #include "set.h"
 #include "shell.h"
 #include "stack.h"
+
 #include <inttypes.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -28,8 +29,6 @@ OPTIONS\n\
 \t-n length       Specify number of array elements.\n\
 \t-p elements     Specify number of elements to print.\n\
 \t-r seed         Specify random seed.\n";
-
-
 
 int moves;
 int compares;
@@ -91,7 +90,7 @@ int main(int argc, char *argv[]) {
             list[ind] = rand();
         }
         bubble_sort(list, sizeof(list) / sizeof(uint32_t)); // Call bubble sort
-	
+
         printf("Bubble Sort\n%u elements, %d moves, %d compares\n", flagn, moves, compares);
         for (i = 0; i < flagp; i = i + 1) { // Iterate over the array items and print it.
             printf("%13" PRIu32, list[i]);
@@ -130,7 +129,8 @@ int main(int argc, char *argv[]) {
             list[ind] = rand();
         }
         quick_sort_stack(list, sizeof(list) / sizeof(uint32_t)); // Call the function then print it
-	printf("Quick Sort (Stack)\n%u elements, %d moves, %d compares\nMax stack size: %u\n", flagn, moves, compares,maxsize);
+        printf("Quick Sort (Stack)\n%u elements, %d moves, %d compares\nMax stack size: %u\n",
+            flagn, moves, compares, maxsize);
         for (i = 0; i < flagp; i = i + 1) {
             printf("%13" PRIu32, list[i]);
             if ((i + 1) % 5 == 0) {
@@ -148,7 +148,8 @@ int main(int argc, char *argv[]) {
             list[ind] = rand();
         }
         quick_sort_queue(list, sizeof(list) / sizeof(uint32_t)); // Call the function then print it.
-	printf("Quick Sort (Queue)\n%u elements, %d moves, %d compares\nMax stack size: %u\n", flagn, moves, compares,maxsize);
+        printf("Quick Sort (Queue)\n%u elements, %d moves, %d compares\nMax stack size: %u\n",
+            flagn, moves, compares, maxsize);
         for (i = 0; i < flagp; i = i + 1) {
             printf("%13" PRIu32, list[i]);
             if ((i + 1) % 5 == 0) {

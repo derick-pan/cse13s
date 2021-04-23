@@ -1,9 +1,9 @@
 #include "set.h"
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
- 
 
 typedef uint32_t Set;
 #define SET_CAPACITY 32 // 32 bits means 32 items max.
@@ -13,18 +13,15 @@ Set set_empty(void) { //return an empty set
     return s;
 }
 
-
 bool set_member(Set s, int x) { //True if x in set
     uint32_t y = (uint32_t)(int) x;
     return ((s & y) == y);
 }
 
-
 Set set_insert(Set s, int x) {
     s = (s | x);
     return s;
 }
-
 
 // I don't need these //
 

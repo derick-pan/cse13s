@@ -2,7 +2,9 @@
 //dpan7
 //Asgn3 2021
 #include "shell.h"
+
 #include "gaps.h"
+
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -29,6 +31,7 @@ void shell_sort(uint32_t *A, uint32_t n) {
                 A[curr] = A[curr - gap];
                 curr = curr - gap;
             }
+            moves += 1;
             A[curr] = temp;
         }
     }

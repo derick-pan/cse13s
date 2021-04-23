@@ -2,8 +2,10 @@
 //dpan7
 //Asgn3
 #include "quick.h"
+
 #include "queue.h"
 #include "stack.h"
+
 #include <math.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -42,7 +44,6 @@ int64_t partition(uint32_t *A, int64_t lo, int64_t hi) {
     return j;
 }
 
-
 //Quick Sort Stack is based off of Dr. Long's Pseudocode
 void quick_sort_stack(uint32_t *A, uint32_t n) {
     moves = 0;
@@ -79,8 +80,6 @@ void quick_sort_stack(uint32_t *A, uint32_t n) {
     }
     stack_delete(&a);
 }
-
-
 
 //Quick Sort Queue is based off of Dr. Long's Pseudocode
 void quick_sort_queue(uint32_t *A, uint32_t n) {

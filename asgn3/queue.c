@@ -2,11 +2,11 @@
 //dpan7
 //Asgn3 2021
 #include "queue.h"
+
 #include <inttypes.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-
 
 typedef struct Queue { //Struct created by Dr. Long
     uint32_t head;
@@ -16,7 +16,8 @@ typedef struct Queue { //Struct created by Dr. Long
     int64_t *items;
 } Queue;
 
-Queue *queue_create(uint32_t capacity) {  //I created this function but is based off of Dr. Long's Stack code
+Queue *queue_create(
+    uint32_t capacity) { //I created this function but is based off of Dr. Long's Stack code
     Queue *q = (Queue *) malloc(sizeof(Queue));
     if (q) {
         q->head = 0;
@@ -32,8 +33,7 @@ Queue *queue_create(uint32_t capacity) {  //I created this function but is based
     return q;
 }
 
-
-void queue_delete(Queue **q) {  // Based off of Dr. Long's Stack code
+void queue_delete(Queue **q) { // Based off of Dr. Long's Stack code
     if (*q && (*q)->items) {
         free((*q)->items);
         free(*q);
@@ -42,16 +42,12 @@ void queue_delete(Queue **q) {  // Based off of Dr. Long's Stack code
     return;
 }
 
-
-
 bool queue_empty(Queue *q) {
     if (q->size == 0) {
         return true;
     }
     return false;
 }
-
-
 
 bool queue_full(Queue *q) {
     if (q->tail == q->head - 1 || (q->tail == q->capacity + 1 && q->head == 0)) {
@@ -63,8 +59,6 @@ bool queue_full(Queue *q) {
 uint32_t queue_size(Queue *q) {
     return q->size;
 }
-
-
 
 bool enqueue(Queue *q, int64_t x) {
     if (queue_full(q)) {
@@ -79,8 +73,6 @@ bool enqueue(Queue *q, int64_t x) {
     return true;
 }
 
-
-
 bool dequeue(Queue *q, int64_t *x) {
     if (queue_empty(q)) {
         return false;
@@ -93,8 +85,6 @@ bool dequeue(Queue *q, int64_t *x) {
     q->size -= 1;
     return true;
 }
-
-
 
 void queue_print(Queue *q) {
     for (uint32_t i = 0; i < queue_size(q); i += 1) {
