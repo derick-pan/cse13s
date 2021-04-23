@@ -27,9 +27,7 @@ OPTIONS\n\
 \t-Q              Enable Quick Sort (Queue).\n\
 \t-n length       Specify number of array elements.\n\
 \t-p elements     Specify number of elements to print.\n\
-\t-r seed         Specify random seed.\n\
-\t-o              Use sorted arrays.\n";
-
+\t-r seed         Specify random seed.\n";
 int main(int argc, char *argv[]) {
     int flagn = 100; //Size
     int flagp = 100; //Elements to print
@@ -55,6 +53,7 @@ int main(int argc, char *argv[]) {
                 flagn = (int) strtoul(optarg, &ntest, 10);
                 if (optarg == ntest) {
                     fprintf(stderr, "Invalid array length.\n");
+			return 0;
                 }
             }
             break;
@@ -63,13 +62,16 @@ int main(int argc, char *argv[]) {
                 flagp = (int) strtoul(optarg, &test, 10);
             }
             break;
-        case '?': fprintf(stderr, "%s", usage);
+        case '?': fprintf(stderr, "%s", usage);	
+	case ':': fprintf(stderr, "%s", usage);
         }
     }
-    if (argv[optind] == NULL || argv[optind + 1] == NULL) {
-        fprintf(stderr, "%s", usage);
-    }
-    //To keep track of the # of moves and compares. I will add those two as elements in the list
+/*    //To keep track of the # of moves and compares. I will add those two as elements in the list
+    if (argv[optind] ==NULL && argv[optind]==NULL) {
+
+        fprintf(stderr, "%s", usage);	
+        }
+	*/
     uint32_t list[flagn];
     int i;
     if (flagp > flagn) {
@@ -78,17 +80,17 @@ int main(int argc, char *argv[]) {
 
     if (set_member(set, 1) || set_member(set, 16)) { //If Bubble sort is chosen
         srandom(seed);
-        for (int ind = 0; ind < flagn; ind = ind + 1) { //Create a list
-            list[ind] = rand();
-        }
+       for (int ind = 0; ind < flagn; ind = ind + 1) { //Create a list
+           list[ind] = rand();
+       }
         bubble_sort(list, sizeof(list) / sizeof(uint32_t));
-
         for (i = 0; i < flagp; i = i + 1) {
             printf("%13" PRIu32, list[i]);
             if ((i + 1) % 5 == 0) {
                 printf("\n");
             }
         }
+	printf("\n");
     }
     if (set_member(set, 2) || set_member(set, 16)) { //If Shell sort is chosen
         srandom(seed);
@@ -102,6 +104,7 @@ int main(int argc, char *argv[]) {
                 printf("\n");
             }
         }
+	printf("\n");
     }
     if (set_member(set, 4) || set_member(set, 16)) { //if flag Quick Sort (Stack) is chosen
         srandom(seed);
@@ -115,6 +118,7 @@ int main(int argc, char *argv[]) {
                 printf("\n");
             }
         }
+	printf("\n");
     }
 
     if (set_member(set, 8) || set_member(set, 16)) { //if flag Quick Sort (Queue) is chosen
@@ -129,6 +133,7 @@ int main(int argc, char *argv[]) {
                 printf("\n");
             }
         }
+	printf("\n");
     }
     return 1;
 }
