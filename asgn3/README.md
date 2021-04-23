@@ -56,7 +56,7 @@ to view the options to run the code, also shown following:
 
     ./sorting [-absqQrnp] [-n length] [-p elements] [-r seed]
 
-OPTIONS\n\
+OPTIONS
 -h              Display program help and usage.
 -a              Enable all sorts.
 -b              Enable Bubble Sort.
