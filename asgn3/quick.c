@@ -10,32 +10,31 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-int quickmoves;
-int quickcompares;
+int moves;
+int compares;
+uint32_t maxsize;
 //Gets immediate left and right value in array
-
 int64_t partition(uint32_t *A, int64_t lo, int64_t hi) {
     int64_t temp;
     int64_t pivot = A[lo + ((hi - lo) / 2)]; //FIX
     int64_t i = lo - 1; //Gets the immediate to the left
     int64_t j = hi + 1; //Gets the immediate to the right
     while (i < j) {
-        quickcompares += 1;
+        compares += 1;
         i += 1;
         while (A[i] < pivot) {
-            quickcompares += 1;
+            compares += 1;
             i += 1;
         }
         j -= 1;
         while (A[j] > pivot) {
-            quickcompares += 1;
+            compares += 1;
             j -= 1;
         }
 
-        quickcompares += 1;
+        compares += 1;
         if (i < j) {
-            quickmoves += 3;
-
+            moves += 3;
             temp = A[i];
             A[i] = A[j];
             A[j] = temp;
@@ -45,10 +44,10 @@ int64_t partition(uint32_t *A, int64_t lo, int64_t hi) {
 }
 
 void quick_sort_stack(uint32_t *A, uint32_t n) {
+    moves = 0;
+    compares = 0;
     uint32_t size = 2;
-    uint32_t maxsize = 0;
-    quickmoves = 0;
-    quickcompares = 0;
+    maxsize = 0;
     int64_t low = 0;
     int64_t high = n - 1;
     int64_t p; //for partition
@@ -78,15 +77,13 @@ void quick_sort_stack(uint32_t *A, uint32_t n) {
         }
     }
     stack_delete(&a);
-    printf("Quick Sort (Stack)\n%d elements, %d moves, %d compares\nMax stack size: %u\n", n,
-        quickmoves, quickcompares, maxsize);
 }
 
 void quick_sort_queue(uint32_t *A, uint32_t n) {
+    moves = 0;
+    compares = 0;
     uint32_t size = 2;
-    uint32_t maxsize = 0;
-    quickmoves = 0;
-    quickcompares = 0;
+    maxsize = 0;
     int64_t low = 0;
     int64_t high = n - 1;
     int64_t p; //for partition
@@ -116,6 +113,4 @@ void quick_sort_queue(uint32_t *A, uint32_t n) {
         }
     }
     queue_delete(&a);
-    printf("Quick Sort (Queue)\n%d elements, %d moves, %d compares\nMax queue size: %u\n", n,
-        quickmoves, quickcompares, maxsize);
 }
