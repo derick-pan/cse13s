@@ -2,14 +2,14 @@
 //dpan7
 //Asgn3 2021
 #include "shell.h"
-
 #include "gaps.h"
-
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 int moves;
 int compares;
+//This code is based off of Dr.Long's Pseudocode
+
 void shell_sort(uint32_t *A, uint32_t n) {
     moves = 0;
     compares = 0;
@@ -27,7 +27,6 @@ void shell_sort(uint32_t *A, uint32_t n) {
             while (curr >= gap && temp < A[curr - gap]) {
                 moves += 3;
                 A[curr] = A[curr - gap];
-
                 curr = curr - gap;
             }
             A[curr] = temp;

@@ -2,10 +2,8 @@
 //dpan7
 //Asgn3
 #include "quick.h"
-
 #include "queue.h"
 #include "stack.h"
-
 #include <math.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -13,6 +11,8 @@
 int moves;
 int compares;
 uint32_t maxsize;
+
+//The Partition Function is based off of Dr.Long's Pseudocode
 //Gets immediate left and right value in array
 int64_t partition(uint32_t *A, int64_t lo, int64_t hi) {
     int64_t temp;
@@ -31,7 +31,6 @@ int64_t partition(uint32_t *A, int64_t lo, int64_t hi) {
             compares += 1;
             j -= 1;
         }
-
         compares += 1;
         if (i < j) {
             moves += 3;
@@ -43,6 +42,8 @@ int64_t partition(uint32_t *A, int64_t lo, int64_t hi) {
     return j;
 }
 
+
+//Quick Sort Stack is based off of Dr. Long's Pseudocode
 void quick_sort_stack(uint32_t *A, uint32_t n) {
     moves = 0;
     compares = 0;
@@ -79,6 +80,9 @@ void quick_sort_stack(uint32_t *A, uint32_t n) {
     stack_delete(&a);
 }
 
+
+
+//Quick Sort Queue is based off of Dr. Long's Pseudocode
 void quick_sort_queue(uint32_t *A, uint32_t n) {
     moves = 0;
     compares = 0;

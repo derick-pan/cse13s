@@ -2,7 +2,6 @@
 //dpan7
 //Asgn3
 #include "stack.h"
-
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,6 +11,9 @@ typedef struct Stack { //This struct is from the asg3_Doc.pdf
     uint32_t capacity; // # of items can push
     int64_t *items; // Array of items,
 } Stack;
+
+
+
 
 //Creates function
 Stack *stack_create(uint32_t capacity) { //Function from asg3_Doc.pdf
@@ -27,6 +29,9 @@ Stack *stack_create(uint32_t capacity) { //Function from asg3_Doc.pdf
     }
     return s;
 }
+
+
+
 //Destructor Function
 //Frees  all memory allocated by the constructor
 void stack_delete(Stack **s) { //Function from asg3_Doc.pdf
@@ -38,6 +43,8 @@ void stack_delete(Stack **s) { //Function from asg3_Doc.pdf
     return;
 }
 
+
+
 bool stack_full(Stack *s) {
     //Not in the .h file
     if (s->top == s->capacity) {
@@ -45,15 +52,22 @@ bool stack_full(Stack *s) {
     }
     return false;
 }
+
+
+
 bool stack_empty(Stack *s) {
     if (s->top == 0) {
         return true;
     }
     return false;
 }
+
+
 uint32_t stack_size(Stack *s) { //Returns # of items in stack
     return s->top;
 }
+
+
 bool stack_push(Stack *s, int64_t x) { //Pushes x to top of stack if success return True, else F
     if (stack_full(s)) {
         return false;
@@ -62,6 +76,9 @@ bool stack_push(Stack *s, int64_t x) { //Pushes x to top of stack if success ret
     s->top += 1; //Next avaliable spot
     return true;
 }
+
+
+
 bool stack_pop(Stack *s, int64_t *x) { //pops item off stack, return T or F for success or not
 
     if (stack_empty(s)) {
@@ -73,6 +90,8 @@ bool stack_pop(Stack *s, int64_t *x) { //pops item off stack, return T or F for 
     //So I changed the pointer,
     return true;
 }
+
+
 void stack_print(Stack *s) {
     for (uint32_t i = 0; i < stack_size(s); i += 1) {
         printf("%ld\n", s->items[i]);

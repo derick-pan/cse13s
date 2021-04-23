@@ -7,6 +7,7 @@
 #include <stdlib.h>
 int moves;
 int compares;
+//This code is based off of Dr.Long's Pseudocode
                  //Pointer      //Size
 void bubble_sort(uint32_t *A, uint32_t n) {
     moves = 0;
