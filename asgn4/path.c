@@ -5,17 +5,25 @@
 #include "path.h"
 #include "graph.h"
 #include "stack.h"
+#include "vertices.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 
 typedef struct Path {
-    Stack *vertices;
+    Stack *vertices;  //Vertices comprising path
     uint32_t length;
 } Path;
 
-Path *path_create(void);
+Path *path_create(void){
+    Path *p = (Path *) malloc(sizeof(Path));
+
+    Stack *vertices = stack_create(VERTICES);
+    p->length = 0;
+
+    return p;
+}
 
 void path_delete(Path **p);
 
