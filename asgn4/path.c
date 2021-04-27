@@ -42,7 +42,6 @@ bool path_push_vertex(Path *p, uint32_t v, Graph *G){
     uint32_t counter = 0;
     for (uint32_t i = 0; i < graph_vertices(G); i++) { //Iterate over I
         for (uint32_t j = 0; j < graph_vertices(G); j++) { //Iterate over J
-
             if (graph_has_edge(G, i, j)) { //If there is an edge
                 counter++; //Then add 1 to counter
             }
@@ -58,31 +57,62 @@ bool path_push_vertex(Path *p, uint32_t v, Graph *G){
 
 }
 
-What G for ?
 bool path_pop_vertex(Path *p, uint32_t *v, Graph *G){
-    uint32_t x= *v;
+    uint32_t x;
 
     if (!stack_empty(p->vertices)){
+        stack_peek(p->vertices, &x); //Gets the current vertx on stack.
 
-        stack_pop(p->vertices, &x);
-        p->length -= x;
-        *v = x;
-        return true;
+        uint32_t counter = 0;
+        for (uint32_t i = 0; i < graph_vertices(G); i++) { //Iterate over I
+            for (uint32_t j = 0; j < graph_vertices(G); j++) { //Iterate over J
+                if (graph_has_edge(G, i, j)) { //If there is an edge
+                    counter++; //Then add 1 to counter
+                }
+                if (counter == x && graph_has_edge(G, i, j)) {
+                    p->length -= graph_edge_weight(G, i, j);
+                    stack_pop(p->vertices, &x);
+                    *v = x;
+                    return true;
+                }
+            }
+        }
+
 
     }
     return false;
 }
+
+
+
 //returns number of vertices in the path
-
-
-uint32_t path_vertices(Path *p);
-
-if path vertices == vertices //That means you visited all of em
+uint32_t path_vertices(Path *p){
+    return stack_size(p->vertices);
+}
+//That means you visited all of em
 
 
 //returns the length of the path
-uint32_t path_length(Path *p);
+uint32_t path_length(Path *p){
+    return p->length;
+}
 
-void path_copy(Path *dst, Path *src);
 
-void path_print(Path *p, FILE *outfile, char *cities[]);
+void path_copy(Path *dst, Path *src){
+    stack_copy(dst->vertices, src->vertices);
+    dst->length =  src->length;
+}
+
+void path_print(Path *p, FILE *outfile, char *cities[]){
+
+    outfile = fopen("outfile.txt", "w");
+
+    stack_print(p->vertices, outfile, cities);
+
+
+
+    fclose(outfile);
+
+
+
+}
