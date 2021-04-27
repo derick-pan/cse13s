@@ -35,20 +35,30 @@ void path_delete(Path **p){
 }
 
 bool path_push_vertex(Path *p, uint32_t v, Graph *G){
-
     if (stack_full(p->vertices)){
         return false;
     }
-    stack_push(p->vertices , v); //Push vertex v onto path p *vertices
-    p->length += v;
+    stack_push(p->vertices, v);
+    uint32_t counter = 0;
+    for (uint32_t i = 0; i < graph_vertices(G); i++) { //Iterate over I
+        for (uint32_t j = 0; j < graph_vertices(G); j++) { //Iterate over J
 
-    return true;
+            if (graph_has_edge(G, i, j)) { //If there is an edge
+                counter++; //Then add 1 to counter
+            }
+            if (counter == v && graph_has_edge(G, i, j)) {
+                p->length += graph_edge_weight(G, i, j);
+                return true;
+            }
+        }
+    }
+    return false;
     //Length of path is increased by edge weight
     //Return True if vertex was successfully pushed and false otherwise
 
 }
 
-/*What G for ? */
+What G for ?
 bool path_pop_vertex(Path *p, uint32_t *v, Graph *G){
     uint32_t x= *v;
 
@@ -63,7 +73,11 @@ bool path_pop_vertex(Path *p, uint32_t *v, Graph *G){
     return false;
 }
 //returns number of vertices in the path
+
+
 uint32_t path_vertices(Path *p);
+
+if path vertices == vertices //That means you visited all of em
 
 
 //returns the length of the path
