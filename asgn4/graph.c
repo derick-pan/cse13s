@@ -4,6 +4,7 @@
 
 #include "graph.h"
 #include "vertices.h"
+#include "path.h"
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -21,18 +22,15 @@ Graph *graph_create(uint32_t vertices, bool undirected) {
 		G->vertices = vertices;
 		G->undirected =	undirected;
 
-		for (uint32_t i =0; i<=VERTICES; i++) {
+		for (uint32_t i =0; i< G->vertices; i++) {
 			G->visited[i] = false;		//Index of visited is false
-			for (uint32_t j=0; j<=VERTICES; j++) {
+			for (uint32_t j=0; j< G->vertices; j++) {
 				G->matrix[i][j] =0;   			//Each cell is set to zero
 			}
 		}
 	}
 	return G;
 }
-
-
-
 
 void graph_delete(Graph **G) {
 	if (*G) {
@@ -42,13 +40,10 @@ void graph_delete(Graph **G) {
 	return;
 }
 
-
-
 //Return Number of vertices in graph
 uint32_t graph_vertices(Graph *G) {
 	return G->vertices;
 }
-
 
 bool graph_add_edge(Graph *G, uint32_t i, uint32_t j, uint32_t k) {
 	/*				### Can there be undirected?

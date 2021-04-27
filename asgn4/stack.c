@@ -45,6 +45,7 @@ void stack_delete(Stack **s) { //Function from asg3_Doc.pdf
 uint32_t stack_size(Stack *s) { //Returns # of items in stack
     return s->top;
 }
+
 bool stack_empty(Stack *s) {
     if (s->top == 0) {
         return true;
@@ -52,7 +53,12 @@ bool stack_empty(Stack *s) {
     return false;
 }
 
-bool stack_full(Stack *s);
+bool stack_full(Stack *s) {
+    if (s->top == s->capacity) {
+        return true;
+    }
+    return false;
+}
 
 bool stack_push(Stack *s, uint32_t x) { //Pushes x to top of stack if success return True, else F
     if (stack_full(s)) {
@@ -71,10 +77,21 @@ bool stack_pop(Stack *s, uint32_t *x) { //pops item off stack, return T or F for
     return true;
 }
 
-bool stack_peek(Stack *s, uint32_t *x);
+bool stack_peek(Stack *s, uint32_t *x) {
+    if (stack_empty(s)){
+        return false;
+    }
+    *x = s->items[s->top];
+    return true;
+}
 
-void stack_copy(Stack *dst, Stack *src);
-
+void stack_copy(Stack *dst, Stack *src) {
+    //Make dst same as src
+    for (int items=0; items <VERTICES ; items++){
+        dst->items[items] = src->items[items];
+    }
+    dst->top =  src->top;
+}
 
 
 void stack_print(Stack *s, FILE *outfile, char *cities[]) {
