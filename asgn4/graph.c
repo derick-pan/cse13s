@@ -42,38 +42,77 @@ void graph_delete(Graph **G) {
 	return;
 }
 
-uint32_t graph_vertices(Graph *G) {  //Return Number of vertices in graph
+
+
+//Return Number of vertices in graph
+uint32_t graph_vertices(Graph *G) {
 	return G->vertices;
 }
 
 
 bool graph_add_edge(Graph *G, uint32_t i, uint32_t j, uint32_t k) {
-
-	if (G->undirected && G->matrix[j][i] != NULL ) {
+	/*				### Can there be undirected?
+	if(i < VERTICES && j < VERTICES){			//If in bound, add
+		G->matrix[i][j] =k;
+	}
+	*/
+	if (G->undirected && i < G->vertices && j < G->vertices) {  //If it's undirected and in bound then add
 		G->matrix[j][i] = k;
+		G->matrix[i][j] =k;
+		return true;
 	}
-
-	if(G->matrix[i][j] != NULL){
-		G->matrix[i][j] ==k;
-	}
-
-
-	//add edge
-	//weight k from j to i
-
-
-
-
+	return false;
 }
 
-bool graph_has_edge(Graph *G, uint32_t i, uint32_t j);
 
-uint32_t graph_edge_weight(Graph *G, uint32_t i, uint32_t j);
 
-bool graph_visited(Graph *G, uint32_t v);
+//Return True if i & j within bound and has edge
+bool graph_has_edge(Graph *G, uint32_t i, uint32_t j) {
 
+	if (i < G->vertices && j < G->vertices && G->matrix[i][j] > 0 ) {
+		return true;
+	}
+	return false;
+}
+
+//Return weight of edge
+uint32_t graph_edge_weight(Graph *G, uint32_t i, uint32_t j){
+
+	if (graph_has_edge(G, i, j)){
+		return G->matrix[i][j];
+	}
+	return 0;
+}
+
+
+
+//Return true if vertex v has been visited
+bool graph_visited(Graph *G, uint32_t v){
+	uint32_t counter = 0;
+
+	for (uint32_t i =0; i< G->vertices; i++) {   //Iterate over I
+		for (uint32_t j=0; j< G->vertices; j++) { //Iterate over J
+			if (graph_has_edge(G, i, j)){		  //If there is an edge
+				counter++;							//Then add 1 to counter
+			}
+			if (counter == v){				//If counter is vertex then return T
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+
+//If Vertex V is within bounds, mark V as visited
 void graph_mark_visited(Graph *G, uint32_t v);
 
+
+
+//If Vertex V is within bounds, mark V as unvisited
 void graph_mark_unvisited(Graph *G, uint32_t v);
+
+
+
 
 void graph_print(Graph *G);
