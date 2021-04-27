@@ -88,31 +88,51 @@ uint32_t graph_edge_weight(Graph *G, uint32_t i, uint32_t j){
 
 //Return true if vertex v has been visited
 bool graph_visited(Graph *G, uint32_t v){
-	uint32_t counter = 0;
+	return G->visited[v];
+}
 
+
+//If Vertex V is within bounds, mark V as visited
+void graph_mark_visited(Graph *G, uint32_t v) {
+
+	uint32_t counter=0;
 	for (uint32_t i =0; i< G->vertices; i++) {   //Iterate over I
 		for (uint32_t j=0; j< G->vertices; j++) { //Iterate over J
 			if (graph_has_edge(G, i, j)){		  //If there is an edge
 				counter++;							//Then add 1 to counter
 			}
-			if (counter == v){				//If counter is vertex then return T
-				return true;
+			if (counter == v && graph_has_edge(G, i, j)){
+				G->visited[v] = true;		//Mark visited
 			}
 		}
 	}
-	return false;
 }
-
-
-//If Vertex V is within bounds, mark V as visited
-void graph_mark_visited(Graph *G, uint32_t v);
 
 
 
 //If Vertex V is within bounds, mark V as unvisited
-void graph_mark_unvisited(Graph *G, uint32_t v);
+void graph_mark_unvisited(Graph *G, uint32_t v) {
+	uint32_t counter=0;
+	for (uint32_t i =0; i< G->vertices; i++) {   //Iterate over I
+		for (uint32_t j=0; j< G->vertices; j++) { //Iterate over J
+			if (graph_has_edge(G, i, j)){		  //If there is an edge
+				counter++;							//Then add 1 to counter
+			}
+			if (counter == v && graph_has_edge(G, i, j)){
+				G->visited[v] = false;		//Mark Unvisited
+			}
+		}
+	}
+}
 
+void graph_print(Graph *G) {
 
+	for (uint32_t i =0; i< G->vertices; i++) {   //Iterate over I
+		for (uint32_t j=0; j< G->vertices; j++) { //Iterate over J
+			printf("%u ",G->matrix[i][j]);
+		}
+		printf("\n");
+	}
+	printf("\n");
 
-
-void graph_print(Graph *G);
+}
