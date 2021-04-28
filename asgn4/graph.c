@@ -3,15 +3,15 @@
 //Asgn4
 
 #include "graph.h"
+
 #include "path.h"
 #include "stack.h"
 #include "vertices.h"
+
 #include <assert.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
-
-
 
 typedef struct Graph {
     uint32_t vertices; //Number of vertices
@@ -55,13 +55,14 @@ bool graph_add_edge(Graph *G, uint32_t i, uint32_t j, uint32_t k) {
 		G->matrix[i][j] =k;
 	}
 	*/
+    G->matrix[i][j] = k; //Directed
     if (G->undirected && i < G->vertices
         && j < G->vertices) { //If it's undirected and in bound then add
-        //G->matrix[j][i] = k;
-        G->matrix[i][j] = k;
+        G->matrix[j][i] = k;
+        //G->matrix[i][j] = k;
         return true;
     }
-    return false;
+    return true;
 }
 
 //Return True if i & j within bound and has edge
