@@ -16,7 +16,7 @@
 typedef struct Stack { //This struct is from the asg3_Doc.pdf
     uint32_t top; //Index of next mt slot
     uint32_t capacity; // # of items can push
-    int64_t *items; // Array of items,
+    uint32_t *items; // Array of items,
 } Stack;
 
 Stack *stack_create(uint32_t capacity) { //Function from asg3_Doc.pdf
@@ -24,7 +24,7 @@ Stack *stack_create(uint32_t capacity) { //Function from asg3_Doc.pdf
     if (s) {
         s->top = 0;
         s->capacity = capacity;
-        s->items = (int64_t *) calloc(capacity, sizeof(int64_t));
+        s->items = (uint32_t *) calloc(capacity, sizeof(uint32_t));
         if (!s->items) {
             free(s);
             s = NULL;
@@ -81,7 +81,7 @@ bool stack_peek(Stack *s, uint32_t *x) {
     if (stack_empty(s)){
         return false;
     }
-    *x = s->items[s->top];
+    *x = s->items[s->top-1];
     return true;
 }
 

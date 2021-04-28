@@ -2,7 +2,6 @@
 //dpan7
 //Asgn4
 
-
 #include "path.h"
 #include "graph.h"
 #include "stack.h"
@@ -42,7 +41,8 @@ bool path_push_vertex(Path *p, uint32_t v, Graph *G){
     }
     if (stack_empty(p->vertices)){
         stack_push(p->vertices, v);
-        p->length += graph_edge_weight(G, START_VERTEX, START_VERTEX);
+        p->length += graph_edge_weight(G, START_VERTEX, v);
+        printf("why mt");
         return true;
     }
 
@@ -50,6 +50,7 @@ bool path_push_vertex(Path *p, uint32_t v, Graph *G){
     uint32_t x;
     stack_peek(p->vertices, &x);
     stack_push(p->vertices, v);
+    printf("%u , %u, \n", x,v);
     p->length += graph_edge_weight(G, x, v);
     return true;
     //Length of path is increased by edge weight
@@ -71,7 +72,7 @@ bool path_pop_vertex(Path *p, uint32_t *v, Graph *G){
 
 //returns number of vertices in the path
 uint32_t path_vertices(Path *p){
-    return stack_size(p->vertices) -1;
+    return stack_size(p->vertices);
 }
 
 
