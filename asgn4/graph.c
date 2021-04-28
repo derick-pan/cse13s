@@ -3,39 +3,15 @@
 //Asgn4
 
 #include "graph.h"
-
 #include "path.h"
+#include "stack.h"
 #include "vertices.h"
-
 #include <assert.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
-int main() {
 
-    Graph *G = graph_create(6, true);
-
-    graph_add_edge(G, 0, 1, 10);
-    graph_add_edge(G, 1, 2, 2);
-    graph_add_edge(G, 1, 3, 5);
-    graph_add_edge(G, 2, 5, 3);
-    graph_add_edge(G, 2, 25, 5);
-    graph_add_edge(G, 3, 4, 21);
-
-    graph_print(G);
-	uint32_t weight= graph_edge_weight(G,1,3);
-	graph_mark_visited(G, 3);
-	printf("\n %u \n", weight);
-
-    for (uint32_t i = 0; i < 7; i++) { //Iterate over I
-			printf("%d",graph_visited(G, i));
-            }
-
-
-
-    graph_delete(&G);
-}
 
 typedef struct Graph {
     uint32_t vertices; //Number of vertices
