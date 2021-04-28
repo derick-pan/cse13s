@@ -68,7 +68,7 @@ bool path_pop_vertex(Path *p, uint32_t *v, Graph *G) {
     stack_pop(p->vertices, v);
     stack_peek(p->vertices, &x); //Gets the vertex at top of the stack
 
-    p->length -= graph_edge_weight(G, x, *v);
+    p->length -= graph_edge_weight(G, *v, x);
     return true;
 }
 

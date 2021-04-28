@@ -9,8 +9,11 @@
 #include <inttypes.h>
 #include <stdint.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+
+char *cities;
 
 void dfs(Graph *G, uint32_t v, Path *c, Path *s) {
 
@@ -60,14 +63,27 @@ int main(int argc, char *argv[]) {
 
     }
     char buffer[1024];
-    printf("%s", file);
+    int amcities;
+    //printf("%s", file);
     FILE *read = fopen(file, "r");
     for (int i=0;fgets(buffer, 1024, read); i++){
         if (i==0){
-            char cities = atoi(buffer); //Make this global
-            
+            amcities = atoi(buffer); //Make this global
+            Graph *G = graph_create(26, true);
+            cities = calloc(amcities, sizeof(char));
         }
-        printf("%s",buffer);
+        if (i < amcities){
+
+            cities[i] = *buffer;
+
+        }
+        printf("%s\n",buffer);
+        elif (i>= amcities){
+
+
+
+
+        }
 
     }
 
