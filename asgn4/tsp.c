@@ -38,8 +38,35 @@ int main() {
     path_print(p, outfile, cities);
     fclose(outfile);
     printf ("Amount of vertices: %u\n", path_vertices(p)); //3
-
+    Path *q = path_create();
+    path_copy(q, p);
+    printf ("2Path Length: %u\n", path_length(q)); //10
     path_delete(&p);
 
     graph_delete(&G);
 }
+
+
+    Path *curr = path_create();
+    Path *short = path_create();
+
+    void dfs(Path *curr, Path *short, Graph *G, uint32_t v){
+        graph_mark_visited(G,v);
+        uint32_t x;
+        if (path_length(curr) < path_length(short)){
+            path_copy(short,curr);
+        }
+
+        for (uint32_t w=0; w< VERTICES; w++){
+            if (graph_has_edge(G,v,w)){ //Only edges
+                if (!graph_visited(G,w)){ //If not visited,
+                    path_push_vertex(p,w,G);   //Push it onto the stack
+                    dfs(curr,short,G,w);       //test it recursively
+                    path_pop_vertex(p,&x,G);   //Pop the stack after testing all of dfs
+                } //If all visited then it stops
+                dfs(curr,short,G,w);
+
+            }
+        }
+        graph_mark_unvisited(G,v);
+    }
