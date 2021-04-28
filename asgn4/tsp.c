@@ -39,6 +39,58 @@ void dfs(Graph *G, uint32_t v, Path *c, Path *s) {
     graph_mark_unvisited(G, v);
 }
 
+int main(int argc, char *argv[]) {
+    int choice;
+    bool flago= false;
+    bool undirectedflag= false;
+    char file[20];
+    while ((choice = getopt(argc, argv, "hv:ui:o:")) != -1) {
+        switch (choice) {
+        case 'h': break; //Print helps
+
+        case 'v': //Verbose printing
+            break;
+
+
+        case 'u': undirectedflag = true; break;
+
+        case 'i': snprintf(file, 20,"%s", optarg); break; //The file
+        case 'o': flago=true; break; //stdout
+        }
+
+    }
+    char buffer[1024];
+    printf("%s", file);
+    FILE *read = fopen(file, "r");
+    for (int i=0;fgets(buffer, 1024, read); i++){
+        if (i==0){
+            char cities = atoi(buffer); //Make this global
+            
+        }
+        printf("%s",buffer);
+
+    }
+
+    fclose(read);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 int main() {
     Graph *G = graph_create(7, true);
     graph_add_edge(G, 0, 1, 10);
@@ -49,7 +101,7 @@ int main() {
     graph_add_edge(G, 3, 4, 21);
     graph_print(G);
     printf("\n");
-    /*
+
     path_push_vertex(p, 0, G);
     printf ("0Path Length: %u\n", path_length(p));  //0
 
@@ -59,7 +111,7 @@ int main() {
     #path_push_vertex(p, 2, G)
     printf ("2Path Length: %u\n", path_length(p)); //10
     printf ("Amount of vertices: %u\n", path_vertices(p)); //3
-    */
+
     Path *p = path_create();
     Path *s = path_create();
     dfs(G, 0, p, s);
@@ -71,3 +123,4 @@ int main() {
     path_delete(&s);
     graph_delete(&G);
 }
+*/
