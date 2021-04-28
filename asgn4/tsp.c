@@ -63,29 +63,33 @@ int main(int argc, char *argv[]) {
 
     }
     char buffer[1024];
+    char* token;
     int amcities;
+    int temp[12];
     //printf("%s", file);
     FILE *read = fopen(file, "r");
     for (int i=0;fgets(buffer, 1024, read); i++){
         if (i==0){
             amcities = atoi(buffer); //Make this global
-            Graph *G = graph_create(26, true);
+            //Graph *G = graph_create(26, true);
             cities = calloc(amcities, sizeof(char));
-        }
-        if (i < amcities){
 
+        }
+        else if (i-1 < amcities){
             cities[i] = *buffer;
 
         }
-        printf("%s\n",buffer);
-        elif (i>= amcities){
-
-
-
+        //printf("%s\n",buffer);
+        else if (i>= amcities){
+            token = strtok(buffer, " ");
+            for (int j=0; token != NULL; j++){
+                printf("%s\n",token);
+                token = strtok(NULL, " ");
+            }
 
         }
-
     }
+
 
     fclose(read);
 }
