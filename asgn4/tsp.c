@@ -5,7 +5,6 @@
 #include "path.h"
 #include "stack.h"
 #include "vertices.h"
-
 #include <inttypes.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -13,51 +12,64 @@
 #include <string.h>
 #include <unistd.h>
 int recuse = 0;
+int flagham;
 
-//uint32_t len = 100;
 void dfs(Graph *G, uint32_t v, Path *c, Path *s) {
     recuse += 1;
+
     graph_mark_visited(G, v);
-    //If is a hamiltonian path shorter than anything ever seen before
-    //If current path is hamiltonian then path_copy
-    //if (recuse >= 9000){fprintf(stderr, "recurse over 9k times\n");}
-    if (path_vertices(c) == graph_vertices(G) && path_length(c) < path_length(s)) {
+    //printf("got into dfs here\n");
+//   Hamiltonian if your path goes through all the points and gets back
+//   to beginning, that is Hamiltonian
+//Shortest hamiltonian is the shortest one that does so
+    if (v==0 && path_vertices(c)){ //If this is my first vertex, add 1 to vertex
+        printf("ONCE \n");
+        path_push_vertex(c, START_VERTEX,G);
         path_copy(s, c);
-        printf("Length: %u  recursive calls: %d  ", path_length(s), recuse);
-        printf("vertices: %u\n", path_vertices(c));
+    }
+    /* Loop to test if ALL have been visited */
+    flagham =0;
+    for (uint32_t q = 0; q < graph_vertices(G); q++){
+        if (!graph_visited(G,q)){
+            flagham = 1; //If flagham ==1 then something wasn't visited
+            break;
+        }
     }
 
-    //printf("%u ",path_vertices(c));
-    //Current path is Hamiltoninan   AND current path is shorter than shortest path){
-    //uint32_t x;
-    for (uint32_t w = 0; w <= graph_vertices(G); w++) { //For all edges
+ /* if   All visted &&        all vertices but current   */
+    if (flagham ==0 && path_vertices(c) == graph_vertices(G)-1){
+        printf("+1 hamiltonian Path\n");
+        if (path_length(s)==0){
+            printf("am i ever here??, Recursion # : %u \n", recuse);
+            path_push_vertex(c, v,G); //Add in the final point
+            path_copy(s, c);
+            return;
+        }
+        /* If this is currently the shortest path then... */
+        else if (path_length(c) < path_length(s)) {
+            path_push_vertex(c, v,G); //Add in the final point
+            path_copy(s, c);  //A Hamiltonian path
+            printf("what am i to you \n");
+            return;
+            }
+        else{return;}
+    }
 
+    uint32_t x;
+    for (uint32_t w = 0; w < graph_vertices(G); w++) { //For all edges
         if (graph_has_edge(G, v, w) && !graph_visited(G, w)) { //Only edges and not visited
-            path_push_vertex(c, w, G); //Push it onto the stack
-            //path_push_vertex(s, w, G); //Push it onto the stack
-
-            dfs(G, w, c, s); //test it recursively
-
-            //path_pop_vertex(s, &x, G); //Push it onto the stack
-            path_pop_vertex(c, &w, G); //Pop the stack after testing all of dfs
-        } //If all visited then it stop
+            flagham = 1;
+            path_push_vertex(c, w, G);  //Push it onto the stack
+            dfs(G, w, c, s);            //test it recursively
+            path_pop_vertex(c, &x, G);  //Pop the stack after testing all of dfs
+        }
     }
-    if (path_length(s) == 0) {
-        //printf("%u ",path_vertices(c));
-        path_copy(s, c);
-    } /*
-    if (path_length(c) < path_length(s)){
-        printf("ayyy");
-        path_copy(s, c);
-    }*/
     graph_mark_unvisited(G, v);
-
-    //printf("recursive calls: %d  \n", recuse);
-
-    //graph_mark_unvisited(G, x);
-    //printf("c->vertices, %u", path_vertices(c));
-    //printf("Path Length S: %u\n Path Length C: %u \n",path_length(s),path_length(c));
 }
+
+
+
+
 ////////###################################################################################/
 
 int main(int argc, char *argv[]) {
@@ -113,9 +125,12 @@ int main(int argc, char *argv[]) {
     Path *c = path_create(); //For current path
     Path *s = path_create(); //For Previous Path
     FILE *outfile = fopen("outfile.txt", "w");
+    //path_push_vertex(c, START_VERTEX,G);
     dfs(G, 0, c, s);
-    printf("Path Length: %u\n", path_length(s));
-    printf("path Vertices: %u\n", path_vertices(s));
+    printf("Path Length S: %u\n", path_length(s));
+    printf("path Vertices S: %u\n", path_vertices(s));
+    //printf("Path Length C: %u\n", path_length(c));
+    //printf("path Vertices C: %u\n", path_vertices(c));
     path_print(s, outfile, cities);
 
     fclose(outfile);

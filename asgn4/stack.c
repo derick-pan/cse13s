@@ -47,7 +47,7 @@ uint32_t stack_size(Stack *s) { //Returns # of items in stack
 }
 
 bool stack_empty(Stack *s) {
-    if (s->top == 0) {
+    if (s->top == 0) { //Testing this was originall 0 ######################
         return true;
     }
     return false;

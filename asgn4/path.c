@@ -50,10 +50,6 @@ bool path_push_vertex(Path *p, uint32_t v, Graph *G) {
     stack_peek(p->vertices, &x);
     stack_push(p->vertices, v);
     p->length += graph_edge_weight(G, x, v);
-    if (stack_peek(p->vertices, &x) != v){  //Debug
-        printf("Pushing failed\n");
-        return false;
-    }
     return true;
 }
 
@@ -85,5 +81,6 @@ void path_copy(Path *dst, Path *src) {
 }
 
 void path_print(Path *p, FILE *outfile, char *cities[]) {
+
     stack_print(p->vertices, outfile, cities);
 }
