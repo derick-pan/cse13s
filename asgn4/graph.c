@@ -22,9 +22,12 @@ typedef struct Graph {
 
 Graph *graph_create(uint32_t vertices, bool undirected) {
     Graph *G = (Graph *) malloc(sizeof(Graph));
+    if (G ==NULL){
+        return NULL;
+    }
     if (G) {
         G->vertices = vertices;
-        G->undirected = undirected;
+        G->undirected = undirected; //True means undirected
 
         for (uint32_t i = 0; i < G->vertices; i++) {
             G->visited[i] = false; //Index of visited is false
@@ -55,29 +58,30 @@ bool graph_add_edge(Graph *G, uint32_t i, uint32_t j, uint32_t k) {
 		G->matrix[i][j] =k;
 	}
 	*/
-    G->matrix[i][j] = k; //Directed
-    if (G->undirected && i < G->vertices
-        && j < G->vertices) { //If it's undirected and in bound then add
-        G->matrix[j][i] = k;
-        //G->matrix[i][j] = k;
+    if (G !=NULL &&i < G->vertices && j < G->vertices){
+
+        G->matrix[i][j] = k; //Directed
+        if (G->undirected){ //If it's undirected and in bound then add
+            G->matrix[j][i] = k;
+        }
         return true;
     }
-    return true;
+    return false;
 }
+
 
 //Return True if i & j within bound and has edge
 bool graph_has_edge(Graph *G, uint32_t i, uint32_t j) {
 
-    if (i < G->vertices && j < G->vertices && G->matrix[i][j] > 0) {
-        return true;
+    if (G!= NULL && i < G->vertices && j < G->vertices) {
+        return (G->matrix[i][j] > 0);
     }
     return false;
 }
 
 //Return weight of edge
 uint32_t graph_edge_weight(Graph *G, uint32_t i, uint32_t j) {
-
-    if (graph_has_edge(G, i, j)) {
+    if (G!= NULL && graph_has_edge(G, i, j)) {
         return G->matrix[i][j];
     }
     return 0;
@@ -90,7 +94,8 @@ bool graph_visited(Graph *G, uint32_t v) {
 
 //If Vertex V is within bounds, mark V as visited
 void graph_mark_visited(Graph *G, uint32_t v) {
-
+    G->visited[v] = true;
+    /*
     uint32_t counter = 0;
     for (uint32_t i = 0; i < G->vertices; i++) { //Iterate over I
         for (uint32_t j = 0; j < G->vertices; j++) { //Iterate over J
@@ -101,11 +106,13 @@ void graph_mark_visited(Graph *G, uint32_t v) {
                 G->visited[v] = true; //Mark visited
             }
         }
-    }
+    }*/
 }
 
 //If Vertex V is within bounds, mark V as unvisited
 void graph_mark_unvisited(Graph *G, uint32_t v) {
+    G->visited[v] = false;
+    /*
     uint32_t counter = 0;
     for (uint32_t i = 0; i < G->vertices; i++) { //Iterate over I
         for (uint32_t j = 0; j < G->vertices; j++) { //Iterate over J
@@ -116,7 +123,7 @@ void graph_mark_unvisited(Graph *G, uint32_t v) {
                 G->visited[v] = false; //Mark Unvisited
             }
         }
-    }
+    }*/
 }
 
 void graph_print(Graph *G) {

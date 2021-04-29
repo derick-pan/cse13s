@@ -37,23 +37,23 @@ void path_delete(Path **p) {
 }
 
 bool path_push_vertex(Path *p, uint32_t v, Graph *G) {
+    uint32_t x;
     if (stack_full(p->vertices)) {
         printf("why false");
         return false;
     }
     if (stack_empty(p->vertices)) {
         stack_push(p->vertices, v);
+        stack_peek(p->vertices, &x);
+        printf("%u This should have a value \n", x);
         p->length += graph_edge_weight(G, START_VERTEX, v);
-        printf("why mt");
+        //printf("why mt");
         return true;
     }
 
-    uint32_t x;
-
     stack_peek(p->vertices, &x);
-    printf("%u , %u, \n", x, v);
+    //printf("%u , %u, \n", x, v);
     stack_push(p->vertices, v);
-
     p->length += graph_edge_weight(G, x, v);
     return true;
     //Length of path is increased by edge weight
@@ -68,7 +68,7 @@ bool path_pop_vertex(Path *p, uint32_t *v, Graph *G) {
     stack_pop(p->vertices, v);
     stack_peek(p->vertices, &x); //Gets the vertex at top of the stack
 
-    p->length -= graph_edge_weight(G, *v, x);
+    p->length -= graph_edge_weight(G, x, *v);
     return true;
 }
 
@@ -88,6 +88,5 @@ void path_copy(Path *dst, Path *src) {
 }
 
 void path_print(Path *p, FILE *outfile, char *cities[]) {
-
     stack_print(p->vertices, outfile, cities);
 }
