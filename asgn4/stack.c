@@ -81,7 +81,9 @@ bool stack_peek(Stack *s, uint32_t *x) {
     if (stack_empty(s)) {
         return false;
     }
+
     *x = s->items[s->top - 1];
+
     return true;
 }
 

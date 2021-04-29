@@ -45,7 +45,7 @@ bool path_push_vertex(Path *p, uint32_t v, Graph *G) {
     if (stack_empty(p->vertices)) {
         stack_push(p->vertices, v);
         stack_peek(p->vertices, &x);
-        printf("%u This should have a value \n", x);
+        //printf("%u This should have a value \n", x);
         p->length += graph_edge_weight(G, START_VERTEX, v);
         //printf("why mt");
         return true;

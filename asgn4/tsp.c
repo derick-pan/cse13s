@@ -12,51 +12,68 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-
-char *cities;
+int recuse=0;
+//char *cities;
 uint32_t len = 100;
 void dfs(Graph *G, uint32_t v, Path *c, Path *s) {
+    recuse +=1;
+    char *cities[] = { "El-C", "santee", "lakeside", "chula", "san", "camp", "jam", "lames",
+        "lajol", "tijua" };
 
     graph_mark_visited(G, v);
     uint32_t x;
 //If is a hamiltonian path shorter than anything ever seen before
-
-//If current path is hamiltonian
-
-    if (path_length(c) < len || path_length(c) < path_length(s)){
+//If current path is hamiltonian then path_copy
+    if (path_length(c)==33 && path_length(c) <= len){
+        FILE * outfile = fopen("outfile.txt", "w");
+        printf("Length = %u       Vertices = %u   Recursive calls: %d \n", path_length(c), graph_vertices(G), recuse);
+        if (6000 < recuse && recuse < 7000){
+        path_print(c, outfile, cities);
+        fprintf(outfile, "\n");
+        }
+        fclose(outfile);
+    }
+        //path_copy(s, c);
+/*
+    }
+    if (path_vertices(c) >= graph_vertices(G) && path_length(c) <= len){
+        path_copy(s, c);
+    }
+    if ( path_length(c) <= len || path_length(c) < path_length(s)){
         //printf("here?");
         //printf("Before C:%u  ", path_vertices(c));
         //printf("Before S:%u  \n", path_vertices(s));
         path_copy(s, c);
         //printf("After C: %u  ", path_vertices(c));
         //printf("After S: %u  \n", path_vertices(s));
-    }
+    }*/
+
 
     for (uint32_t w = 0; w < graph_vertices(G); w++) { //For all edges
 
         if (graph_has_edge(G, v, w) && !graph_visited(G, w)) { //Only edges and not visited
             path_push_vertex(c, w, G); //Push it onto the stack
-            //path_push_vertex(s, w, G); //Push it onto the stack
 
             dfs(G, w, c, s); //test it recursively
-            if (path_length(c)< len){
-                len = path_length(c);
-            }
+
             path_pop_vertex(c, &x, G); //Pop the stack after testing all of dfs
-            //path_pop_vertex(s, &x, G); //Pop the stack after testing all of dfs
+
 
         } //If all visited then it stops
+
         //dfs(G, v, c, s);
 
     }
     graph_mark_unvisited(G, v);
-    printf("Path Length S: %u\n Path Length C: %u \n",path_length(s),path_length(c));
+    //printf("c->vertices, %u", path_vertices(c));
+    //printf("Path Length S: %u\n Path Length C: %u \n",path_length(s),path_length(c));
 }
+////////###################################################################################/
 
 int main(int argc, char *argv[]) {
     int choice;
-    bool flago= false;
-    bool undirectedflag= false;
+    //bool flago= false;
+    //bool undirectedflag= true;
     char file[20];
     while ((choice = getopt(argc, argv, "hv:ui:o:")) != -1) {
         switch (choice) {
@@ -64,49 +81,58 @@ int main(int argc, char *argv[]) {
 
         case 'v': //Verbose printing
             break;
-        case 'u': undirectedflag = true; break;
+        case 'u': //undirectedflag = true; break;
         case 'i': snprintf(file, 20,"%s", optarg); break; //The file
-        case 'o': flago=true; break; //stdout
+        case 'o': break;//flago=true; break; //stdout
         }
     }
     char buffer[1024];
     char* token;
-    int amcities;
+    //int amcities;
     int temp[] = {0,0,0};
-    Graph *G = graph_create(26, true);
+    Graph *G;
     //printf("%s", file);
+
     FILE *read = fopen(file, "r");
-    for (int i=0;fgets(buffer, 1024, read); i++){
+
+    for (int i=0;fgets(buffer, 1023, read)!= NULL ; i++){
         if (i==0){
-            amcities = atoi(buffer); //Make this global
-            //
-            cities = calloc(amcities, sizeof(char));
+            //amcities = atoi(buffer); //Make this global
 
-        }
-        else if (i-1 < amcities){
-            cities[i] = *buffer;
+            //cities = calloc(amcities, sizeof(char));
 
+
+            G = graph_create(10, false);
         }
+        //else if ((i) <= amcities){
+
+            //cities[i] = malloc(strlen(buffer)+1);
+
+            //cities[i-1] = *strndup(buffer, 1024);
+            //printf("%s\n", cities[i]);
+        //}
         //printf("%s\n",buffer);
-        else if (i>= amcities){
+
             token = strtok(buffer, " ");
             for (int j=0; token != NULL && j<3; j++){
                 //printf("%s\n",token);
                 temp[j] = atoi(token);
                 token = strtok(NULL, " ");
-
             }
             //printf("%d, %d, %d\n", temp[0], temp[1], temp[2]);
-            graph_add_edge(G, temp[0], temp[1], temp[2]);
-        }
+        graph_add_edge(G, temp[0], temp[1], temp[2]);
+
     }
     graph_print(G);
     Path *c = path_create(); //For current path
     Path *s = path_create(); //For Previous Path
-
+    //FILE * outfile = fopen("outfile.txt", "w");
     dfs(G, 0, c, s);
-    printf("Path Length: %u\n",path_length(c));
+    printf("Path Length: %u\n",path_length(s));
+    //free(cities);
+    //path_print(c, outfile, &cities);
     fclose(read);
+    //fclose(outfile);
 
 
     graph_delete(&G);
