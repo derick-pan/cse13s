@@ -23,6 +23,7 @@ typedef struct Graph {
 Graph *graph_create(uint32_t vertices, bool undirected) {
     Graph *G = (Graph *) malloc(sizeof(Graph));
     if (G == NULL) {
+        printf("Graph Create returned Null");
         return NULL;
     }
     if (G) {
@@ -72,7 +73,7 @@ bool graph_add_edge(Graph *G, uint32_t i, uint32_t j, uint32_t k) {
 //Return True if i & j within bound and has edge
 bool graph_has_edge(Graph *G, uint32_t i, uint32_t j) {
 
-    if (G != NULL && i < G->vertices && j < G->vertices) {
+    if (i >= 0 && j >=0 && i < G->vertices && j < G->vertices) {
         return (G->matrix[i][j] > 0);
     }
     return false;
@@ -93,21 +94,25 @@ bool graph_visited(Graph *G, uint32_t v) {
 
 //If Vertex V is within bounds, mark V as visited
 void graph_mark_visited(Graph *G, uint32_t v) {
-    G->visited[v] = true;
+    if (v>=0 && v<= graph_vertices(G)){
+        G->visited[v] = true;
+    }
 }
 
 //If Vertex V is within bounds, mark V as unvisited
 void graph_mark_unvisited(Graph *G, uint32_t v) {
+    if (v>=0 && v<= graph_vertices(G)){
     G->visited[v] = false;
+    }
 }
 
-void graph_print(Graph *G) {
 
+void graph_print(Graph *G) {
     for (uint32_t i = 0; i < G->vertices; i++) { //Iterate over I
         for (uint32_t j = 0; j < G->vertices; j++) { //Iterate over J
             printf("%u ", G->matrix[i][j]);
         }
         printf("\n");
     }
-    printf("\n");
+    printf("### Graph End ####\n");
 }
