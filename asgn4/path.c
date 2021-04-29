@@ -39,25 +39,22 @@ void path_delete(Path **p) {
 bool path_push_vertex(Path *p, uint32_t v, Graph *G) {
     uint32_t x;
     if (stack_full(p->vertices)) {
-        printf("why false");
+        printf("Can not path Push Vertex  \n");
         return false;
     }
-    if (stack_empty(p->vertices)) {
+    if (stack_empty(p->vertices)) { //If the stack is empty push it, and length is 0,v
         stack_push(p->vertices, v);
-
-        //printf("%u This should have a value \n", x);
         p->length += graph_edge_weight(G, START_VERTEX, v);
-        //printf("why mt");
         return true;
     }
-
     stack_peek(p->vertices, &x);
-    //printf("%u , %u, \n", x, v);
     stack_push(p->vertices, v);
     p->length += graph_edge_weight(G, x, v);
+    if (stack_peek(p->vertices, &x) != v){  //Debug
+        printf("Pushing failed\n");
+        return false;
+    }
     return true;
-    //Length of path is increased by edge weight
-    //Return True if vertex was successfully pushed and false otherwise
 }
 
 bool path_pop_vertex(Path *p, uint32_t *v, Graph *G) {
@@ -74,12 +71,12 @@ bool path_pop_vertex(Path *p, uint32_t *v, Graph *G) {
 
 //returns number of vertices in the path
 uint32_t path_vertices(Path *p) {
-    return stack_size(p->vertices);
+    return stack_size(p->vertices); //returns next empty position
 }
 
 //returns the length of the path
 uint32_t path_length(Path *p) {
-    return p->length;
+    return p->length;           //Returns current length
 }
 
 void path_copy(Path *dst, Path *src) {
