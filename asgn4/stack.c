@@ -25,10 +25,10 @@ Stack *stack_create(uint32_t capacity) { //Function from asg3_Doc.pdf
         s->top = 0;
         s->capacity = capacity;
         s->items = (uint32_t *) calloc(capacity, sizeof(uint32_t));
-        if (!s->items) {
+        /*if (!s->items) {
             free(s);
             s = NULL;
-        }
+        }*/
     }
     return s;
 }
