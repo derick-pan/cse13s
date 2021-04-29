@@ -14,22 +14,26 @@
 int recuse = 0;
 int flagham;
 
-void dfs(Graph *G, uint32_t v, Path *c, Path *s) {
+void dfs(Graph *G, uint32_t v, Path *c, Path *s, FILE *outfile, char *cities[]) {
     recuse += 1;
-
     graph_mark_visited(G, v);
+    //path_print(c, outfile, cities);
+
     //printf("got into dfs here\n");
 //   Hamiltonian if your path goes through all the points and gets back
 //   to beginning, that is Hamiltonian
 //Shortest hamiltonian is the shortest one that does so
+    /*
     if (v==0 && path_vertices(c)){ //If this is my first vertex, add 1 to vertex
         printf("ONCE \n");
         path_push_vertex(c, START_VERTEX,G);
         path_copy(s, c);
-    }
+    }*/
+
+
     /* Loop to test if ALL have been visited */
     flagham =0;
-    for (uint32_t q = 0; q < graph_vertices(G); q++){
+    for (uint32_t q = v; q < graph_vertices(G); q++){
         if (!graph_visited(G,q)){
             flagham = 1; //If flagham ==1 then something wasn't visited
             break;
@@ -37,30 +41,33 @@ void dfs(Graph *G, uint32_t v, Path *c, Path *s) {
     }
 
  /* if   All visted &&        all vertices but current   */
-    if (flagham ==0 && path_vertices(c) == graph_vertices(G)-1){
+
+ // !(If all is visited and last one has edge to origin)
+ //     All Not visited or last one doesn't have edge to origin
+
+    if (flagham ==0 && (graph_has_edge(G, v,START_VERTEX) )){
         printf("+1 hamiltonian Path\n");
-        if (path_length(s)==0){
+
+        if (path_length(s)==0 || (path_length(c) < path_length(s))){
             printf("am i ever here??, Recursion # : %u \n", recuse);
             path_push_vertex(c, v,G); //Add in the final point
             path_copy(s, c);
+            path_print(s, outfile, cities);
             return;
         }
-        /* If this is currently the shortest path then... */
-        else if (path_length(c) < path_length(s)) {
-            path_push_vertex(c, v,G); //Add in the final point
-            path_copy(s, c);  //A Hamiltonian path
-            printf("what am i to you \n");
-            return;
-            }
-        else{return;}
+        else{return;} //Not the shortest one
     }
+    else if (flagham ==0){
+        return;
+    }
+    //If i visited all vertices buy next one isn't orgin What do i do?
+    // IF I visited all vertices && my stack top is origin then???
 
     uint32_t x;
-    for (uint32_t w = 0; w < graph_vertices(G); w++) { //For all edges
+    for (uint32_t w = 0; w <= graph_vertices(G); w++) { //For all edges
         if (graph_has_edge(G, v, w) && !graph_visited(G, w)) { //Only edges and not visited
-            flagham = 1;
             path_push_vertex(c, w, G);  //Push it onto the stack
-            dfs(G, w, c, s);            //test it recursively
+            dfs(G, w, c, s, outfile, cities);            //test it recursively
             path_pop_vertex(c, &x, G);  //Pop the stack after testing all of dfs
         }
     }
@@ -106,7 +113,7 @@ int main(int argc, char *argv[]) {
         if ((i) < amcities) {
             //strcpy(cities[i],buffer);
             cities[i] = strndup(buffer, 1023);
-            //printf("hi %s\n", cities[i]);
+            printf("hi %s\n", cities[i]);
         }
         if (i < amcities) {
             continue;
@@ -122,16 +129,16 @@ int main(int argc, char *argv[]) {
     }
     fclose(read);
     graph_print(G);
+    //uint32_t x;
     Path *c = path_create(); //For current path
     Path *s = path_create(); //For Previous Path
     FILE *outfile = fopen("outfile.txt", "w");
-    //path_push_vertex(c, START_VERTEX,G);
-    dfs(G, 0, c, s);
-    printf("Path Length S: %u\n", path_length(s));
-    printf("path Vertices S: %u\n", path_vertices(s));
-    //printf("Path Length C: %u\n", path_length(c));
-    //printf("path Vertices C: %u\n", path_vertices(c));
-    path_print(s, outfile, cities);
+    path_push_vertex(c, START_VERTEX,G);
+    //path_pop_vertex(c, &x,G);
+    dfs(G, 1, c, s, outfile, cities);
+    printf("Path Length C: %u\n", path_length(s));
+    printf("path Vertices C: %u\n", path_vertices(s));
+
 
     fclose(outfile);
     //free(cities);
