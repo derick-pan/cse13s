@@ -88,18 +88,17 @@ bool graph_visited(Graph *G, uint32_t v) {
 
 //If Vertex V is within bounds, mark V as visited
 void graph_mark_visited(Graph *G, uint32_t v) {
-    if (v>=0 && v<= graph_vertices(G)){
+    if (v >= 0 && v <= graph_vertices(G)) {
         G->visited[v] = true;
     }
 }
 
 //If Vertex V is within bounds, mark V as unvisited
 void graph_mark_unvisited(Graph *G, uint32_t v) {
-    if (v>=0 && v<= graph_vertices(G)){
-    G->visited[v] = false;
+    if (v >= 0 && v <= graph_vertices(G)) {
+        G->visited[v] = false;
     }
 }
-
 
 void graph_print(Graph *G) {
     for (uint32_t i = 0; i < G->vertices; i++) { //Iterate over I

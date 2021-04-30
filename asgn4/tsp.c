@@ -26,7 +26,6 @@ int64_t recuse = 0;
 int flagham;
 void dfs(Graph *G, uint32_t v, Path *c, Path *s, FILE *outfile, char *cities[]) {
     printf("rec %ld\n", recuse);
-    recuse += 1;
     flagham = 0;
 
     graph_mark_visited(G, v);
@@ -37,38 +36,30 @@ void dfs(Graph *G, uint32_t v, Path *c, Path *s, FILE *outfile, char *cities[]) 
             break;
         }
     }
-        uint32_t x=0;
+    uint32_t x = 0;
     if (flagham == 0) {
-
-
-        if (path_vertices(s) == 0 && graph_has_edge(G,v, 0)) { //This if statement seems fine
-            fprintf(outfile,"I'm a solo\n");
-
-            path_push_vertex(c, START_VERTEX, G);//Push in the return to origin
-
+        if (path_vertices(s) == 0 && graph_has_edge(G, v, 0)) { //This if statement seems fine
+            fprintf(outfile, "I'm a solo\n");
+            path_push_vertex(c, START_VERTEX, G); //Push in the return to origin
             path_copy(s, c);
-
-            path_pop_vertex(c, &x, G);  //Pop the return to origin
-
+            path_pop_vertex(c, &x, G); //Pop the return to origin
             path_print(s, outfile, cities);
         }
-
-        if (graph_has_edge(G,v, 0) ){ //Now i can test it
-
-            path_push_vertex(c, START_VERTEX, G);//Push in the return to origin
-            if (path_length(c) < path_length(s)){
+        if (graph_has_edge(G, v, 0)) { //Now i can test it
+            path_push_vertex(c, START_VERTEX, G); //Push in the return to origin
+            if (path_length(c) < path_length(s)) {
                 path_copy(s, c);
-                fprintf(outfile, "~");
+	    recuse += 1;
+			fprintf(outfile, "~");
                 path_print(s, outfile, cities);
             }
-            path_pop_vertex(c, &x, G);  //Pop the return to origin
+            path_pop_vertex(c, &x, G); //Pop the return to origin
         }
         graph_mark_unvisited(G, v);
         return;
     }
-
     for (uint32_t w = 0; w < graph_vertices(G); w += 1) { // For all edges
-        if ((!graph_visited(G, w)) && (graph_has_edge(G,v, w))) { // Only edges and not visited
+        if ((!graph_visited(G, w)) && (graph_has_edge(G, v, w))) { // Only edges and not visited
             path_push_vertex(c, w, G); // Push it onto the stack
             dfs(G, w, c, s, outfile, cities); // test it recursively
             path_pop_vertex(c, &x, G); // Pop the stack after testing all of dfs
@@ -77,36 +68,6 @@ void dfs(Graph *G, uint32_t v, Path *c, Path *s, FILE *outfile, char *cities[]) 
     graph_mark_unvisited(G, v);
 }
 
-/*
-Correct one:
-        s->items[i] =2
-s->items[i] =0
-El-Cajon -> La-Mesa -> Jamul -> Campo -> La-Jolla -> Tijuana -> San-Ysidro ->
-Santee -> Chula-Vista -> Lakeside -> El-Cajon
-
-El-Cajon -> La-Mesa -> Chula-Vista -> Lakeside -> Jamul -> Campo -> La-Jolla -> Santee -> Tijuana -> San-Ysidro
-
-El-Cajon
-Santee
-Lakeside
-Chula-Vista
-San-Ysidro
-Campo
-Jamul
-La-Mesa
-La-Jolla
-Tijuana
-
-
-El-Cajon -> Santee -> Chula-Vista -> Lakeside -> San-Ysidro -> Campo -> La-Jolla -> La-Mesa -> Jamul -> Tijuana
-~El-Cajon -> Santee -> Chula-Vista -> Lakeside -> San-Ysidro -> La-Mesa -> Jamul -> Campo -> La-Jolla -> Tijuana
-~El-Cajon -> Santee -> Chula-Vista -> Lakeside -> Jamul -> Campo -> La-Jolla -> La-Mesa -> San-Ysidro -> Tijuana
-~El-Cajon -> San-Ysidro -> Tijuana -> Santee -> Jamul -> Campo -> La-Jolla -> La-Mesa -> Chula-Vista -> Lakeside
-~El-Cajon -> La-Mesa -> Chula-Vista -> Lakeside -> Jamul -> Campo -> La-Jolla -> Santee -> Tijuana -> San-Ysidro
-
-El-Cajon -> La-Mesa -> Chula-Vista -> Lakeside -> Jamul -> Campo -> La-Jolla -> Santee -> Tijuana -> San-Ysidro
-
-*/
 int main(int argc, char *argv[]) {
     int choice;
     bool undir = false;
@@ -141,11 +102,9 @@ int main(int argc, char *argv[]) {
         }
         token = strtok(buffer, " ");
         for (int j = 0; token != NULL && j < 3; j++) {
-            // printf("%s\n",token);
             temp[j] = (uint32_t) strtoul(token, NULL, 10);
             token = strtok(NULL, " ");
         }
-        // printf("%u, %u, %u\n", temp[0], temp[1], temp[2]);
         graph_add_edge(G, temp[0], temp[1], temp[2]);
     }
 
