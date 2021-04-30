@@ -54,13 +54,7 @@ uint32_t graph_vertices(Graph *G) {
 }
 
 bool graph_add_edge(Graph *G, uint32_t i, uint32_t j, uint32_t k) {
-    /*				### Can there be undirected?
-	if(i < VERTICES && j < VERTICES){			//If in bound, add
-		G->matrix[i][j] =k;
-	}
-	*/
-    if (G != NULL && i < G->vertices && j < G->vertices) {
-
+    if (i < G->vertices && j < G->vertices) {
         G->matrix[i][j] = k; //Directed
         if (G->undirected) { //If it's undirected and in bound then add
             G->matrix[j][i] = k;
@@ -73,7 +67,7 @@ bool graph_add_edge(Graph *G, uint32_t i, uint32_t j, uint32_t k) {
 //Return True if i & j within bound and has edge
 bool graph_has_edge(Graph *G, uint32_t i, uint32_t j) {
 
-    if (i >= 0 && j >=0 && i < G->vertices && j < G->vertices) {
+    if (i < G->vertices && j < G->vertices) {
         return (G->matrix[i][j] > 0);
     }
     return false;
@@ -81,7 +75,7 @@ bool graph_has_edge(Graph *G, uint32_t i, uint32_t j) {
 
 //Return weight of edge
 uint32_t graph_edge_weight(Graph *G, uint32_t i, uint32_t j) {
-    if (G != NULL && graph_has_edge(G, i, j)) {
+    if (graph_has_edge(G, i, j)) {
         return G->matrix[i][j];
     }
     return 0;

@@ -42,7 +42,7 @@ bool path_push_vertex(Path *p, uint32_t v, Graph *G) {
         printf("Can not path Push Vertex  \n");
         return false;
     }
-    if (stack_empty(p->vertices)) { //If the stack is empty push it, and length is 0,v
+    else if (stack_empty(p->vertices)) { //If the stack is empty push it, and length is 0,v
         stack_push(p->vertices, v);
         p->length += graph_edge_weight(G, START_VERTEX, v);
         return true;
@@ -57,12 +57,14 @@ bool path_pop_vertex(Path *p, uint32_t *v, Graph *G) {
     if (stack_empty(p->vertices)) {
         return false;
     }
+    else{
     uint32_t x = 0;
     stack_pop(p->vertices, v);
     stack_peek(p->vertices, &x); //Gets the vertex at top of the stack
 
     p->length -= graph_edge_weight(G, x, *v);
     return true;
+    }
 }
 
 //returns number of vertices in the path

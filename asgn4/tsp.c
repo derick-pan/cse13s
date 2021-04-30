@@ -37,25 +37,36 @@ void dfs(Graph *G, uint32_t v, Path *c, Path *s, FILE *outfile, char *cities[]) 
             break;
         }
     }
-    //Hamiltonian = Go through all the points NO MORE THAN ONCE.
-    /* Off by a few digits because I did not factor in the Last weight (OG Vertex)*/
+        uint32_t x=0;
     if (flagham == 0) {
+
+
         if (path_vertices(s) == 0 && graph_has_edge(G,v, 0)) { //This if statement seems fine
             fprintf(outfile,"I'm a solo\n");
+
+            path_push_vertex(c, START_VERTEX, G);//Push in the return to origin
+
             path_copy(s, c);
+
+            path_pop_vertex(c, &x, G);  //Pop the return to origin
+
             path_print(s, outfile, cities);
         }
 
-        if (graph_has_edge(G,v, 0)){
+        if (graph_has_edge(G,v, 0) ){ //Now i can test it
+
+            path_push_vertex(c, START_VERTEX, G);//Push in the return to origin
+            if (path_length(c) < path_length(s)){
                 path_copy(s, c);
                 fprintf(outfile, "~");
                 path_print(s, outfile, cities);
+            }
+            path_pop_vertex(c, &x, G);  //Pop the return to origin
         }
         graph_mark_unvisited(G, v);
         return;
     }
 
-    uint32_t x;
     for (uint32_t w = 0; w < graph_vertices(G); w += 1) { // For all edges
         if ((!graph_visited(G, w)) && (graph_has_edge(G,v, w))) { // Only edges and not visited
             path_push_vertex(c, w, G); // Push it onto the stack
