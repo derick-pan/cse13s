@@ -40,24 +40,19 @@ void dfs(Graph *G, uint32_t v, Path *c, Path *s, FILE *outfile, char *cities[]) 
     //Hamiltonian = Go through all the points NO MORE THAN ONCE.
 
     if (flagham == 0) {
-        if (path_vertices(s) == 0 || graph_has_edge(G,v, 0)) { //This if statement seems fine
+        if (path_vertices(s) == 0 && graph_has_edge(G,v, 0)) { //This if statement seems fine
             fprintf(outfile,"I'm a solo\n");
-            //path_push_vertex(c, START_VERTEX, G); // Add in the final point
             path_copy(s, c);
             path_print(s, outfile, cities);
-            //graph_mark_unvisited(G, v);
-            //return;
         }
-        if ((path_length(c) < path_length(s)) && (graph_has_edge(G,v, 0))) {
-            path_copy(s, c);
-            fprintf(outfile, "~");
-            path_print(s, outfile, cities);
-            graph_mark_unvisited(G, v);
-            //return;
+
+        if (graph_has_edge(G,v, 0)){
+                path_copy(s, c);
+                fprintf(outfile, "~");
+                path_print(s, outfile, cities);
         }
-        else{
         graph_mark_unvisited(G, v);
-        return;}
+        return;
     }
 
     uint32_t x;
