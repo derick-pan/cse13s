@@ -28,36 +28,36 @@ void dfs(Graph *G, uint32_t v, Path *c, Path *s, FILE *outfile, char *cities[]) 
     printf("rec %ld\n", recuse);
     recuse += 1;
     flagham = 0;
+
     graph_mark_visited(G, v);
-    // path_print(s, outfile, cities);
+
     for (uint32_t q = 0; q < graph_vertices(G); q++) {
         if (!graph_visited(G, q)) {
             flagham = 1; // If flagham ==1 then SOME POINT is not visited
             break;
         }
     }
-
     //Hamiltonian = Go through all the points NO MORE THAN ONCE.
 
     if (flagham == 0) {
-
-        if (path_vertices(s) == 0 && path_length(s)==0 ) { //This if statement seems fine
-            printf("I'm a solo\n");
+        if (path_vertices(s) == 0 || graph_has_edge(G,v, 0)) { //This if statement seems fine
+            fprintf(outfile,"I'm a solo\n");
             //path_push_vertex(c, START_VERTEX, G); // Add in the final point
             path_copy(s, c);
             path_print(s, outfile, cities);
-
-        }
-        if ((path_length(c) < path_length(s)) && (graph_has_edge(G,v, 0))) {
-
-            //path_push_vertex(c, START_VERTEX, G); // Add in the final point
-            path_copy(s, c);
-            fprintf(outfile, "am i the corrupted one?");
-            path_print(s, outfile, cities);
+            //graph_mark_unvisited(G, v);
             //return;
         }
+        if ((path_length(c) < path_length(s)) && (graph_has_edge(G,v, 0))) {
+            path_copy(s, c);
+            fprintf(outfile, "~");
+            path_print(s, outfile, cities);
+            graph_mark_unvisited(G, v);
+            //return;
+        }
+        else{
         graph_mark_unvisited(G, v);
-        return;
+        return;}
     }
 
     uint32_t x;
@@ -72,40 +72,34 @@ void dfs(Graph *G, uint32_t v, Path *c, Path *s, FILE *outfile, char *cities[]) 
 }
 
 /*
-Mines:
-El-Cajon -> Santee -> Lakeside -> Chula-Vista -> San-Ysidro -> Campo -> Jamul ->
-        Chula-Vista -> Lakeside -> El-Cajon
-
 Correct one:
         s->items[i] =2
 s->items[i] =0
 El-Cajon -> La-Mesa -> Jamul -> Campo -> La-Jolla -> Tijuana -> San-Ysidro ->
 Santee -> Chula-Vista -> Lakeside -> El-Cajon
 
+El-Cajon -> La-Mesa -> Chula-Vista -> Lakeside -> Jamul -> Campo -> La-Jolla -> Santee -> Tijuana -> San-Ysidro
 
-         s->items[i] =1         s->items[i] =3
-s->items[i] =0      s->items[i] =2              s->items[i] =4
-El-Cajon -> Santee -> Lakeside -> Chula-Vista -> San-Ysidro -> Campo -> Jamul -> La-Mesa -> La-Jolla -> Tijuana -> El-Cajon
-El-Cajon -> Santee -> Lakeside -> Chula-Vista -> San-Ysidro -> Campo -> Jamul -> La-Mesa -> La-Jolla -> Tijuana -> El-Cajon
-
-
-
-El-Cajon -> Santee -> Lakeside -> Chula-Vista -> San-Ysidro -> Campo -> Jamul -> La-Jolla -> Jamul -> El-Cajon
-El-Cajon -> Santee -> Lakeside -> Chula-Vista -> San-Ysidro -> Campo -> Jamul -> La-Jolla -> El-Cajon
-El-Cajon -> Santee -> Lakeside -> Chula-Vista -> San-Ysidro -> Campo -> Jamul -> Campo -> El-Cajon
-El-Cajon -> Santee -> Lakeside -> Chula-Vista -> San-Ysidro -> Campo -> Jamul -> San-Ysidro -> El-Cajon
-El-Cajon -> Santee -> Lakeside -> Chula-Vista -> San-Ysidro -> Campo -> Jamul -> Chula-Vista -> Lakeside -> El-Cajon
-El-Cajon -> Santee -> Lakeside -> Chula-Vista -> San-Ysidro -> Campo -> Jamul -> Chula-Vista -> Lakeside -> El-Cajon
+El-Cajon
+Santee
+Lakeside
+Chula-Vista
+San-Ysidro
+Campo
+Jamul
+La-Mesa
+La-Jolla
+Tijuana
 
 
+El-Cajon -> Santee -> Chula-Vista -> Lakeside -> San-Ysidro -> Campo -> La-Jolla -> La-Mesa -> Jamul -> Tijuana
+~El-Cajon -> Santee -> Chula-Vista -> Lakeside -> San-Ysidro -> La-Mesa -> Jamul -> Campo -> La-Jolla -> Tijuana
+~El-Cajon -> Santee -> Chula-Vista -> Lakeside -> Jamul -> Campo -> La-Jolla -> La-Mesa -> San-Ysidro -> Tijuana
+~El-Cajon -> San-Ysidro -> Tijuana -> Santee -> Jamul -> Campo -> La-Jolla -> La-Mesa -> Chula-Vista -> Lakeside
+~El-Cajon -> La-Mesa -> Chula-Vista -> Lakeside -> Jamul -> Campo -> La-Jolla -> Santee -> Tijuana -> San-Ysidro
 
+El-Cajon -> La-Mesa -> Chula-Vista -> Lakeside -> Jamul -> Campo -> La-Jolla -> Santee -> Tijuana -> San-Ysidro
 
-El-Cajon -> Santee -> Lakeside -> Chula-Vista -> San-Ysidro -> Campo -> Jamul -> La-Mesa -> La-Jolla -> Tijuana -> El-Cajon
-
-El-Cajon -> Santee -> Lakeside -> Chula-Vista -> San-Ysidro -> Campo -> Jamul -> La-Mesa -> La-Jolla -> Tijuana -> El-Cajon
-
-
-El-Cajon -> Santee -> Lakeside -> Chula-Vista -> San-Ysidro -> Campo -> Jamul -> Chula-Vista -> Lakeside -> El-Cajon
 */
 int main(int argc, char *argv[]) {
     int choice;
