@@ -38,7 +38,7 @@ void dfs(Graph *G, uint32_t v, Path *c, Path *s, FILE *outfile, char *cities[]) 
         }
     }
     //Hamiltonian = Go through all the points NO MORE THAN ONCE.
-
+    /* Off by a few digits because I did not factor in the Last weight (OG Vertex)*/
     if (flagham == 0) {
         if (path_vertices(s) == 0 && graph_has_edge(G,v, 0)) { //This if statement seems fine
             fprintf(outfile,"I'm a solo\n");
