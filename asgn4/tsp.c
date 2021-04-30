@@ -110,6 +110,7 @@ int main(int argc, char *argv[]) {
     char *cities[amcities];
 
     for (int i = 0; fgets(buffer, 1023, read) != NULL; i++) {
+	buffer[strcspn(buffer, "\n")] = 0;
         if ((i) < amcities) {
             //strcpy(cities[i],buffer);
             cities[i] = strndup(buffer, 1023);
@@ -135,7 +136,7 @@ int main(int argc, char *argv[]) {
     FILE *outfile = fopen("outfile.txt", "w");
     path_push_vertex(c, START_VERTEX,G);
     //path_pop_vertex(c, &x,G);
-    dfs(G, 1, c, s, outfile, cities);
+    dfs(G, 0, c, s, outfile, cities);
     printf("Path Length C: %u\n", path_length(s));
     printf("path Vertices C: %u\n", path_vertices(s));
 
