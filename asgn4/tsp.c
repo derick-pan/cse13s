@@ -25,7 +25,8 @@ OPTIONS\n\
 
 int recursetimes = 0;
 int flagham;
-void dfs(Graph *G, uint32_t v, Path *c, Path *s) {
+bool verbose = false;
+void dfs(Graph *G, uint32_t v, Path *c, Path *s,FILE* outfile,char *cities[]) {
     flagham = 0;
 
     graph_mark_visited(G, v);
@@ -49,8 +50,12 @@ void dfs(Graph *G, uint32_t v, Path *c, Path *s) {
             path_push_vertex(c, START_VERTEX, G); //Push in the return to origin
             if (path_length(c) < path_length(s)) {
                 path_copy(s, c);
+		if (verbose == true){
+		   fprintf(outfile, "Path Length: %u\n", path_length(s));
+                   path_print(s, outfile, cities);
+		}
+
                 //			fprintf(outfile, "~");
-                //   path_print(s, outfile, cities);
             }
             path_pop_vertex(c, &x, G); //Pop the return to origin
         }
@@ -61,7 +66,7 @@ void dfs(Graph *G, uint32_t v, Path *c, Path *s) {
         if ((!graph_visited(G, w)) && (graph_has_edge(G, v, w))) { // Only edges and not visited
             path_push_vertex(c, w, G); // Push it onto the stack
             recursetimes += 1;
-            dfs(G, w, c, s); // test it recursively
+            dfs(G, w, c, s, outfile, cities); // test it recursively
             path_pop_vertex(c, &x, G); // Pop the stack after testing all of dfs
         }
     }
@@ -73,16 +78,15 @@ int main(int argc, char *argv[]) {
     bool undir = false;
     bool sdout = false;
     char file[20];
-    //    FILE *location = NULL;
-    // char into[100];
     char fileout[100];
-    // FILE *in = stdin;
-    // char*out = stdout;
-
-    while ((choice = getopt(argc, argv, "hv:ui:o:")) != -1) {
+    verbose = false;
+    while ((choice = getopt(argc, argv, "hvui:o:")) != -1) {
         switch (choice) {
         case 'h': fprintf(stderr, "%s", usage); break; // Print helps
-        case 'v': break; // Verbose printing
+        case 'v':
+		 verbose = true;
+		 break; // Verbose printing
+
         case 'u': undir = true; break;
         case 'i':
             if (optarg != NULL) {
@@ -135,15 +139,16 @@ int main(int argc, char *argv[]) {
 
     path_push_vertex(c, 0, G);
 
-    dfs(G, 0, c, s);
 
     if (sdout == true) { //If user wants to print to file
         FILE *outfile = fopen(fileout, "w");
+        dfs(G, 0, c, s, outfile, cities);
         fprintf(outfile, "Path Length: %u\n Path:", path_length(s));
         path_print(s, outfile, cities);
         fprintf(outfile, "Total recursive calls: %d\n", recursetimes);
         fclose(outfile);
     } else {
+        dfs(G, 0, c, s, stdout, cities);
         fprintf(stdout, "Path Length: %u\n", path_length(s));
         path_print(s, stdout, cities);
         fprintf(stdout, "Total recursive calls: %d\n", recursetimes);
