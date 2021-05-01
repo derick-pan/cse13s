@@ -100,11 +100,17 @@ int main(int argc, char *argv[]) {
 
         case 'u': undir = true; break;
         case 'i':
-            if (optarg != NULL) {
+
+            if (optarg != NULL) { //If argument isn't null
                 snprintf(file, 20, "%s", optarg);
-            } else {
-                fprintf(stderr, "%s", usage);
-            }
+	        if (access(file, R_OK) ==0){ // if file exists
+
+			break;
+                }
+	       	else {
+                  fprintf(stderr, "Error: failed to open infile.\n");
+           	}
+	    }	
             break;
         case 'o':
             if (optarg != NULL) {
