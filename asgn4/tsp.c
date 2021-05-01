@@ -73,27 +73,39 @@ int main(int argc, char *argv[]) {
     bool undir = false;
     bool sdout = false;
     char file[20];
+//    FILE *location = NULL;
+
+  // char into[100];
+  //  char outto[100];
+   // FILE *in = stdin;
+   // char*out = stdout;
+
+
+
    // char outf[50];
     while ((choice = getopt(argc, argv, "hv:ui:o:")) != -1) {
         switch (choice) {
         case 'h': fprintf(stderr, "%s", usage); break; // Print helps
         case 'v': break; // Verbose printing
         case 'u': undir = true; break;
-        case 'i': snprintf(file, 20, "%s", optarg); break; // Read file
-        case 'o': sdout=true ; break; // Print where?
+        case 'i':
+		 snprintf(file, 20, "%s", optarg); break; // Read file
+
+        case 'o':
+		  sdout=true ; break; // Print where?
         case '?': fprintf(stderr, "%s", usage); break;
         }
     }
     char buffer[1024];
     char *token;
     uint32_t temp[] = { 0, 0, 0 };
-    FILE *read = fopen(file, "r");
-    fgets(buffer, 1023, read);
+    FILE *stdin = fopen(file, "r");
+    fgets(buffer, 1023, stdin);
     uint32_t amcities = atoi(buffer);
 
     Graph *G = graph_create(amcities, undir);
     char *cities[amcities - 1];
-    for (uint32_t i = 0; fgets(buffer, 1023, read); i++) {
+    for (uint32_t i = 0; fgets(buffer, 1023, stdin); i++) {
         buffer[strcspn(buffer, "\n")] = 0;
         if ((i) < amcities) {
             cities[i] = strndup(buffer, 1023);
@@ -109,7 +121,7 @@ int main(int argc, char *argv[]) {
         graph_add_edge(G, temp[0], temp[1], temp[2]);
     }
 
-    fclose(read);
+    fclose(stdin);
     graph_print(G);
 
     Path *c = path_create(); // For current path
