@@ -24,8 +24,8 @@ OPTIONS\n\
 
 int64_t recuse = 0;
 int flagham;
-void dfs(Graph *G, uint32_t v, Path *c, Path *s, FILE *outfile, char *cities[]) {
-    printf("rec %ld\n", recuse);
+void dfs(Graph *G, uint32_t v, Path *c, Path *s) {
+   // printf("rec %ld\n", recuse);
     flagham = 0;
 
     graph_mark_visited(G, v);
@@ -39,19 +39,19 @@ void dfs(Graph *G, uint32_t v, Path *c, Path *s, FILE *outfile, char *cities[]) 
     uint32_t x = 0;
     if (flagham == 0) {
         if (path_vertices(s) == 0 && graph_has_edge(G, v, 0)) { //This if statement seems fine
-            fprintf(outfile, "I'm a solo\n");
+  //          fprintf(outfile, "I'm a solo\n");
             path_push_vertex(c, START_VERTEX, G); //Push in the return to origin
             path_copy(s, c);
             path_pop_vertex(c, &x, G); //Pop the return to origin
-            path_print(s, outfile, cities);
+           // path_print(s, outfile, cities);
         }
         if (graph_has_edge(G, v, 0)) { //Now i can test it
             path_push_vertex(c, START_VERTEX, G); //Push in the return to origin
             if (path_length(c) < path_length(s)) {
                 path_copy(s, c);
 	    recuse += 1;
-			fprintf(outfile, "~");
-                path_print(s, outfile, cities);
+//			fprintf(outfile, "~");
+             //   path_print(s, outfile, cities);
             }
             path_pop_vertex(c, &x, G); //Pop the return to origin
         }
@@ -61,7 +61,7 @@ void dfs(Graph *G, uint32_t v, Path *c, Path *s, FILE *outfile, char *cities[]) 
     for (uint32_t w = 0; w < graph_vertices(G); w += 1) { // For all edges
         if ((!graph_visited(G, w)) && (graph_has_edge(G, v, w))) { // Only edges and not visited
             path_push_vertex(c, w, G); // Push it onto the stack
-            dfs(G, w, c, s, outfile, cities); // test it recursively
+            dfs(G, w, c, s); // test it recursively
             path_pop_vertex(c, &x, G); // Pop the stack after testing all of dfs
         }
     }
@@ -71,15 +71,16 @@ void dfs(Graph *G, uint32_t v, Path *c, Path *s, FILE *outfile, char *cities[]) 
 int main(int argc, char *argv[]) {
     int choice;
     bool undir = false;
+    bool sdout = false;
     char file[20];
-    char outf[50];
+   // char outf[50];
     while ((choice = getopt(argc, argv, "hv:ui:o:")) != -1) {
         switch (choice) {
         case 'h': fprintf(stderr, "%s", usage); break; // Print helps
         case 'v': break; // Verbose printing
         case 'u': undir = true; break;
-        case 'i': snprintf(file, 20, "%s", optarg); break; // The file
-        case 'o': snprintf(outf, 50, "%s", optarg); break;
+        case 'i': snprintf(file, 20, "%s", optarg); break; // Read file
+        case 'o': sdout=true ; break; // Print where?
         case '?': fprintf(stderr, "%s", usage); break;
         }
     }
@@ -113,17 +114,26 @@ int main(int argc, char *argv[]) {
 
     Path *c = path_create(); // For current path
     Path *s = path_create(); // For Previous Path
-    FILE *outfile = fopen("outfile.txt", "w");
 
     path_push_vertex(c, 0, G);
 
-    dfs(G, 0, c, s, outfile, cities);
+    dfs(G, 0, c, s);
     printf("Path Length S: %u\n", path_length(s));
     printf("path Vertices S: %u\n", path_vertices(s));
-    fprintf(outfile, "\n");
+	
+    if ( sdout == true) { //If user wants to print to file
+    FILE *outfile = fopen("outfile.txt", "w");
     path_print(s, outfile, cities);
-
     fclose(outfile);
+    }else{
+    path_print(s, stdout, cities);
+
+
+    }
+
+
+
+
     path_delete(&c);
     path_delete(&s);
     graph_delete(&G);
