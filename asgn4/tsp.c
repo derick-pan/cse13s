@@ -23,45 +23,56 @@ OPTIONS\n\
   -i infile      Input containing graph (default: stdin)\n\
   -o outfile     Output of computed path (default: stdout)\n";
 
-int recursetimes = 0;
-int flagham;
-bool verbose = false;
+int recursetimes = 0;//Counter for amoount of recursive calls
+int flagham;//Flag that signals if all points are visited
+bool verbose = false; //Verbose printing on or off?
+
 void dfs(Graph *G, uint32_t v, Path *c, Path *s,FILE* outfile,char *cities[]) {
-    flagham = 0;
 
     graph_mark_visited(G, v);
 
+
+    //Set flag to 0. For loop checks if all points have been visited.
+    flagham = 0;
     for (uint32_t q = 0; q < graph_vertices(G); q++) {
         if (!graph_visited(G, q)) {
             flagham = 1; // If flagham ==1 then SOME POINT is not visited
             break;
         }
     }
-    uint32_t x = 0;
-    if (flagham == 0) {
-        if (path_vertices(s) == 0 && graph_has_edge(G, v, 0)) { //This if statement seems fine
-            //          fprintf(outfile, "I'm a solo\n");
+
+    uint32_t x = 0;//Disregarded pointer
+
+
+    //Base cases in this for loop
+    if (flagham == 0) { //If all vertices have been visited
+
+        if (path_vertices(s) == 0 && graph_has_edge(G, v, 0)) { // if it's the first time for the shortest path.
             path_push_vertex(c, START_VERTEX, G); //Push in the return to origin
             path_copy(s, c);
             path_pop_vertex(c, &x, G); //Pop the return to origin
-            // path_print(s, outfile, cities);
         }
-        if (graph_has_edge(G, v, 0)) { //Now i can test it
-            path_push_vertex(c, START_VERTEX, G); //Push in the return to origin
-            if (path_length(c) < path_length(s)) {
-                path_copy(s, c);
-		if (verbose == true){
+
+        if (graph_has_edge(G, v, 0)) {                //Check if the graph has an edge
+            path_push_vertex(c, START_VERTEX, G);         //Push in the starting vertex
+
+            if (path_length(c) < path_length(s)) {        //If Current path is shorter than shortest path in history
+                path_copy(s, c);			      //Copy the path
+
+
+		if (verbose == true){   //For verbose printing
 		   fprintf(outfile, "Path Length: %u\n", path_length(s));
                    path_print(s, outfile, cities);
 		}
 
-                //			fprintf(outfile, "~");
             }
-            path_pop_vertex(c, &x, G); //Pop the return to origin
+            path_pop_vertex(c, &x, G); //Pop the starting vertex off the top because we don't want repeats in the stack.
         }
         graph_mark_unvisited(G, v);
         return;
     }
+
+	//Loops to test all the vertices.
     for (uint32_t w = 0; w < graph_vertices(G); w += 1) { // For all edges
         if ((!graph_visited(G, w)) && (graph_has_edge(G, v, w))) { // Only edges and not visited
             path_push_vertex(c, w, G); // Push it onto the stack
@@ -75,11 +86,11 @@ void dfs(Graph *G, uint32_t v, Path *c, Path *s,FILE* outfile,char *cities[]) {
 
 int main(int argc, char *argv[]) {
     int choice;
-    bool undir = false;
-    bool sdout = false;
-    char file[20];
-    char fileout[100];
-    verbose = false;
+    bool undir = false;  //Flag to know if the graph is directed or undirected
+    bool sdout = false;  //Flag to know if the user wants to print into a file
+    char file[20];	 //Read the file input from user
+    char fileout[100];   //File output for user
+    verbose = false;	
     while ((choice = getopt(argc, argv, "hvui:o:")) != -1) {
         switch (choice) {
         case 'h': fprintf(stderr, "%s", usage); break; // Print helps
@@ -95,7 +106,6 @@ int main(int argc, char *argv[]) {
                 fprintf(stderr, "%s", usage);
             }
             break;
-
         case 'o':
             if (optarg != NULL) {
                 snprintf(file, 20, "%s", optarg);
@@ -107,29 +117,35 @@ int main(int argc, char *argv[]) {
         case '?': fprintf(stderr, "%s", usage); break;
         }
     }
-    char buffer[1024];
-    char *token;
-    uint32_t temp[] = { 0, 0, 0 };
-    FILE *stdin = fopen(file, "r");
-    fgets(buffer, 1023, stdin);
-    uint32_t amcities = atoi(buffer);
 
-    Graph *G = graph_create(amcities, undir);
-    char *cities[amcities - 1];
+    
+    char buffer[1024];			//A buffer to store the lines in the file
+    char *token;			//token holds the i,j,k values but seperately with no whitespace
+    uint32_t temp[] = { 0, 0, 0 };	//temporary array to store the i,j,k inputs
+
+    FILE *stdin = fopen(file, "r");	//Open the file for reading
+
+    fgets(buffer, 1023, stdin);		//Read the first line which is amount of vertices
+    uint32_t amcities = atoi(buffer);	//Set amcities (amount of cities) to above.
+
+    Graph *G = graph_create(amcities, undir); //Create the graph
+    char *cities[amcities - 1];		//The cities array
+
+
     for (uint32_t i = 0; fgets(buffer, 1023, stdin); i++) {
-        buffer[strcspn(buffer, "\n")] = 0;
-        if ((i) < amcities) {
+        buffer[strcspn(buffer, "\n")] = 0;		//Split up each line to whitespace
+
+        if ((i) < amcities) {			//If statement ONLY for cities
             cities[i] = strndup(buffer, 1023);
+	    continue;
         }
-        if (i < amcities) {
-            continue;
-        }
-        token = strtok(buffer, " ");
-        for (int j = 0; token != NULL && j < 3; j++) {
-            temp[j] = (uint32_t) strtoul(token, NULL, 10);
+
+        token = strtok(buffer, " ");			//Split the edges with respect to whitespace
+        for (int j = 0; token != NULL && j < 3; j++) {  //Add all of the items into temporary array.
+            temp[j] = (uint32_t) strtoul(token, NULL, 10); 
             token = strtok(NULL, " ");
         }
-        graph_add_edge(G, temp[0], temp[1], temp[2]);
+        graph_add_edge(G, temp[0], temp[1], temp[2]);  //Pass the temporary array of values to create an edge on graph
     }
 
     fclose(stdin);
@@ -137,7 +153,7 @@ int main(int argc, char *argv[]) {
     Path *c = path_create(); // For current path
     Path *s = path_create(); // For Previous Path
 
-    path_push_vertex(c, 0, G);
+    path_push_vertex(c, 0, G); //Push the first vertex so we have a starting point.
 
 
     if (sdout == true) { //If user wants to print to file
@@ -147,7 +163,9 @@ int main(int argc, char *argv[]) {
         path_print(s, outfile, cities);
         fprintf(outfile, "Total recursive calls: %d\n", recursetimes);
         fclose(outfile);
-    } else {
+
+    }
+    else { 		//If user doesn't want to print into a file
         dfs(G, 0, c, s, stdout, cities);
         fprintf(stdout, "Path Length: %u\n", path_length(s));
         path_print(s, stdout, cities);
