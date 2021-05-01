@@ -107,5 +107,4 @@ void graph_print(Graph *G) {
         }
         printf("\n");
     }
-    printf("### Graph End ####\n");
 }

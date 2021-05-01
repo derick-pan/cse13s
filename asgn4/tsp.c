@@ -5,6 +5,7 @@
 #include "path.h"
 #include "stack.h"
 #include "vertices.h"
+
 #include <inttypes.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -22,10 +23,9 @@ OPTIONS\n\
   -i infile      Input containing graph (default: stdin)\n\
   -o outfile     Output of computed path (default: stdout)\n";
 
-int64_t recuse = 0;
+int recursetimes = 0;
 int flagham;
 void dfs(Graph *G, uint32_t v, Path *c, Path *s) {
-   // printf("rec %ld\n", recuse);
     flagham = 0;
 
     graph_mark_visited(G, v);
@@ -39,19 +39,18 @@ void dfs(Graph *G, uint32_t v, Path *c, Path *s) {
     uint32_t x = 0;
     if (flagham == 0) {
         if (path_vertices(s) == 0 && graph_has_edge(G, v, 0)) { //This if statement seems fine
-  //          fprintf(outfile, "I'm a solo\n");
+            //          fprintf(outfile, "I'm a solo\n");
             path_push_vertex(c, START_VERTEX, G); //Push in the return to origin
             path_copy(s, c);
             path_pop_vertex(c, &x, G); //Pop the return to origin
-           // path_print(s, outfile, cities);
+            // path_print(s, outfile, cities);
         }
         if (graph_has_edge(G, v, 0)) { //Now i can test it
             path_push_vertex(c, START_VERTEX, G); //Push in the return to origin
             if (path_length(c) < path_length(s)) {
                 path_copy(s, c);
-	    recuse += 1;
-//			fprintf(outfile, "~");
-             //   path_print(s, outfile, cities);
+                //			fprintf(outfile, "~");
+                //   path_print(s, outfile, cities);
             }
             path_pop_vertex(c, &x, G); //Pop the return to origin
         }
@@ -61,6 +60,7 @@ void dfs(Graph *G, uint32_t v, Path *c, Path *s) {
     for (uint32_t w = 0; w < graph_vertices(G); w += 1) { // For all edges
         if ((!graph_visited(G, w)) && (graph_has_edge(G, v, w))) { // Only edges and not visited
             path_push_vertex(c, w, G); // Push it onto the stack
+            recursetimes += 1;
             dfs(G, w, c, s); // test it recursively
             path_pop_vertex(c, &x, G); // Pop the stack after testing all of dfs
         }
@@ -73,26 +73,33 @@ int main(int argc, char *argv[]) {
     bool undir = false;
     bool sdout = false;
     char file[20];
-//    FILE *location = NULL;
+    //    FILE *location = NULL;
+    // char into[100];
+    char fileout[100];
+    // FILE *in = stdin;
+    // char*out = stdout;
 
-  // char into[100];
-  //  char outto[100];
-   // FILE *in = stdin;
-   // char*out = stdout;
-
-
-
-   // char outf[50];
     while ((choice = getopt(argc, argv, "hv:ui:o:")) != -1) {
         switch (choice) {
         case 'h': fprintf(stderr, "%s", usage); break; // Print helps
         case 'v': break; // Verbose printing
         case 'u': undir = true; break;
         case 'i':
-		 snprintf(file, 20, "%s", optarg); break; // Read file
+            if (optarg != NULL) {
+                snprintf(file, 20, "%s", optarg);
+            } else {
+                fprintf(stderr, "%s", usage);
+            }
+            break;
 
         case 'o':
-		  sdout=true ; break; // Print where?
+            if (optarg != NULL) {
+                snprintf(file, 20, "%s", optarg);
+                sdout = true;
+            } else {
+                fprintf(stderr, "%s", usage);
+            }
+            break;
         case '?': fprintf(stderr, "%s", usage); break;
         }
     }
@@ -122,7 +129,6 @@ int main(int argc, char *argv[]) {
     }
 
     fclose(stdin);
-    graph_print(G);
 
     Path *c = path_create(); // For current path
     Path *s = path_create(); // For Previous Path
@@ -130,21 +136,18 @@ int main(int argc, char *argv[]) {
     path_push_vertex(c, 0, G);
 
     dfs(G, 0, c, s);
-    printf("Path Length S: %u\n", path_length(s));
-    printf("path Vertices S: %u\n", path_vertices(s));
-	
-    if ( sdout == true) { //If user wants to print to file
-    FILE *outfile = fopen("outfile.txt", "w");
-    path_print(s, outfile, cities);
-    fclose(outfile);
-    }else{
-    path_print(s, stdout, cities);
 
-
+    if (sdout == true) { //If user wants to print to file
+        FILE *outfile = fopen(fileout, "w");
+        fprintf(outfile, "Path Length: %u\n Path:", path_length(s));
+        path_print(s, outfile, cities);
+        fprintf(outfile, "Total recursive calls: %d\n", recursetimes);
+        fclose(outfile);
+    } else {
+        fprintf(stdout, "Path Length: %u\n", path_length(s));
+        path_print(s, stdout, cities);
+        fprintf(stdout, "Total recursive calls: %d\n", recursetimes);
     }
-
-
-
 
     path_delete(&c);
     path_delete(&s);
