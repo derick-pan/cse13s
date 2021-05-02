@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
                 snprintf(file, 20, "%s", optarg);
                 if (access(file, R_OK) != 0) { // if file exists
                     fprintf(stderr, "Error: failed to open infile.\n");
-		    return 0;
+                    return 0;
                 }
             }
             break;
@@ -157,7 +157,7 @@ int main(int argc, char *argv[]) {
                 return 0;
             }
         }
-       	//Pass the temporary array of values to create an edge on graph
+        //Pass the temporary array of values to create an edge on graph
         graph_add_edge(G, temp[0], temp[1], temp[2]);
     }
     if (graph_vertices(G) == 1) {
