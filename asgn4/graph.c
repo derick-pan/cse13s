@@ -1,7 +1,6 @@
 //Derick Pan
 //dpan7
 //Asgn4
-
 #include "graph.h"
 
 #include "path.h"
@@ -29,7 +28,6 @@ Graph *graph_create(uint32_t vertices, bool undirected) {
     if (G) {
         G->vertices = vertices;
         G->undirected = undirected; //True means undirected
-
         for (uint32_t i = 0; i < G->vertices; i++) {
             G->visited[i] = false; //Index of visited is false
             for (uint32_t j = 0; j < G->vertices; j++) {
@@ -66,7 +64,6 @@ bool graph_add_edge(Graph *G, uint32_t i, uint32_t j, uint32_t k) {
 
 //Return True if i & j within bound and has edge
 bool graph_has_edge(Graph *G, uint32_t i, uint32_t j) {
-
     if (i < G->vertices && j < G->vertices) {
         return (G->matrix[i][j] > 0);
     }

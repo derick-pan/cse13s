@@ -13,13 +13,13 @@
 
 /*Most of these helper functions are my functions from Asgn3's stack*/
 
-typedef struct Stack { //This struct is from the asg3_Doc.pdf
+typedef struct Stack { //This struct is from the asg4_Doc.pdf
     uint32_t top; //Index of next mt slot
     uint32_t capacity; // # of items can push
     uint32_t *items; // Array of items,
 } Stack;
 
-Stack *stack_create(uint32_t capacity) { //Function from asg3_Doc.pdf
+Stack *stack_create(uint32_t capacity) { //Function from asg4_Doc.pdf
     Stack *s = (Stack *) malloc(sizeof(Stack));
     if (s) {
         s->top = 0;
@@ -33,7 +33,7 @@ Stack *stack_create(uint32_t capacity) { //Function from asg3_Doc.pdf
     return s;
 }
 
-void stack_delete(Stack **s) { //Function from asg3_Doc.pdf
+void stack_delete(Stack **s) { //Function from asg4_Doc.pdf
     if (*s && (*s)->items) {
         free((*s)->items);
         free(*s);
@@ -47,7 +47,7 @@ uint32_t stack_size(Stack *s) { //Returns # of items in stack
 }
 
 bool stack_empty(Stack *s) {
-    if (s->top == 0) { //Testing this was originall 0 ######################
+    if (s->top == 0) {
         return true;
     }
     return false;
@@ -81,14 +81,12 @@ bool stack_peek(Stack *s, uint32_t *x) {
     if (stack_empty(s)) {
         return false;
     }
-
     *x = s->items[s->top - 1];
-
     return true;
 }
 
+//Make dst same as src
 void stack_copy(Stack *dst, Stack *src) {
-    //Make dst same as src
     for (int items = 0; items < VERTICES; items++) {
         dst->items[items] = src->items[items];
     }
