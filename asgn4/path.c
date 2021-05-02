@@ -79,4 +79,3 @@ void path_copy(Path *dst, Path *src) {
 void path_print(Path *p, FILE *outfile, char *cities[]) {
     stack_print(p->vertices, outfile, cities);
 }
-
