@@ -95,7 +95,7 @@ int main(int argc, char *argv[]) {
     verbose = false;
     while ((choice = getopt(argc, argv, "hvui:o:")) != -1) {
         switch (choice) {
-        case 'h': fprintf(stderr, "%s", usage); break; // Print helps
+        case 'h': fprintf(stderr, "%s", usage); exit(0); // Print helps
         case 'v': verbose = true; break; // Verbose printing
 
         case 'u': undir = true; break;
@@ -105,19 +105,19 @@ int main(int argc, char *argv[]) {
                 snprintf(file, 20, "%s", optarg);
                 if (access(file, R_OK) != 0) { // if file exists
                     fprintf(stderr, "Error: failed to open infile.\n");
-                    return 0;
+                    exit(0);
                 }
             }
             break;
         case 'o':
             if (optarg != NULL) {
-                snprintf(file, 20, "%s", optarg);
+                snprintf(fileout, 20, "%s", optarg);
                 sdout = true;
             } else {
                 fprintf(stderr, "%s", usage);
             }
-            break;
-        case '?': fprintf(stderr, "%s", usage); break;
+            exit(0);
+        case '?': fprintf(stderr, "%s", usage); exit(0);
         }
     }
     char buffer[100]; //A buffer to store the lines in the file
@@ -163,7 +163,7 @@ int main(int argc, char *argv[]) {
     if (graph_vertices(G) == 1) {
         graph_delete(&G);
         fprintf(stderr, "%s", deadend);
-        return 0;
+        exit(0);
     }
     fclose(stdin);
 

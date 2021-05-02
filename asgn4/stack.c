@@ -85,7 +85,7 @@ bool stack_peek(Stack *s, uint32_t *x) {
 
 //Make dst same as src
 void stack_copy(Stack *dst, Stack *src) {
-    for (int items = 0; items < VERTICES; items++) {
+    for (uint32_t items = 0; items < src->top; items++) {
         dst->items[items] = src->items[items];
     }
     dst->top = src->top;
