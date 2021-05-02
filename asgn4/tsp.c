@@ -24,6 +24,8 @@ OPTIONS\n\
   -i infile      Input containing graph (default: stdin)\n\
   -o outfile     Output of computed path (default: stdout)\n";
 
+char deadend[100] = "There's nowhere to go.\n";
+
 int recursetimes = 0; //Counter for amoount of recursive calls
 int flagham; //Flag that signals if all points are visited
 bool verbose = false; //Verbose printing on or off?
@@ -101,11 +103,9 @@ int main(int argc, char *argv[]) {
 
             if (optarg != NULL) { //If argument isn't null
                 snprintf(file, 20, "%s", optarg);
-                if (access(file, R_OK) == 0) { // if file exists
-
-                    break;
-                } else {
+                if (access(file, R_OK) != 0) { // if file exists
                     fprintf(stderr, "Error: failed to open infile.\n");
+		    return 0;
                 }
             }
             break;
@@ -127,7 +127,7 @@ int main(int argc, char *argv[]) {
     fgets(buffer, 100, stdin); //Read the first line which is amount of vertices
     uint32_t amcities = atoi(buffer); //Set amcities (amount of cities) to above.
     if (amcities == 0) {
-        fprintf(stderr, "There's nowhere to go.\n");
+        fprintf(stderr, "%s", deadend);
         return 0;
     }
     Graph *G = graph_create(amcities, undir); //Create the graph
@@ -139,7 +139,7 @@ int main(int argc, char *argv[]) {
         if ((i) < amcities) { //If statement ONLY for cities
             if (strndup(buffer, 100) == NULL) {
                 graph_delete(&G);
-                fprintf(stderr, ".There's nowhere to go.\n");
+                fprintf(stderr, "%s", deadend);
                 return 0;
             }
             cities[i] = strndup(buffer, 1023);
@@ -157,12 +157,12 @@ int main(int argc, char *argv[]) {
                 return 0;
             }
         }
-        graph_add_edge(G, temp[0], temp[1],
-            temp[2]); //Pass the temporary array of values to create an edge on graph
+       	//Pass the temporary array of values to create an edge on graph
+        graph_add_edge(G, temp[0], temp[1], temp[2]);
     }
     if (graph_vertices(G) == 1) {
         graph_delete(&G);
-        fprintf(stderr, "There's nowhere to go.\n");
+        fprintf(stderr, "%s", deadend);
         return 0;
     }
     fclose(stdin);
