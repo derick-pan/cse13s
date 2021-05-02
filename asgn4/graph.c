@@ -21,10 +21,6 @@ typedef struct Graph {
 
 Graph *graph_create(uint32_t vertices, bool undirected) {
     Graph *G = (Graph *) malloc(sizeof(Graph));
-    if (G == NULL) {
-        printf("Graph Create returned Null");
-        return NULL;
-    }
     if (G) {
         G->vertices = vertices;
         G->undirected = undirected; //True means undirected

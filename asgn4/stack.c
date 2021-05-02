@@ -1,7 +1,6 @@
 //Derick Pan
 //dpan7
 //Asgn4
-
 #include "stack.h"
 
 #include "vertices.h"
@@ -12,7 +11,6 @@
 #include <stdlib.h>
 
 /*Most of these helper functions are my functions from Asgn3's stack*/
-
 typedef struct Stack { //This struct is from the asg4_Doc.pdf
     uint32_t top; //Index of next mt slot
     uint32_t capacity; // # of items can push

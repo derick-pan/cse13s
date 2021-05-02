@@ -58,9 +58,19 @@ USAGE
   ./tsp [-u] [-v] [-h] [-i infile] [-o outfile]
 
 OPTIONS
-  -u             Use undirected graph.
-  -v             Enable verbose printing.
-  -h             Program usage and help.
-  -i infile      Input containing graph (default: stdin)
-  -o outfile     Output of computed path (default: stdout)
+  -u             Use undirected graph.  This allows the user to specify
+					whether or not they want their 
+					graph to be directed/undirected.
+
+  -v             Enable verbose printing. This allows the user to see
+					  all of the hamiltonian paths that
+					  stood a chance of being the shortest
+
+  -h             Program usage and help. User has to know what to do! This shows them
+
+  -i infile      Input containing graph (default: stdin) Allows the code to know where 
+							 the graph details are coming from
+
+  -o outfile     Output of computed path (default: stdout) If the user wants the code's output
+							   to be in a specified file.
 
