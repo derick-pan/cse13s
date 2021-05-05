@@ -4,7 +4,7 @@
 //bm.c Bit matrix ADT
 #include "bm.h"
 #include "bv.h"
-#include "hamming.h"
+//#include "hamming.h"
 #include <ctype.h>
 #include <inttypes.h>
 #include <stdint.h>
@@ -26,13 +26,20 @@ BitMatrix *bm_create(uint32_t rows, uint32_t cols){
     m->rows = rows;
     m->cols = cols;
     uint32_t matlength = rows *cols;
-    m->vector = (BitVector *) calloc(matlength, sizeof(uint32_t));
+    //m->vector = (BitVector *) calloc(matlength, sizeof(uint32_t));
     m->vector = bv_create(matlength);
+    for ( uint8_t i = 0; i < m->rows; i++){
+        for ( uint8_t j = 0; j < m->cols; j++){
+            bm_clr_bit(m,i,j);
+        }
+    }
     return m;
 }
 
 void bm_delete(BitMatrix **m){
+    bv_delete(&(*m)->vector);
     free((*m)->vector);
+
     free(*m);
     *m = NULL;
 }
@@ -79,13 +86,14 @@ BitMatrix *bm_from_data(uint8_t byte, uint32_t length){
         i+=1;
     }
     return newmatrix;
-}
+ } //   0010   0011
 
 //Extract first 8 bits of matrix, and return.
+//4x4 matrix
 uint8_t bm_to_data(BitMatrix *m){
     uint8_t data = 0;
-    for (uint32_t i = 0; i <= 8; i++){
-        uint8_t val= bm_get_bit(m, 1,i);
+    for (uint32_t i = 0; i < 8; i++){
+        uint8_t val= bm_get_bit(m, 0,i);
         data |= val; //Or the val to keep it.
         data <<= 1;  //Shift left by 1
     }
@@ -95,13 +103,17 @@ uint8_t bm_to_data(BitMatrix *m){
 //Multiply matrix
 BitMatrix *bm_multiply(BitMatrix *A, BitMatrix *B){
     BitMatrix *multiplied = bm_create( bm_rows(A), bm_cols(A));
+
     uint8_t col = 0;
-    for (uint8_t i = 0; i < A->cols; i++){
-        uint8_t temp;
-        for (uint8_t j = 0; j < A->cols; j++){  //Iterate over the 1x4 matrix
+    for (uint8_t i = 0; i < A->cols; i++){ //Iterate over the A matrix
+
+        uint8_t temp=0;
+        for (uint8_t j = 0; j < B->cols; j++){   //Iterate over the B matrix
+
             uint8_t abit= bm_get_bit(A,0,j); //Value of A's
             abit &= bm_get_bit(B, j, col); // And it
             temp^= abit;    //XOR previous vals
+
             if (j==A->cols-1){ col +=1;}
         }
         bm_set_bit(multiplied, 0, i);
@@ -110,9 +122,9 @@ BitMatrix *bm_multiply(BitMatrix *A, BitMatrix *B){
 }
 
 void bm_print(BitMatrix *m){
-    for ( uint8_t i = 0; i <= m->rows; i++){
+    for ( uint8_t i = 0; i < m->rows; i++){
 
-        for ( uint8_t j = 0; j <= m->cols; j++){
+        for ( uint8_t j = 0; j < m->cols; j++){
             printf("%u ", bm_get_bit(m,i,j));
         }
         printf("\n");

@@ -4,7 +4,7 @@
 //Bit vector bv.c
 #include "bm.h"
 #include "bv.h"
-#include "hamming.h"
+//#include "hamming.h"
 #include <ctype.h>
 #include <inttypes.h>
 #include <stdint.h>
@@ -13,6 +13,8 @@
 #include <string.h>
 #include <unistd.h>
 #define byte_length(x) ((x/8) + !!(x%8))
+
+//1 d array
 
 
 typedef struct BitVector {
@@ -24,8 +26,8 @@ BitVector *bv_create(uint32_t length){
     BitVector *v = (BitVector *) malloc(sizeof(BitVector));
     v->length = length;
     v->vector = (uint8_t *) calloc(byte_length(length), sizeof(uint8_t));
-    for (uint8_t i = 0; i <= byte_length(length); i++){
-        v->vector[i] = 0;
+    for (uint8_t i = 0; i < length; i++){
+        bv_clr_bit(v,0);
     }
     return v;
 }
@@ -54,6 +56,7 @@ void bv_clr_bit(BitVector *v, uint32_t i){
     return;
 }
 
+//
 void bv_xor_bit(BitVector *v, uint32_t i, uint8_t bit){
     v->vector[i/8] ^= ~((uint64_t) bit << (i % 8) );
     return;
