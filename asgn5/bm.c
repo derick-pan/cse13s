@@ -76,11 +76,11 @@ BitMatrix *bm_from_data(uint8_t byte, uint32_t length){
     uint8_t i = 0;
     while (byte) {
         if (byte & 1) {  //If first bit is 1:
-            bm_clr_bit(newmatrix, 1, i);
-            bm_set_bit(newmatrix,1,i);
+            bm_clr_bit(newmatrix, 0, i);
+            bm_set_bit(newmatrix,0,i);
         }
         else{ //If first bit is 0:
-            bm_clr_bit(newmatrix, 1, i);
+            bm_clr_bit(newmatrix, 0, i);
         }
         byte >>= 1;  //Right shift by 1
         i+=1;
@@ -92,10 +92,16 @@ BitMatrix *bm_from_data(uint8_t byte, uint32_t length){
 //4x4 matrix
 uint8_t bm_to_data(BitMatrix *m){
     uint8_t data = 0;
-    for (uint32_t i = 0; i < 8; i++){
-        uint8_t val= bm_get_bit(m, 0,i);
-        data |= val; //Or the val to keep it.
-        data <<= 1;  //Shift left by 1
+    uint8_t counter = 0;
+    for (uint8_t i = 0; i < bm_rows(m); i++){
+        for (uint32_t j = 0; j < bm_cols(m); j++){
+            if (counter == 7){return data;}
+
+            uint8_t val= bm_get_bit(m, i,j);
+            data |= val; //Or the val to keep it.
+            data <<= 1;  //Shift left by 1
+            counter +=1;
+        }
     }
     return data;
 }
