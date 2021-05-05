@@ -112,23 +112,21 @@ uint8_t bm_to_data(BitMatrix *m) {
 BitMatrix *bm_multiply(BitMatrix *A, BitMatrix *B) {
     BitMatrix *multiplied = bm_create( bm_rows(A), bm_cols(B));
 
-    //uint8_t col = 0;
-    //i=  0 1 2 3
+
     for (uint8_t i = 0; i < B->cols; i++){ //Iterate over the A matrix
 
         uint8_t temp=0;
-        //temp = bm_get_bit(A,0,i) * bm_get_bit(B, 0, i);
-        //    j =  0 1 2 3 4 5 6 7
+
         for (uint8_t j = 0; j < A->cols; j++){   //Iterate over the B matrix
 
-            printf("%u  times %u\n",bm_get_bit(A,0,j) ,bm_get_bit(B, j, i));
+            //printf("%u  times %u\n",bm_get_bit(A,0,j) ,bm_get_bit(B, j, i));
 
             uint8_t abit= bm_get_bit(A,0,j) * bm_get_bit(B, j, i); //Value of A's
-            printf("abit %u\n",abit);
+            //printf("abit %u\n",abit);
             temp = temp + abit;    //XOR previous vals
-            printf("TEMP: %u\n\n", temp);
+            //printf("TEMP: %u\n\n", temp);
         }
-        printf("NEXTT########################################\n");
+        //printf("NEXTT########################################\n");
         //printf("%u",temp);
         temp = temp % 2;
 
@@ -142,31 +140,6 @@ BitMatrix *bm_multiply(BitMatrix *A, BitMatrix *B) {
     return multiplied;
 }
 
-    /*
-    BitMatrix *multiplied = bm_create(bm_rows(A), bm_cols(B));
-    uint8_t temp;
-
-        for (uint8_t j = 0; j < B->cols; j++) { //Iterate over the B matrix
-            uint8_t prev =0;
-            for (uint8_t k = 0; k < A->cols; k++) { //Iterate over the A matrix
-
-                //printf("j: %u ,  k: %u \n", j,k);
-                temp = (bm_get_bit(A, 0, k) * bm_get_bit(B, k, j));
-                prev +=temp;
-                //bv_xor_bit(multiplied->vector, j, temp);
-                printf("Temp: %u\n", temp);
-                //bm_print(multiplied);
-            }
-            prev %= 2;
-            if (prev ==1){
-                bm_set_bit(multiplied, 0, j);
-            }
-            else {bm_clr_bit(multiplied, 0, j);}
-        }
-
-    return multiplied;
-}
-*/
 void bm_print(BitMatrix *m) {
     for (uint8_t i = 0; i < m->rows; i++) {
 
