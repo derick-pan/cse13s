@@ -122,8 +122,7 @@ Corrected errors: %d\n\
 Error rate: %lf\n",
             total, uncorrected, corrected, error_rate);
     }
-
-    fclose(stdin);
+    fclose(filein);
     fclose(outfile);
     bm_delete(&Ht);
 }

@@ -39,7 +39,6 @@ uint8_t pack_byte(uint8_t upper, uint8_t lower) {
 
 int main(int argc, char *argv[]) {
     int choice;
-    //bool sdout = false;
     char infile[20]; //Read the file input from user
     char fileout[100]; //File output for user
     FILE *filein;
@@ -99,8 +98,6 @@ int main(int argc, char *argv[]) {
         fputc(msg1, outfile);
         fputc(msg2, outfile);
     }
-    //fputs("EOF", outfile); //Does this work
-    //fputs("\n",outfile); //Does this work
 
     fclose(filein);
     fclose(outfile);
