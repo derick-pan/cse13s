@@ -42,7 +42,8 @@ int main(int argc, char *argv[]) {
     //bool sdout = false;
     char infile[20]; //Read the file input from user
     char fileout[100]; //File output for user
-    FILE *stdin;
+    FILE *filein;
+    filein = stdin;
     FILE *outfile;
     outfile = stdout;
     while ((choice = getopt(argc, argv, "hi:o:")) != -1) {
@@ -53,7 +54,7 @@ int main(int argc, char *argv[]) {
                 printf("sad1\n");
                 snprintf(infile, 20, "%s", optarg);
                 printf("sad2\n");
-                stdin = fopen(optarg, "r");
+                filein = fopen(optarg, "r");
                 printf("sad3\n");
                 if (access(infile, R_OK) != 0) { // if file exists
                     fprintf(stderr, "Error: failed to open infile.\n");
@@ -92,7 +93,7 @@ int main(int argc, char *argv[]) {
     uint8_t msg1;
     uint8_t msg2;
     int read;
-    while ((read = fgetc(stdin)) != EOF) { //Every byte we read becomes two message bits
+    while ((read = fgetc(filein)) != EOF) { //Every byte we read becomes two message bits
         msg1 = ham_encode(G, lower_nibble(read)); //8 bits long
         msg2 = ham_encode(G, upper_nibble(read)); //8 bits long
         fputc(msg1, outfile);

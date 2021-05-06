@@ -52,11 +52,11 @@ int main(int argc, char *argv[]) {
         case 'v': break; //Print stats of decoding
         case 'i':
             if (optarg != NULL) { //If argument isn't null
-                printf("sad1\n");
+                //printf("sad1\n");
                 snprintf(infile, 20, "%s", optarg);
-                printf("sad2\n");
+                //printf("sad2\n");
                 stdin = fopen(optarg, "r");
-                printf("sad3\n");
+                //printf("sad3\n");
                 if (access(infile, R_OK) != 0) { // if file exists
                     fprintf(stderr, "Error: failed to open infile.\n");
                     exit(0);
@@ -79,30 +79,42 @@ int main(int argc, char *argv[]) {
     fstat(fileno(stdin), &statbuf);
     fchmod(fileno(outfile), statbuf.st_mode);
 
-    BitMatrix *G = bm_create(8, 4);
+    //Create the transposed Matrix
+    BitMatrix *Ht = bm_create(8, 4);
     for (uint8_t i = 4; i < 8; i++) { //Columns
         for (uint8_t j = 0; j < 4; j++) { //Rows
             if (j + 4 == i) {
-                bm_set_bit(G, i, j);
+                bm_set_bit(Ht, i, j);
             }
         }
     }
     for (uint8_t i = 0; i < 4; i++) { //Columns
         for (uint8_t j = 0; j < 4; j++) { //Rows
             if (i != j) {
-                bm_set_bit(G, j, i);
+                bm_set_bit(Ht, j, i);
             }
         }
     }
 
-    bm_print(G);
-    uint8_t msg;
-    while ((choice = fgetc(stdin)) != EOF) {
+    bm_print(Ht);
+    uint8_t msg1;
+    uint8_t msg2;
+    choice = 0;
+    int choice2;
+    while ((choice = fgetc(stdin)) != EOF) { //Every Byte is a code
+        //We need two codes to convert back to a singular byte of data
 
-        ham_decode(G, pack_byte(fgetc(stdin), choice), &msg);
-        //ham_encode(G, lower_nibble(choice));
-        //fprintf(outfile,"countin: %u sup\n",ham_encode(G, lower_nibble(fgetc(stdin))));
-        fputc(lower_nibble(msg), outfile);
+        choice2 = fgetc(stdin);
+        //printf("%d , %d \n", choice,choice2);
+        ham_decode(Ht, choice, &msg1); //Read in first Code || Hamming code for lower nibble
+        ham_decode(Ht, choice2, &msg2); //Read in second code || Hamming code for upper nibble
+        //printf("%u  , %u \n", msg1,msg2);
+        //fputc(pack_byte(lower_nibble(msg1),upper_nibble(msg2) ), outfile);
+        //fputc(pack_byte(upper_nibble(msg2), lower_nibble(msg1)), outfile);
+        fputc(pack_byte(lower_nibble(msg2), lower_nibble(msg1)), outfile);
+        //fputc(pack_byte(msg2, msg1), outfile);
     }
-    bm_delete(&G);
+    fclose(stdin);
+    fclose(outfile);
+    bm_delete(&Ht);
 }
