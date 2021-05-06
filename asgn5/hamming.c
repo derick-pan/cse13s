@@ -25,7 +25,10 @@ uint8_t ham_encode(BitMatrix *G, uint8_t msg) {
     // c = mG
     BitMatrix *temp = bm_from_data(msg, 4);
     BitMatrix *mult = bm_multiply(temp, G);
+    printf("Before: ");
+    bm_print(mult);
     uint8_t encoded = bm_to_data(mult);
+    printf("After, %u\n", encoded);
     bm_delete(&mult);
     bm_delete(&temp);
     return encoded;
