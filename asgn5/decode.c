@@ -112,7 +112,7 @@ int main(int argc, char *argv[]) {
         ham_decode(Ht, choice2, &msg2); //Read in second code || Hamming code for upper nibble
         fputc(pack_byte(lower_nibble(msg2), lower_nibble(msg1)), outfile);
     }
-    fputs("EOF", outfile); //Does this work
+    //fputs("EOF", outfile); //Does this work
 
     if (stats == true) {
         double error_rate = (double) uncorrected / total;

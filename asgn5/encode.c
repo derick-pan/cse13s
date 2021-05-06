@@ -99,6 +99,7 @@ int main(int argc, char *argv[]) {
         fputc(msg1, outfile);
         fputc(msg2, outfile);
     }
+    //fputs("EOF", outfile); //Does this work
     //fputs("\n",outfile); //Does this work
 
     fclose(filein);
