@@ -51,11 +51,11 @@ int main(int argc, char *argv[]) {
         case 'h': fprintf(stderr, "%s", usage); exit(0); // Print helps
         case 'i':
             if (optarg != NULL) { //If argument isn't null
-                printf("sad1\n");
+                //printf("sad1\n");
                 snprintf(infile, 20, "%s", optarg);
-                printf("sad2\n");
+                //printf("sad2\n");
                 filein = fopen(optarg, "r");
-                printf("sad3\n");
+                //printf("sad3\n");
                 if (access(infile, R_OK) != 0) { // if file exists
                     fprintf(stderr, "Error: failed to open infile.\n");
                     exit(0);
@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
         }
     }
     struct stat statbuf;
-    fstat(fileno(stdin), &statbuf);
+    fstat(fileno(filein), &statbuf);
     fchmod(fileno(outfile), statbuf.st_mode);
 
     BitMatrix *G = bm_create(4, 8);
@@ -89,7 +89,7 @@ int main(int argc, char *argv[]) {
             }
         }
     }
-    bm_print(G);
+    //bm_print(G);
     uint8_t msg1;
     uint8_t msg2;
     int read;
@@ -99,5 +99,9 @@ int main(int argc, char *argv[]) {
         fputc(msg1, outfile);
         fputc(msg2, outfile);
     }
+    //fputs("\n",outfile); //Does this work
+
+    fclose(filein);
+    fclose(outfile);
     bm_delete(&G);
 }

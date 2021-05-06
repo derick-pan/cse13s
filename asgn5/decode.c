@@ -8,6 +8,7 @@
 
 #include <ctype.h>
 #include <inttypes.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -25,6 +26,9 @@ OPTIONS\n\
   -v             Print statistics of decoding to stderr.\n\
   -i infile      Input data to decode.\n\
   -o outfile     Output of decoded data.\n";
+int total;
+int uncorrected;
+int corrected;
 
 uint8_t lower_nibble(uint8_t val) {
     return val & 0xF;
@@ -40,22 +44,23 @@ uint8_t pack_byte(uint8_t upper, uint8_t lower) {
 
 int main(int argc, char *argv[]) {
     int choice;
-    //bool sdout = false;
+    bool stats = false;
     char infile[20]; //Read the file input from user
     char fileout[100]; //File output for user
-    FILE *stdin;
+    FILE *filein;
+    filein = stdin;
     FILE *outfile;
     outfile = stdout;
     while ((choice = getopt(argc, argv, "hvi:o:")) != -1) {
         switch (choice) {
         case 'h': fprintf(stderr, "%s", usage); exit(0); // Print helps
-        case 'v': break; //Print stats of decoding
+        case 'v': stats = true; break; //Print stats of decoding
         case 'i':
             if (optarg != NULL) { //If argument isn't null
                 //printf("sad1\n");
                 snprintf(infile, 20, "%s", optarg);
                 //printf("sad2\n");
-                stdin = fopen(optarg, "r");
+                filein = fopen(optarg, "r");
                 //printf("sad3\n");
                 if (access(infile, R_OK) != 0) { // if file exists
                     fprintf(stderr, "Error: failed to open infile.\n");
@@ -76,7 +81,7 @@ int main(int argc, char *argv[]) {
         }
     }
     struct stat statbuf;
-    fstat(fileno(stdin), &statbuf);
+    fstat(fileno(filein), &statbuf);
     fchmod(fileno(outfile), statbuf.st_mode);
 
     //Create the transposed Matrix
@@ -96,24 +101,28 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    bm_print(Ht);
     uint8_t msg1;
     uint8_t msg2;
     choice = 0;
     int choice2;
-    while ((choice = fgetc(stdin)) != EOF) { //Every Byte is a code
+    while ((choice = fgetc(filein)) != EOF) { //Every Byte is a code
         //We need two codes to convert back to a singular byte of data
-
-        choice2 = fgetc(stdin);
-        //printf("%d , %d \n", choice,choice2);
+        choice2 = fgetc(filein);
         ham_decode(Ht, choice, &msg1); //Read in first Code || Hamming code for lower nibble
         ham_decode(Ht, choice2, &msg2); //Read in second code || Hamming code for upper nibble
-        //printf("%u  , %u \n", msg1,msg2);
-        //fputc(pack_byte(lower_nibble(msg1),upper_nibble(msg2) ), outfile);
-        //fputc(pack_byte(upper_nibble(msg2), lower_nibble(msg1)), outfile);
         fputc(pack_byte(lower_nibble(msg2), lower_nibble(msg1)), outfile);
-        //fputc(pack_byte(msg2, msg1), outfile);
     }
+    fputs("EOF", outfile); //Does this work
+
+    if (stats == true) {
+        double error_rate = 100.0 * uncorrected / total;
+        fprintf(stderr, "Total bytes processed: %d\n\
+        Uncorrected errors: %d\n\
+        Corrected errors: %d\n\
+        Error rate: %lf\n",
+            total, uncorrected, corrected, error_rate);
+    }
+
     fclose(stdin);
     fclose(outfile);
     bm_delete(&Ht);

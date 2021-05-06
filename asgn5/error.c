@@ -1,10 +1,11 @@
+#include "hamming.h"
+
 #include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
 #include <sys/uio.h>
 #include <unistd.h>
-
 #define OPTIONS "hs:e:"
 #define SEED    2021
 #define KB      1024
