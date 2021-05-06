@@ -110,31 +110,29 @@ uint8_t bm_to_data(BitMatrix *m) {
 
 //Multiply matrix       A=1 X           X ?
 BitMatrix *bm_multiply(BitMatrix *A, BitMatrix *B) {
-    BitMatrix *multiplied = bm_create( bm_rows(A), bm_cols(B));
+    BitMatrix *multiplied = bm_create(bm_rows(A), bm_cols(B));
 
+    for (uint8_t i = 0; i < B->cols; i++) { //Iterate over the A matrix
 
-    for (uint8_t i = 0; i < B->cols; i++){ //Iterate over the A matrix
+        uint8_t temp = 0;
 
-        uint8_t temp=0;
-
-        for (uint8_t j = 0; j < A->cols; j++){   //Iterate over the B matrix
+        for (uint8_t j = 0; j < A->cols; j++) { //Iterate over the B matrix
 
             //printf("%u  times %u\n",bm_get_bit(A,0,j) ,bm_get_bit(B, j, i));
 
-            uint8_t abit= bm_get_bit(A,0,j) * bm_get_bit(B, j, i); //Value of A's
+            uint8_t abit = bm_get_bit(A, 0, j) * bm_get_bit(B, j, i); //Value of A's
             //printf("abit %u\n",abit);
-            temp = temp + abit;    //XOR previous vals
+            temp = temp + abit; //XOR previous vals
             //printf("TEMP: %u\n\n", temp);
         }
         //printf("NEXTT########################################\n");
         //printf("%u",temp);
         temp = temp % 2;
 
-        if (temp ==1){
+        if (temp == 1) {
             bm_set_bit(multiplied, 0, i);
-        }
-        else{
-            bm_clr_bit(multiplied,0,i );
+        } else {
+            bm_clr_bit(multiplied, 0, i);
         }
     }
     return multiplied;
