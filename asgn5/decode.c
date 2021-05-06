@@ -100,10 +100,10 @@ int main(int argc, char *argv[]) {
     uint8_t msg;
     while ((choice = fgetc(stdin)) != EOF) {
 
-        msg= ham_decode(G,pack_byte(fgetc(stdin),choice),&msg);
+        ham_decode(G,pack_byte(fgetc(stdin),choice),&msg);
         //ham_encode(G, lower_nibble(choice));
         //fprintf(outfile,"countin: %u sup\n",ham_encode(G, lower_nibble(fgetc(stdin))));
-        fputc(msg,outfile);
+        fputc(lower_nibble(msg),outfile);
     }
     bm_delete(&G);
 }

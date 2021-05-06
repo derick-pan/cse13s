@@ -90,13 +90,14 @@ int main(int argc, char *argv[]) {
     }
     bm_print(G);
     uint8_t msg;
-    while ((choice = fgetc(stdin)) != EOF) {
+    int read;
+    while ((read = fgetc(stdin)) != EOF) {
 
         //ham_encode(G, lower_nibble(choice));
         //fprintf(outfile,"countin: %u sup\n",ham_encode(G, lower_nibble(fgetc(stdin))));
 
-        msg = ham_encode(G, lower_nibble(choice));
-            fputc(lower_nibble(msg), outfile);
+        msg = ham_encode(G, lower_nibble(read));
+            fputc(msg, outfile);
     }
     bm_delete(&G);
 }
