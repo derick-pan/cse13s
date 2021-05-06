@@ -115,11 +115,11 @@ int main(int argc, char *argv[]) {
     fputs("EOF", outfile); //Does this work
 
     if (stats == true) {
-        double error_rate = 100.0 * uncorrected / total;
+        double error_rate = (double) uncorrected / total;
         fprintf(stderr, "Total bytes processed: %d\n\
-        Uncorrected errors: %d\n\
-        Corrected errors: %d\n\
-        Error rate: %lf\n",
+Uncorrected errors: %d\n\
+Corrected errors: %d\n\
+Error rate: %lf\n",
             total, uncorrected, corrected, error_rate);
     }
 

@@ -51,9 +51,10 @@ HAM_STATUS ham_decode(BitMatrix *Ht, uint8_t code, uint8_t *msg) {
         uncorrected += 1;
         return HAM_ERR;
     }
-    if (lookup(ebinary) >= 4) {
+    if (lookup(ebinary) > 4) {
         *msg
             = code; //This is 8 bits, the main needs to convert this into upper_nibble UPPER BC IT"S UINT
+        corrected += 1;
         return HAM_CORRECT;
     }
     if (bm_get_bit(codeMat, 0, lookup(ebinary)) == 1) {
