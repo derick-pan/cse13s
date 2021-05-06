@@ -15,7 +15,6 @@
 #include <string.h>
 #include <unistd.h>
 
-
 int lookup(uint8_t e) {
     int moves[] = { -3, 4, 5, HAM_ERR, 6, HAM_ERR, HAM_ERR, 3, 7, HAM_ERR, HAM_ERR, 2, HAM_ERR, 1,
         0, HAM_ERR };

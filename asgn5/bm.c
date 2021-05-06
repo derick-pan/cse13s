@@ -71,7 +71,7 @@ uint8_t bm_get_bit(BitMatrix *m, uint32_t r, uint32_t c) {
     return bv_get_bit(m->vector, bitnum(r, m->cols, c));
 }
 
-//                             code, 4
+//                             code, 4 or 8
 BitMatrix *bm_from_data(uint8_t byte, uint32_t length) {
     BitMatrix *newmatrix = bm_create(1, length);
     uint8_t i = 0;
@@ -89,21 +89,15 @@ BitMatrix *bm_from_data(uint8_t byte, uint32_t length) {
 } //   0010   0011
 
 //Extract first 8 bits of matrix, and return.
-//4x4 matrix
 uint8_t bm_to_data(BitMatrix *m) {
     uint8_t data = 0;
     uint8_t counter = 0;
     for (uint8_t i = 0; i < bm_rows(m); i++) {
-        for (uint32_t j = 0; j < bm_cols(m); j++) {
-            if (counter == 7) {
-                return data;
-            }
-
-            uint8_t val = bm_get_bit(m, i, j);
-            data |= val; //Or the val to keep it.
+        for (uint8_t j = 0; ((j < bm_cols(m)) && (counter != 8)); j++) {
             data <<= 1; //Shift left by 1
-            counter += 1;
-        }
+            data |= bm_get_bit(m, i, j); //Or the val to keep it.
+            counter +=1;
+            }
     }
     return data;
 }
