@@ -23,10 +23,15 @@ int lookup(uint8_t e) {
 uint8_t ham_encode(BitMatrix *G, uint8_t msg) {
     //if msg is 4 bits then generate c by vector matrix multiplication
     // c = mG
-    BitMatrix *temp = bm_from_data(msg, 4);
 
-    BitMatrix *mult = bm_multiply(temp, G);
+    BitMatrix *temp = bm_from_data(msg, 4); //Convert Binary into matrix
 
+    printf("multiply:\n");
+    bm_print(temp);
+    BitMatrix *mult = bm_multiply(temp, G); //Mult matrix with G
+    printf("ANSWER:\n");
+    bm_print(mult);
+    printf("\n\n");
     uint8_t encoded = bm_to_data(mult);
 
     bm_delete(&mult);

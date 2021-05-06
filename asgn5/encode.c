@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
     uint8_t msg1;
     uint8_t msg2;
     int read;
-    while ((read = fgetc(stdin)) != EOF) {//Every byte we read becomes two message bits
+    while ((read = fgetc(stdin)) != EOF) { //Every byte we read becomes two message bits
         msg1 = ham_encode(G, lower_nibble(read)); //8 bits long
         msg2 = ham_encode(G, upper_nibble(read)); //8 bits long
         fputc(msg1, outfile);

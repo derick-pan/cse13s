@@ -96,8 +96,8 @@ uint8_t bm_to_data(BitMatrix *m) {
         for (uint8_t j = 0; ((j < bm_cols(m)) && (counter != 8)); j++) {
             data <<= 1; //Shift left by 1
             data |= bm_get_bit(m, i, j); //Or the val to keep it.
-            counter +=1;
-            }
+            counter += 1;
+        }
     }
     return data;
 }
@@ -111,7 +111,6 @@ BitMatrix *bm_multiply(BitMatrix *A, BitMatrix *B) {
         for (uint8_t j = 0; j < A->cols; j++) { //Iterate over the B matrix
             uint8_t abit = bm_get_bit(A, 0, j) * bm_get_bit(B, j, i); //Value of A's
             temp = temp + abit; //XOR previous vals
-
         }
 
         temp = temp % 2;

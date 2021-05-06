@@ -26,7 +26,6 @@ OPTIONS\n\
   -i infile      Input data to decode.\n\
   -o outfile     Output of decoded data.\n";
 
-
 uint8_t lower_nibble(uint8_t val) {
     return val & 0xF;
 }
@@ -83,7 +82,7 @@ int main(int argc, char *argv[]) {
     BitMatrix *G = bm_create(8, 4);
     for (uint8_t i = 4; i < 8; i++) { //Columns
         for (uint8_t j = 0; j < 4; j++) { //Rows
-            if (j+4== i) {
+            if (j + 4 == i) {
                 bm_set_bit(G, i, j);
             }
         }
@@ -100,10 +99,10 @@ int main(int argc, char *argv[]) {
     uint8_t msg;
     while ((choice = fgetc(stdin)) != EOF) {
 
-        ham_decode(G,pack_byte(fgetc(stdin),choice),&msg);
+        ham_decode(G, pack_byte(fgetc(stdin), choice), &msg);
         //ham_encode(G, lower_nibble(choice));
         //fprintf(outfile,"countin: %u sup\n",ham_encode(G, lower_nibble(fgetc(stdin))));
-        fputc(lower_nibble(msg),outfile);
+        fputc(lower_nibble(msg), outfile);
     }
     bm_delete(&G);
 }
