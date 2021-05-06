@@ -89,15 +89,14 @@ int main(int argc, char *argv[]) {
         }
     }
     bm_print(G);
-    uint8_t msg;
+    uint8_t msg1;
+    uint8_t msg2;
     int read;
-    while ((read = fgetc(stdin)) != EOF) {
-
-        //ham_encode(G, lower_nibble(choice));
-        //fprintf(outfile,"countin: %u sup\n",ham_encode(G, lower_nibble(fgetc(stdin))));
-
-        msg = ham_encode(G, lower_nibble(read));
-            fputc(msg, outfile);
+    while ((read = fgetc(stdin)) != EOF) {//Every byte we read becomes two message bits
+        msg1 = ham_encode(G, lower_nibble(read)); //8 bits long
+        msg2 = ham_encode(G, upper_nibble(read)); //8 bits long
+        fputc(msg1, outfile);
+        fputc(msg2, outfile);
     }
     bm_delete(&G);
 }
