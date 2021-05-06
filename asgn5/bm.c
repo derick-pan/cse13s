@@ -91,14 +91,15 @@ BitMatrix *bm_from_data(uint8_t byte, uint32_t length) {
 //Extract first 8 bits of matrix, and return.
 uint8_t bm_to_data(BitMatrix *m) {
     uint8_t data = 0;
-    uint8_t counter = 0;
-    for (uint8_t i = 0; i < bm_rows(m); i++) {
-        for (uint8_t j = 0; ((j < bm_cols(m)) && (counter != 8)); j++) {
-            data <<= 1; //Shift left by 1
-            data |= bm_get_bit(m, i, j); //Or the val to keep it.
-            counter += 1;
-        }
+    uint8_t temp;
+    for (uint8_t j = 0; j < 8; j++) {
+        temp = bm_get_bit(m, 0, j) << j;
+        data |= temp;
+
+        //data |= bm_get_bit(m, 0, j); //Or the val to keep it.
+        //data <<= 1; //Shift left by 1
     }
+
     return data;
 }
 
