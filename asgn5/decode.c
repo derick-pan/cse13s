@@ -26,6 +26,7 @@ OPTIONS\n\
   -v             Print statistics of decoding to stderr.\n\
   -i infile      Input data to decode.\n\
   -o outfile     Output of decoded data.\n";
+
 int total;
 int uncorrected;
 int corrected;
@@ -57,11 +58,8 @@ int main(int argc, char *argv[]) {
         case 'v': stats = true; break; //Print stats of decoding
         case 'i':
             if (optarg != NULL) { //If argument isn't null
-                //printf("sad1\n");
                 snprintf(infile, 20, "%s", optarg);
-                //printf("sad2\n");
                 filein = fopen(optarg, "r");
-                //printf("sad3\n");
                 if (access(infile, R_OK) != 0) { // if file exists
                     fprintf(stderr, "Error: failed to open infile.\n");
                     exit(0);
@@ -84,7 +82,7 @@ int main(int argc, char *argv[]) {
     fstat(fileno(filein), &statbuf);
     fchmod(fileno(outfile), statbuf.st_mode);
 
-    //Create the transposed Matrix
+    /* ########Create the transposed Matrix #############*/
     BitMatrix *Ht = bm_create(8, 4);
     for (uint8_t i = 4; i < 8; i++) { //Columns
         for (uint8_t j = 0; j < 4; j++) { //Rows
@@ -100,19 +98,18 @@ int main(int argc, char *argv[]) {
             }
         }
     }
-
+    /*########## Finished Transposed Matrix ############ */
     uint8_t msg1;
     uint8_t msg2;
-    choice = 0;
     int choice2;
+
     while ((choice = fgetc(filein)) != EOF) { //Every Byte is a code
-        //We need two codes to convert back to a singular byte of data
         choice2 = fgetc(filein);
+        //We need two codes to convert back to a singular byte of data
         ham_decode(Ht, choice, &msg1); //Read in first Code || Hamming code for lower nibble
         ham_decode(Ht, choice2, &msg2); //Read in second code || Hamming code for upper nibble
         fputc(pack_byte(lower_nibble(msg2), lower_nibble(msg1)), outfile);
     }
-    //fputs("EOF", outfile); //Does this work
 
     if (stats == true) {
         double error_rate = (double) uncorrected / total;

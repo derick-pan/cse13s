@@ -25,6 +25,7 @@ OPTIONS\n\
   -i infile      Input data to encode.\n\
   -o outfile     Output of encoded data.\n\
 ";
+
 uint8_t lower_nibble(uint8_t val) {
     return val & 0xF;
 }
@@ -50,11 +51,8 @@ int main(int argc, char *argv[]) {
         case 'h': fprintf(stderr, "%s", usage); exit(0); // Print helps
         case 'i':
             if (optarg != NULL) { //If argument isn't null
-                //printf("sad1\n");
                 snprintf(infile, 20, "%s", optarg);
-                //printf("sad2\n");
                 filein = fopen(optarg, "r");
-                //printf("sad3\n");
                 if (access(infile, R_OK) != 0) { // if file exists
                     fprintf(stderr, "Error: failed to open infile.\n");
                     exit(0);
@@ -88,7 +86,6 @@ int main(int argc, char *argv[]) {
             }
         }
     }
-    //bm_print(G);
     uint8_t msg1;
     uint8_t msg2;
     int read;
