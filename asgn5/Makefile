@@ -9,22 +9,22 @@ format:
 encode: encode.o
 	$(CC) -o encode encode.o bm.o bv.o hamming.o
 encode.o:
-	$(CC) $(CFLAGS) -c bm.c bv.c test.c hamming.c encode.c
+	$(CC) $(CFLAGS) -c bm.c bv.c hamming.c encode.c
 
 decode: decode.o
 	$(CC) -o decode decode.o bm.o bv.o hamming.o
 decode.o:
-	$(CC) $(CFLAGS) -c bm.c bv.c test.c hamming.c decode.c
+	$(CC) $(CFLAGS) -c bm.c bv.c hamming.c decode.c
 
 error: error.o
 	$(CC) -o error error.o bm.o bv.o hamming.o
 error.o:
-	$(CC) $(CFLAGS) -c bm.c bv.c test.c hamming.c error.c
+	$(CC) $(CFLAGS) -c bm.c bv.c hamming.c error.c
 
 entropy: entropy.o
 	$(CC) -o entropy entropy.o bm.o bv.o hamming.o -lm
 entropy.o:
-	$(CC) $(CFLAGS) -c bm.c bv.c test.c hamming.c entropy.c
+	$(CC) $(CFLAGS) -c bm.c bv.c hamming.c entropy.c
 
 
 
