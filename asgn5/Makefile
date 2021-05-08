@@ -26,10 +26,7 @@ entropy: entropy.o
 entropy.o:
 	$(CC) $(CFLAGS) -c bm.c bv.c hamming.c entropy.c
 
-
-
 clean:
 	rm -f encode encode.o decode decode.o error error.o entropy entropy.o pain.o bm.o bv.o hamming.o
-
 scan-build: clean
 	scan-build make

@@ -102,7 +102,6 @@ int main(int argc, char *argv[]) {
     uint8_t msg1;
     uint8_t msg2;
     int choice2;
-
     while ((choice = fgetc(filein)) != EOF) { //Every Byte is a code
         choice2 = fgetc(filein);
         //We need two codes to convert back to a singular byte of data

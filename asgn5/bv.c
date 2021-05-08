@@ -3,9 +3,7 @@
 //Asgn5
 //Bit vector bv.c
 #include "bv.h"
-
 #include "bm.h"
-
 #include <ctype.h>
 #include <inttypes.h>
 #include <stdint.h>

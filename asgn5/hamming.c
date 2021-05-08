@@ -32,7 +32,6 @@ uint8_t ham_encode(BitMatrix *G, uint8_t msg) {
     BitMatrix *mult = bm_multiply(temp, G); //Mult matrix with G
 
     uint8_t encoded = bm_to_data(mult);
-
     bm_delete(&mult);
     bm_delete(&temp);
     return encoded;
@@ -40,14 +39,10 @@ uint8_t ham_encode(BitMatrix *G, uint8_t msg) {
 
 HAM_STATUS ham_decode(BitMatrix *Ht, uint8_t code, uint8_t *msg) {
     total += 1;
-    // WORKING but memory
     BitMatrix *codeMat = bm_from_data(code, 8); // Code in matrix form
     BitMatrix *mult = bm_multiply(codeMat, Ht);
     uint8_t ebinary = bm_to_data(mult); //  Convert E into binary
     code &= 0xF;
-
-    //
-    //
     if (lookup(ebinary) == HAM_OK) { //No correction is needed, return HAM_OK
         *msg = code;
         bm_delete(&codeMat);
@@ -62,7 +57,7 @@ HAM_STATUS ham_decode(BitMatrix *Ht, uint8_t code, uint8_t *msg) {
     }
     if (lookup(ebinary) > 4) {
         *msg = code; //This is 8 bits
-
+	
     } else if (bm_get_bit(codeMat, 0, lookup(ebinary)) == 1) {
         bm_clr_bit(codeMat, 0, lookup(ebinary));
         *msg = bm_to_data(codeMat);

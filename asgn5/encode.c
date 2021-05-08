@@ -5,7 +5,6 @@
 #include "bm.h"
 #include "bv.h"
 #include "hamming.h"
-
 #include <ctype.h>
 #include <inttypes.h>
 #include <stdint.h>
@@ -95,7 +94,6 @@ int main(int argc, char *argv[]) {
         fputc(msg1, outfile);
         fputc(msg2, outfile);
     }
-
     fclose(filein);
     fclose(outfile);
     bm_delete(&G);

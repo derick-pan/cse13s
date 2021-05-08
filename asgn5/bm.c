@@ -3,9 +3,7 @@
 //Asgn5
 //bm.c Bit matrix ADT
 #include "bm.h"
-
 #include "bv.h"
-
 #include <ctype.h>
 #include <inttypes.h>
 #include <stdint.h>
@@ -85,7 +83,6 @@ BitMatrix *bm_from_data(uint8_t byte, uint32_t length) {
     }
     return newmatrix;
 }
-
 //Extract first 8 bits of matrix, and return.
 uint8_t bm_to_data(BitMatrix *m) {
     uint8_t data = 0;
