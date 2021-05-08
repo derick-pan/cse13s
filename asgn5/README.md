@@ -13,7 +13,8 @@ data bits, while the right half is used to calculate the parity of the message.
 To decode, we multiply the code by a DIFFERENT generator matrix. This generator matrix is the transposed matrix
 of the one used to encode a message. We multiply the code by the Transposed matrix to get a 4 bit matrix. If
 the matrix is 0000, then there are no errors, and if it's different we use the lookup table detailed in the DESIGN
-and the hamming.c to see if it's a correctable error or a non-correctable error.
+and the hamming.c to see if it's a correctable error or a non-correctable error. We have the option to inject error
+into the decoder, to see how much noise can be injected and how much is decodeable.
 
 
 -----------------------------------------------------
