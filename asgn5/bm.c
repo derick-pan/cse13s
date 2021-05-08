@@ -3,7 +3,9 @@
 //Asgn5
 //bm.c Bit matrix ADT
 #include "bm.h"
+
 #include "bv.h"
+
 #include <ctype.h>
 #include <inttypes.h>
 #include <stdint.h>
@@ -36,7 +38,7 @@ BitMatrix *bm_create(uint32_t rows, uint32_t cols) {
 
 void bm_delete(BitMatrix **m) {
     bv_delete(&(*m)->vector);
-    free((*m)->vector);
+    //free((*m)->vector);
     free(*m);
     *m = NULL;
 }
@@ -94,10 +96,10 @@ uint8_t bm_to_data(BitMatrix *m) {
     return data;
 }
 
-//  Multiply matrices
+//  Multiply matrices of most sizes
 BitMatrix *bm_multiply(BitMatrix *A, BitMatrix *B) {
     BitMatrix *multiplied = bm_create(bm_rows(A), bm_cols(B));
-    for (uint8_t k = 0; k < A->cols; k++) {
+    for (uint8_t k = 0; k < A->rows; k++) {
         for (uint8_t i = 0; i < B->cols; i++) { //Iterate over the A matrix
             uint8_t temp = 0;
             for (uint8_t j = 0; j < A->cols; j++) { //Iterate over the B matrix
