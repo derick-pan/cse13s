@@ -40,31 +40,34 @@ uint8_t ham_encode(BitMatrix *G, uint8_t msg) {
 HAM_STATUS ham_decode(BitMatrix *Ht, uint8_t code, uint8_t *msg) {
     total += 1;
     BitMatrix *codeMat = bm_from_data(code, 8); // Code in matrix form
-    BitMatrix *mult = bm_multiply(codeMat, Ht);
+    BitMatrix *mult = bm_multiply(codeMat, Ht); //Multipply the codemat by augmented matrix
     uint8_t ebinary = bm_to_data(mult); //  Convert E into binary
-    code &= 0xF;
+
+    code &= 0xF; //&= the code because message should only be 4 bits
+
     if (lookup(ebinary) == HAM_OK) { //No correction is needed, return HAM_OK
         *msg = code;
         bm_delete(&codeMat);
         bm_delete(&mult);
         return HAM_OK;
     }
-    if (lookup(ebinary) == HAM_ERR) {
+    if (lookup(ebinary) == HAM_ERR) { // HAM_ERR means we can't correct it
         uncorrected += 1;
         bm_delete(&codeMat);
         bm_delete(&mult);
         return HAM_ERR;
     }
-    if (lookup(ebinary) > 4) {
+    if (lookup(ebinary) > 4) { // The error's bit doesn't touch the msg
         *msg = code; //This is 8 bits
 
-    } else if (bm_get_bit(codeMat, 0, lookup(ebinary)) == 1) {
+    } else if (bm_get_bit(codeMat, 0, lookup(ebinary)) == 1) { //Flip the incorrect bit
         bm_clr_bit(codeMat, 0, lookup(ebinary));
         *msg = bm_to_data(codeMat);
-    } else {
+    } else { //Flip the incorrect bit
         bm_set_bit(codeMat, 0, lookup(ebinary));
         *msg = bm_to_data(codeMat);
     }
+
     corrected += 1;
     bm_delete(&codeMat);
     bm_delete(&mult);

@@ -46,35 +46,29 @@ uint8_t pack_byte(uint8_t upper, uint8_t lower) {
 int main(int argc, char *argv[]) {
     int choice;
     bool stats = false;
-    char infile[20]; //Read the file input from user
-    char fileout[100]; //File output for user
     FILE *filein;
     filein = stdin;
     FILE *outfile;
     outfile = stdout;
     while ((choice = getopt(argc, argv, "hvi:o:")) != -1) {
         switch (choice) {
-        case 'h': fprintf(stderr, "%s", usage); exit(0); // Print helps
+        case 'h': fprintf(stderr, "%s", usage); exit(1); // Print helps
         case 'v': stats = true; break; //Print stats of decoding
         case 'i':
             if (optarg != NULL) { //If argument isn't null
-                snprintf(infile, 20, "%s", optarg);
-                filein = fopen(optarg, "r");
-                if (access(infile, R_OK) != 0) { // if file exists
+                if ((filein = fopen(optarg, "r")) == NULL) {
                     fprintf(stderr, "Error: failed to open infile.\n");
-                    exit(0);
+                    exit(1);
                 }
             }
             break;
         case 'o':
             if (optarg != NULL) {
-                snprintf(fileout, 20, "%s", optarg);
                 outfile = fopen(optarg, "w");
                 break;
             }
             fprintf(stderr, "Error: failed to open infile.\n");
             exit(0);
-
         case '?': fprintf(stderr, "%s", usage); exit(0);
         }
     }

@@ -40,8 +40,6 @@ uint8_t pack_byte(uint8_t upper, uint8_t lower) {
 
 int main(int argc, char *argv[]) {
     int choice;
-    // char infile[20]; //Read the file input from user
-    // char fileout[100]; //File output for user
     FILE *filein;
     filein = stdin;
     FILE *outfile;
@@ -51,10 +49,7 @@ int main(int argc, char *argv[]) {
         case 'h': fprintf(stderr, "%s", usage); exit(1); // Print helps
         case 'i':
             if (optarg != NULL) { //If argument isn't null
-                // snprintf(infile, 20, "%s", optarg);
-                // filein = fopen(optarg, "r");
                 if ((filein = fopen(optarg, "r")) == NULL) {
-                    // if (access(infile, R_OK) != 0) { // if file exists
                     fprintf(stderr, "Error: failed to open %s.\n", optarg);
                     exit(1);
                 }
@@ -62,13 +57,11 @@ int main(int argc, char *argv[]) {
             break;
         case 'o':
             if (optarg != NULL) {
-                // snprintf(fileout, 20, "%s", optarg);
                 outfile = fopen(optarg, "w");
                 break;
             }
             fprintf(stderr, "Error: failed to open infile.\n");
             exit(1);
-
         case '?': fprintf(stderr, "%s", usage); exit(1);
         }
     }
@@ -76,6 +69,7 @@ int main(int argc, char *argv[]) {
     fstat(fileno(filein), &statbuf);
     fchmod(fileno(outfile), statbuf.st_mode);
 
+    /* ########## CREATE AUGMENTED MATRIX ########### */
     BitMatrix *G = bm_create(4, 8);
     for (uint8_t k = 0; k < 4; k++) { //Left side Diagonal
         bm_set_bit(G, k, k);
@@ -87,14 +81,12 @@ int main(int argc, char *argv[]) {
             }
         }
     }
-    //uint8_t msg1;
-    //uint8_t msg2;
+    /* ######### FINISH AUGMENTED MATRIX ############ */
+
     int read;
     while ((read = fgetc(filein)) != EOF) { //Every byte we read becomes two message bits
-        // msg1 = ham_encode(G, lower_nibble(read));
-        // msg2 = ham_encode(G, upper_nibble(read));
-        fputc(ham_encode(G, lower_nibble(read)), outfile);
-        fputc(ham_encode(G, upper_nibble(read)), outfile);
+        fputc(ham_encode(G, lower_nibble(read)), outfile); //Pass lower nibble
+        fputc(ham_encode(G, upper_nibble(read)), outfile); //Pass Upper nibble
     }
     fclose(filein);
     fclose(outfile);
