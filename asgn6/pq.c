@@ -119,6 +119,7 @@ void pq_print(PriorityQueue *q) {
 
     for (uint32_t i = 0; i < q->size; i++) {
         //printf("%u\n\n", i);
-        printf("postion %u  |  symbol: %u\n", i, q->items[i]->symbol);
+        printf("postion %u  |  symbol: %u | freq: ", i, q->items[i]->symbol);
+        printf("%" PRIu64 "\n", q->items[i]->frequency);
     }
 }
