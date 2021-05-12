@@ -81,36 +81,16 @@ bool enqueue(PriorityQueue *q, Node *n){
     }
     // Begin searching for correct position to place node n
     uint64_t curr = n->frequency;    //The value we need to insert
-    //printf("here1\n");
-    int position = prev_pos(q->tail, q->capacity); //Store my position
-    //printf("After storing position\n");
-    //Position has a value in the array
-    //While my frequency is less than position before me && it exists
-    //printf("%u is the q->items[0]->frequency\n",(q->items[0])->frequency))
-    //printf("position is: %u \n", position);
-
-    //This will be a linear queue
+    int position = q->tail -1; // Store the position to test
+    //This felt more like a bubble sort
     while (position >= 0 && (curr < ((q->items[position])->frequency))) {
-
-        //Then current position is now the position before me
         q->items[position +1] = q->items[position];
-        //printf("Crashed here\n");
-        position = prev_pos(position, q->capacity);
-        //printf("Crashed here??? %u\n\n", position);
+        position -=1;
     }
-    printf("Where the f are you crashing\n");
-    //pq_print(q);
-    printf("\nThe location of the crash is here   %u \n",next_pos(position,q->capacity));
-    q->items[q->tail] = n;
-    //printf("The index of what i Enqueued is %u\n",next_pos(position,q->capacity));
-    printf("pos and tail difference is as follows:\n\n %u , %u\n\n",next_pos(position,q->capacity),next_pos(q->tail,q->capacity) );
-
+    q->items[position+1] = n;
     q->size +=1;
-    q->tail = next_pos(q->tail,q->capacity);
-    printf("Symbol of what I just added in  \n" );
-    node_print(q->items[next_pos(position,q->capacity)]);
-    //node_print(q->items[next_pos(position,q->capacity)]);
-    printf("\n\n\n");
+    q->tail +=1;
+
 return true;
 }
 
@@ -120,14 +100,14 @@ bool dequeue(PriorityQueue *q, Node **n){
         return false;
     }
     //q->head = next_pos(q->head, q->capacity);
+    *n = q->items[q->head];
     q->size -=1;
     *n = q->items[0];
     //Shift the elements one back
     for (uint32_t i = 0; i < q->size ; i++){
         q->items[i] = q->items[i+1];
-
     }
-    *n = q->items[q->head];
+
 
     return true;
 }
@@ -136,8 +116,8 @@ bool dequeue(PriorityQueue *q, Node **n){
 void pq_print(PriorityQueue *q){
 
     for (uint32_t i = 0 ; i < q->capacity; i++){
-        printf("%u\n\n", i);
-        printf("postion %u  |  symbol: %u", i, q->items[i]->symbol);
+        //printf("%u\n\n", i);
+        printf("postion %u  |  symbol: %u\n", i, q->items[i]->symbol);
 
 
 
