@@ -11,14 +11,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-/*
+
 static inline uint8_t prev_pos(uint32_t tail, uint32_t cap) { //from lab1 documentation
     return ((tail + cap - 1) % cap);
 }
 
 static inline uint8_t next_pos(uint32_t tail, uint32_t cap) { //from lab1 documentation
     return ((tail + 1) % cap);
-}*/
+}
 typedef struct PriorityQueue {
     uint32_t capacity;
     uint32_t size;
@@ -34,7 +34,6 @@ PriorityQueue *pq_create(uint32_t capacity) {
         q->size = 0;
         q->head = 0;
         q->tail = 0;
-        //printf("here");
         q->items = (Node **) calloc(capacity, sizeof(Node *)); //allocating array of node poitners
         if (!q->items) {
             free(q);
@@ -67,7 +66,6 @@ bool pq_full(PriorityQueue *q) {
 uint32_t pq_size(PriorityQueue *q) {
     return q->size;
 }
-
 //My enqueue follows similar implementation from my Asgn3 shell.c
 //the lower frequencies should stay towards the head (High priority)
 // [lower, to , higher]
@@ -82,18 +80,16 @@ bool enqueue(PriorityQueue *q, Node *n) {
     }
     // Begin searching for correct position to place node n
     uint64_t curr = n->frequency; //The value we need to insert
-    int position = q->tail - 1; // Store the position to test
-    //This felt more like a bubble sort
-    //While the testing position is >= 0 and
-    //the Node's frequency is less than the position being tested.
-    while (position >= 0 && (curr < ((q->items[position])->frequency))) {
+    uint32_t position = prev_pos(q->tail, q->capacity); // Store the position to test
+        //My frequency is less than previous position
+    while (position != prev_pos(q->head, q->capacity) && curr < q->items[position]->frequency) {
         //We move the node up a spot if so.
-        q->items[position + 1] = q->items[position];
-        position -= 1;
+        q->items[next_pos(position, q->capacity)] = q->items[position];
+        position = prev_pos(position, q->capacity);
     }
-    q->items[position + 1] = n;
+    q->items[next_pos(position, q->capacity)] = n;
     q->size += 1;
-    q->tail += 1;
+    q->tail = next_pos(q->tail, q->capacity);
 
     return true;
 }
@@ -105,21 +101,17 @@ bool dequeue(PriorityQueue *q, Node **n) {
         return false;
     }
     *n = q->items[q->head];
-    q->tail -= 1;
+    q->head = next_pos(q->head, q->capacity);
     q->size -= 1;
-    *n = q->items[0];
-    //Shift the elements one back
-    for (uint32_t i = 0; i < q->size; i++) {
-        q->items[i] = q->items[i + 1];
-    }
     return true;
 }
 
 void pq_print(PriorityQueue *q) {
-
-    for (uint32_t i = 0; i < q->size; i++) {
-        //printf("%u\n\n", i);
+    printf("Head: %u  && Tail: %u && Size: %u\n", q->head, q->tail, q->size);
+    uint32_t counter = 0;
+    for (uint32_t i = q->head; counter != q->size; i = next_pos(i, q->capacity)) {
         printf("postion %u  |  symbol: %u | freq: ", i, q->items[i]->symbol);
         printf("%" PRIu64 "\n", q->items[i]->frequency);
+        counter += 1;
     }
 }
