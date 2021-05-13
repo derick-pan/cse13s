@@ -83,18 +83,14 @@ bool enqueue(PriorityQueue *q, Node *n) {
     uint64_t curr = n->frequency; //The value we need to insert
     uint32_t position = prev_pos(q->tail, q->capacity); // Store the position to test
         //My frequency is less than previous position
-
     while (position != prev_pos(q->head, q->capacity) && curr < q->items[position]->frequency) {
         //We move the node up a spot if so.
-
         q->items[next_pos(position, q->capacity)] = q->items[position]; //Move the lower value up
-
         position = prev_pos(position, q->capacity);
     }
     q->items[next_pos(position, q->capacity)] = n; // Fill in the empty spot
     q->size += 1;
     q->tail = next_pos(q->tail, q->capacity);
-
     return true;
 }
 
