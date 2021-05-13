@@ -14,10 +14,11 @@
 extern uint64_t bytes_read;
 extern uint64_t bytes_written;
 
-int buf[BLOCK]; //Declare buffer in io.c
+static uint8_t buf[BLOCK]; //Declare buffer in io.c
+static int bufind = 0; //Declare buffer in io.c
 
 int read_bytes(int infile, uint8_t *buf, int nbytes) { //Internal function
-    uint64_t bytes_read; //Total num of bytes read from infile
+    //uint64_t bytes_read; //Total num of bytes read from infile
     int bytes; //Number of bytes read
     // -1,0 is the error return , so set it greater than 0
     //May cause issues
@@ -30,7 +31,7 @@ int read_bytes(int infile, uint8_t *buf, int nbytes) { //Internal function
 
 //Internal Function
 int write_bytes(int outfile, uint8_t *buf, int nbytes) {
-    int bytes_written; //Total num of bytes written to outfile
+    //int bytes_written; //Total num of bytes written to outfile
     int bytes; //Number of bytes written in one write
     // -1,0 is the error return , so set it greater than 0
     while ((bytes = write(outfile, buf, nbytes)) > 0 && (int) bytes_written != nbytes) {
@@ -43,9 +44,22 @@ int write_bytes(int outfile, uint8_t *buf, int nbytes) {
 //External Function
 bool read_bit(int infile, uint8_t *bit) { //Calls read_bytes, used in main
     //Uses functionality of read_bytes
+
+    //if buffer empty or the buffer's index is the size of a block
+    if (bufind == BLOCK) {
+        //Fill the buffer if fillable
+        if (read_bytes(infile, buf, BLOCK) == 0) {
+            return false;
+        }
+        bufind = 0;
+    }
+    //pass back bit at bufind
+    *bit = (buf[bufind / 8] >> (bufind % 8) & 0x1); //Get the bit
+    bufind += 1;
+    return true;
 }
 
 //External Function
-void write_code(int outfile, Code *c); //calls write bytes , used in main
-
+void write_code(int outfile, Code *c) { //calls write bytes , used in main
+}
 void flush_codes(int outfile);
