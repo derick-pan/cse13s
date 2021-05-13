@@ -50,7 +50,7 @@ bool code_empty(Code *c) {
 
 //return true if code is full
 bool code_full(Code *c) {
-    if (c->top == ALPHABET - 1) {
+    if (c->top == ALPHABET) {
         return true;
     }
     return false;
