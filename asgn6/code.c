@@ -29,60 +29,61 @@ typedef struct Code {
 Code code_init(void) {
     Code c;
     c.top = 0;
-    for (uint32_t i = 0 ; i < MAX_CODE_SIZE ; i++){//For loop to zero out the bits
+    for (uint32_t i = 0; i < MAX_CODE_SIZE; i++) { //For loop to zero out the bits
         c.bits[i] = 0;
     }
     return c;
 }
 
 //return the number of bits pushed onto the code
-uint32_t code_size(Code *c){
+uint32_t code_size(Code *c) {
     return c->top;
 }
 
 //Return True if code is empty
-bool code_empty(Code *c){
-    if (c->top ==0){
+bool code_empty(Code *c) {
+    if (c->top == 0) {
         return true;
     }
     return false;
 }
 
 //return true if code is full
-bool code_full(Code *c){
-    if (c->top == ALPHABET-1){
+bool code_full(Code *c) {
+    if (c->top == ALPHABET - 1) {
         return true;
     }
     return false;
 }
 
-
 //#########  Would it be better to receive a byte and iterate over bits to push? #########//
-bool code_push_bit(Code *c, uint8_t bit){ // Push one bit at a time
-    if (code_full(c)){
+bool code_push_bit(Code *c, uint8_t bit) { // Push one bit at a time
+    if (code_full(c)) {
         return false;
     }
-    c->bits[c->top/8] |= bit << (c->top % 8);
-    c->top +=1;
+    c->bits[c->top / 8] |= bit << (c->top % 8);
+    c->top += 1;
     return true;
 }
 //Pop a bit off the code
-bool code_pop_bit(Code *c, uint8_t *bit){
-    if (code_empty(c)){
+bool code_pop_bit(Code *c, uint8_t *bit) {
+    if (code_empty(c)) {
         return false;
     }
     // the bit will be in this array: c->bits[c->top/8] at index: [c->top % 8]
-    c->top -=1; //decrement c->top
+    c->top -= 1; //decrement c->top
     *bit = c->bits[c->top / 8] >> (c->top % 8) & 0x1; //Get the bit
-    c->bits[c->top / 8] &= ~(0x1 << (c->top % 8));    //Clear the bit
+    c->bits[c->top / 8] &= ~(0x1 << (c->top % 8)); //Clear the bit
     return true;
 }
 
-void code_print(Code *c){
-    for (uint32_t i = 0 ; i < MAX_CODE_SIZE ; i++){//For loop to zero out the bits
-        printf("%u ",c->bits[i / 8] >> (i % 8) & 0x1);
-        if (i % 8 ==0){
+void code_print(Code *c) {
+    printf("Print code:\n");
+    for (uint32_t i = 0; i < c->top; i++) { //For loop to zero out the bits
+        printf("%u ", c->bits[i / 8] >> (i % 8) & 0x1);
+        if (i % 8 == 7) {
             printf("\n");
         }
     }
+    printf("\n");
 }
