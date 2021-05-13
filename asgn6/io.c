@@ -3,6 +3,8 @@
 //io.c
 #include "io.h"
 
+#include "code.c"
+
 #include <ctype.h>
 #include <fcntl.h>
 #include <inttypes.h>
@@ -15,7 +17,7 @@ extern uint64_t bytes_read;
 extern uint64_t bytes_written;
 
 static uint8_t buf[BLOCK]; //Declare buffer in io.c
-static int bufind = 0; //Declare buffer in io.c
+static int bufind = 0; //Declare buffer index
 
 int read_bytes(int infile, uint8_t *buf, int nbytes) { //Internal function
     //uint64_t bytes_read; //Total num of bytes read from infile
@@ -46,7 +48,8 @@ bool read_bit(int infile, uint8_t *bit) { //Calls read_bytes, used in main
     //Uses functionality of read_bytes
 
     //if buffer empty or the buffer's index is the size of a block
-    if (bufind == BLOCK) {
+    //Or if the index is 0, meaning buffer is empty
+    if (bufind == BLOCK || bufind == 0) {
         //Fill the buffer if fillable
         if (read_bytes(infile, buf, BLOCK) == 0) {
             return false;
@@ -61,5 +64,27 @@ bool read_bit(int infile, uint8_t *bit) { //Calls read_bytes, used in main
 
 //External Function
 void write_code(int outfile, Code *c) { //calls write bytes , used in main
+    //Each bit in the code c is buffered into the buffer
+    //Create a loop to iterate over the buffer
+
+    //Code is based off of Euguene's Pseudocode
+    for (uint32_t i = 0; i < c->top; i++) {
+
+        if (code_get_bit(c, i) == 1) {
+            //Set the bit to 1 at buffer
+            buf[bufind / 8] |= 0x1 << (bufind % 8);
+        } else {
+            //Set the bit to 0 at the buffer location
+            buf[bufind / 8] &= ~(0x1 << (bufind % 8));
+        }
+        bufind += 1;
+
+        //If the index
+        if (bufind == BLOCK || bufind == 0) {
+            //Fill the buffer if fillable
+            write_bytes(outfile, buf, BLOCK);
+            bufind = 0;
+        }
+    }
 }
 void flush_codes(int outfile);

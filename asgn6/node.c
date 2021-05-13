@@ -31,7 +31,7 @@ Node *node_join(Node *left, Node *right) {
     //uint8_t name = (uint8_t) strtoul("$",NULL,10);
     //uint64_t freq = ;
     //printf( "Frequency: %" PRIu64 "\n"  ,freq);
-    Node *parentn = node_create(111, left->frequency + right->frequency);
+    Node *parentn = node_create(36, left->frequency + right->frequency);
     parentn->left = left;
     parentn->right = right;
     return parentn;
@@ -39,7 +39,7 @@ Node *node_join(Node *left, Node *right) {
 
 void node_print(Node *n) {
     if (n) {
-        printf("symbol: %u | ", n->symbol);
+        printf("symbol: %c | ", n->symbol);
         printf("my freq: %" PRIu64 "\n", n->frequency);
 
     } else {

@@ -56,6 +56,10 @@ bool code_full(Code *c) {
     return false;
 }
 
+uint32_t code_get_bit(Code *c, uint8_t i) { //Inspired by Dr.Long
+    return (c->bits[i / 8] >> (i % 8) & 0x1);
+}
+
 bool code_push_bit(Code *c, uint8_t bit) { // Push one bit at a time
     if (code_full(c)) {
         return false;
@@ -71,7 +75,9 @@ bool code_pop_bit(Code *c, uint8_t *bit) {
     }
     // the bit will be in this array: c->bits[c->top/8] at index: [c->top % 8]
     c->top -= 1; //decrement c->top
-    *bit = c->bits[c->top / 8] >> (c->top % 8) & 0x1; //Get the bit
+
+    //*bit = c->bits[c->top / 8] >> (c->top % 8) & 0x1; //Get the bit
+    *bit = code_get_bit(c, c->top);
     c->bits[c->top / 8] &= ~(0x1 << (c->top % 8)); //Clear the bit
     return true;
 }
