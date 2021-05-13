@@ -41,7 +41,7 @@ void node_print(Node *n) {
     if (n) {
         printf("symbol: %u | ", n->symbol);
         printf("my freq: %" PRIu64 "\n", n->frequency);
-        printf("I'm created! \n");
+
     } else {
         printf("i'm not created\n");
     }
