@@ -56,7 +56,6 @@ bool code_full(Code *c) {
     return false;
 }
 
-//#########  Would it be better to receive a byte and iterate over bits to push? #########//
 bool code_push_bit(Code *c, uint8_t bit) { // Push one bit at a time
     if (code_full(c)) {
         return false;
