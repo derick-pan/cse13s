@@ -14,30 +14,38 @@
 extern uint64_t bytes_read;
 extern uint64_t bytes_written;
 
-int read_bytes(int infile, uint8_t *buf, int nbytes) {
-    int counter = 0; //Total num of bytes read from infile
+int buf[BLOCK]; //Declare buffer in io.c
+
+int read_bytes(int infile, uint8_t *buf, int nbytes) { //Internal function
+    uint64_t bytes_read; //Total num of bytes read from infile
     int bytes; //Number of bytes read
     // -1,0 is the error return , so set it greater than 0
-    while ((bytes = read(infile, buf, nbytes)) > 0 && counter != nbytes) {
+    //May cause issues
+    while ((bytes = read(infile, buf, nbytes)) > 0 && (int) bytes_read != nbytes) {
         buf += bytes; //Increase position of buffer
-        counter += bytes;
+        bytes_read += bytes;
     }
-    return counter;
+    return bytes_read;
 }
 
+//Internal Function
 int write_bytes(int outfile, uint8_t *buf, int nbytes) {
-    int counter = 0; //Total num of bytes written to outfile
+    int bytes_written; //Total num of bytes written to outfile
     int bytes; //Number of bytes written in one write
     // -1,0 is the error return , so set it greater than 0
-    while ((bytes = write(outfile, buf, nbytes)) > 0 && counter != nbytes) {
+    while ((bytes = write(outfile, buf, nbytes)) > 0 && (int) bytes_written != nbytes) {
         buf += bytes; //Increase position of buffer
-        counter += bytes;
+        bytes_written += bytes;
     }
-    return counter;
+    return bytes_written;
 }
 
-bool read_bit(int infile, uint8_t *bit);
+//External Function
+bool read_bit(int infile, uint8_t *bit) { //Calls read_bytes, used in main
+    //Uses functionality of read_bytes
+}
 
-void write_code(int outfile, Code *c);
+//External Function
+void write_code(int outfile, Code *c); //calls write bytes , used in main
 
 void flush_codes(int outfile);
