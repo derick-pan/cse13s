@@ -19,12 +19,6 @@ extern uint64_t bytes_written;
 static uint8_t buf[BLOCK]; //Declare buffer in io.c
 static int bufind = 0; //Declare buffer index
 
-//3977/8 = 497.125   gotta be 498
-
-//3977 % 8 = 1     3977/8 +1 = 498
-
-//3948 / 8 = 493.5  gotta be 494
-//  if (3948 % 8 > 1) 3948/8 +1 = 494
 int read_bytes(int infile, uint8_t *buf, int nbytes) { //Internal function
     //uint64_t bytes_read; //Total num of bytes read from infile
     int bytes; //Number of bytes read
@@ -96,7 +90,6 @@ void write_code(int outfile, Code *c) { //calls write bytes , used in main
 //bufind is the next slot
 void flush_codes(int outfile) { //Write out any leftover buffered bits.
     uint32_t amount = 0;
-
     if (bufind > 0) {
         //convert num of bits in the buffer to least num of bytes possible
         if (bufind % 8 > 0) {
@@ -104,7 +97,6 @@ void flush_codes(int outfile) { //Write out any leftover buffered bits.
         }
         amount += bufind;
         //Zero out some bits
-
         for (uint32_t i = bufind; i < amount; i++) { //For loop to zero out the bits
             buf[i / 8] &= ~(0x1 << (i % 8));
         }
