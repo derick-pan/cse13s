@@ -43,7 +43,36 @@ Node *build_tree(uint64_t hist[ALPHABET]){
     return j;
 }
 
-void build_codes(Node *root, Code table[static ALPHABET])
+ //build_left(Node *root, Code )
+
+
+void build_codes(Node *root, Code table[ALPHABET]){
+    *table = code_init();
+
+    //While i'm an interior node
+
+    //If Current node is a leaf then save the code it took to get here
+
+    // else{
+        //code_push_bit(c,0)
+
+        //RECURSE to left link
+
+        //Then pop
+            //code_pop_bit(c)
+
+            //code_push_bit(c,1)
+
+            //RECURSE to right, and pop from c when I'm back
+}
+
+
+
+
+
+
+
+
 
 Node *rebuild_tree(uint16_t nbytes, uint8_t tree[static nbytes]);
 
