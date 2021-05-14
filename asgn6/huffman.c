@@ -58,21 +58,22 @@ void build_codes(Node *root, Code table[ALPHABET]) {
             code_push_bit(table, temp);
             //code_pop_bit(table, &temp );
             //code_push_bit(table, root->symbol / 64)
-            return;
         }
-        //The current node is an interior node
-
-        //Push, recurse left, pop
-        code_push_bit(&c, 0); // Push a 0 because we're going left
-        build_codes(root->left, &c); // RECURSE to left link
-        code_pop_bit(&c, &temp);
-
-        //Push, recurse right, pop
-        code_push_bit(&c, 1);
-        build_codes(root->right, &c); // RECURSE to right
-        code_pop_bit(&c, &temp); // pop from c
+        return;
     }
+    //The current node is an interior node
 
-    Node *rebuild_tree(uint16_t nbytes, uint8_t tree[static nbytes]);
+    //Push, recurse left, pop
+    code_push_bit(&c, 0); // Push a 0 because we're going left
+    build_codes(root->left, &c); // RECURSE to left link
+    code_pop_bit(&c, &temp);
 
-    void delete_tree(Node * *root);
+    //Push, recurse right, pop
+    code_push_bit(&c, 1);
+    build_codes(root->right, &c); // RECURSE to right
+    code_pop_bit(&c, &temp); // pop from c
+}
+
+Node *rebuild_tree(uint16_t nbytes, uint8_t tree[static nbytes]);
+
+void delete_tree(Node **root);
