@@ -3,7 +3,7 @@
 //io.c
 #include "io.h"
 
-#include "code.c"
+#include "code.h"
 
 #include <ctype.h>
 #include <fcntl.h>
@@ -12,15 +12,16 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
-extern uint64_t bytes_read;
-extern uint64_t bytes_written;
+uint64_t bytes_read = 0;
+uint64_t bytes_written = 0;
+//extern uint64_t bytes_read;
+//extern uint64_t bytes_written;
 //Block = 4096
 static uint8_t buf[BLOCK]; //Declare buffer in io.c
 static int bufind = 0; //Declare buffer index
 
 int read_bytes(int infile, uint8_t *buf, int nbytes) { //Internal function
-    //uint64_t bytes_read; //Total num of bytes read from infile
+    //uint64_t bytes_read = 0; //Total num of bytes read from infile
     int bytes; //Number of bytes read
     // -1,0 is the error return , so set it greater than 0
     //May cause issues
@@ -33,7 +34,7 @@ int read_bytes(int infile, uint8_t *buf, int nbytes) { //Internal function
 
 //Internal Function
 int write_bytes(int outfile, uint8_t *buf, int nbytes) {
-    //int bytes_written; //Total num of bytes written to outfile
+    //int bytes_written = 0; //Total num of bytes written to outfile
     int bytes; //Number of bytes written in one write
     // -1,0 is the error return , so set it greater than 0
     while ((bytes = write(outfile, buf, nbytes)) > 0 && (int) bytes_written != nbytes) {
@@ -46,7 +47,6 @@ int write_bytes(int outfile, uint8_t *buf, int nbytes) {
 //External Function
 bool read_bit(int infile, uint8_t *bit) { //Calls read_bytes, used in main
     //Uses functionality of read_bytes
-
     //if buffer empty or the buffer's index is the size of a block
     //Or if the index is 0, meaning buffer is empty
     if (bufind == BLOCK || bufind == 0) {
@@ -70,7 +70,7 @@ void write_code(int outfile, Code *c) { //calls write bytes , used in main
     //Code is based off of Euguene's Pseudocode
     for (uint32_t i = 0; i < c->top; i++) {
 
-        if (code_get_bit(c, i) == 1) {
+        if ((c->bits[i / 8] >> (i % 8) & 0x1) == 1) {
             //Set the bit to 1 at buffer
             buf[bufind / 8] |= 0x1 << (bufind % 8);
         } else {
