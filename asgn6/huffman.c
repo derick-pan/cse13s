@@ -52,18 +52,27 @@ void build_codes(Node *root, Code table[ALPHABET]){
     //While i'm an interior node
 
     //If Current node is a leaf then save the code it took to get here
+    if (root->left == NULL){  //If there's a left kid then there's a right, same vice versa
+
+        //Loop over the code to push
+
+    }
 
     // else{
-        //code_push_bit(c,0)
 
+        code_push_bit(table,0); //Push a 0 because we're going left
         //RECURSE to left link
+        build_codes(root->left, table);
 
         //Then pop
-            //code_pop_bit(c)
+            uint8_t temp;
+            code_pop_bit(table, &temp);
 
-            //code_push_bit(c,1)
-
+            code_push_bit(table,1);
             //RECURSE to right, and pop from c when I'm back
+            build_codes(root->right, table);
+            code_pop_bit(table, &temp);
+
 }
 
 
