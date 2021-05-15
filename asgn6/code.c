@@ -64,7 +64,14 @@ bool code_push_bit(Code *c, uint8_t bit) { // Push one bit at a time
     if (code_full(c)) {
         return false;
     }
-    c->bits[c->top / 8] |= bit << (c->top % 8);
+    //if bit =1 set and shift 1 else clr by shifting 1
+
+    if (bit == 1) {
+        c->bits[c->top / 8] |= 0x1 << (c->top % 8);
+    } else {
+        c->bits[c->top / 8] &= ~(0x1 << (c->top % 8));
+    }
+
     c->top += 1;
     return true;
 }

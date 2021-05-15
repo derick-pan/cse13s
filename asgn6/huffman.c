@@ -14,7 +14,7 @@
 #include <string.h>
 #include <unistd.h>
 
-// ALPHABET      256
+#define ALPHABET 256
 
 Node *build_tree(uint64_t hist[ALPHABET]) {
     uint32_t freq;
@@ -44,7 +44,7 @@ Node *build_tree(uint64_t hist[ALPHABET]) {
     return j;
 }
 
-void build_codes(Node *root, Code table[ALPHABET]) {
+void build_codes(Node *root, Code table[static ALPHABET]) {
     Code c = code_init(); //Doesn't allocate any memory so make as many as i want
 
     //While i'm an interior node
