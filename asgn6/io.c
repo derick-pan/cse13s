@@ -111,7 +111,6 @@ void flush_codes(int outfile) { //Write out any leftover buffered bits.
             buf[i / 8] &= ~(0x1 << (i % 8));
         }
         amount += bufind / 8 + 1;
-
     }
     else{amount +=bufind/8 +1;}
         write_bytes(outfile, buf, amount);
