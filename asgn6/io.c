@@ -22,24 +22,28 @@ static int bufind = 0; //Declare buffer index
 
 int read_bytes(int infile, uint8_t *buf, int nbytes) { //Internal function
     int bytes = 0; //Number of bytes read
+    int localbytes = 0;
     while ((bytes = read(infile, buf, nbytes)) > 0) {
         buf += bytes; //Increase position of buffer
         bytes_read += bytes;
         nbytes -= bytes;
+        localbytes += bytes;
     }
-    return bytes_read;
+    return localbytes;
 }
 
 //Internal Function
 int write_bytes(int outfile, uint8_t *buf, int nbytes) {
     int bytes = 0; //Number of bytes written in one write
+    int localbytes = 0;
     while (
-        (bytes = write(outfile, buf, nbytes - bytes)) > 0 /* && (int) bytes_written != nbytes*/) {
+        (bytes = write(outfile, buf, nbytes)) > 0 /* && (int) bytes_written != nbytes*/) {
         buf += bytes; //Increase position of buffer
         bytes_written += bytes;
-        //nbytes -= bytes;
+        localbytes += bytes;
+        nbytes -= bytes;
     }
-    return bytes_written;
+    return localbytes;
 }
 
 //External Function
@@ -57,6 +61,7 @@ bool read_bit(int infile, uint8_t *bit) { //Calls read_bytes, used in main
         //printf("yo");
         //printf("%d",read_bytes(infile, buf, BLOCK));  //Returning 9
         if (read_bytes(infile, buf, BLOCK) <= 0) {
+            printf("done");
             return false;
         }
         bufind = 0;
@@ -69,6 +74,7 @@ bool read_bit(int infile, uint8_t *bit) { //Calls read_bytes, used in main
 
 //External Function
 void write_code(int outfile, Code *c) { //calls write bytes , used in main
+    //bufind = 0;
     //Each bit in the code c is buffered into the buffer
     //Create a loop to iterate over the buffer
     //uint8_t temp;
@@ -84,7 +90,7 @@ void write_code(int outfile, Code *c) { //calls write bytes , used in main
         bufind += 1;
 
         //buffind is in bits, block in bytes
-        if (bufind == BLOCK * 8) {
+        if (bufind == BLOCK * 8 -1) {
             //Fill the buffer if fillable
             printf("Should not be in here");
             write_bytes(outfile, buf, BLOCK);
@@ -97,21 +103,18 @@ void write_code(int outfile, Code *c) { //calls write bytes , used in main
 void flush_codes(int outfile) { //Write out any leftover buffered bits.
     printf("%u\n", bufind);
     uint32_t amount = 0;
-    if (bufind > 0) {
+    if (bufind % 8 != 0) {
         //convert num of bits in the buffer to least num of bytes possible
         //if (bufind % 8 > 0) {
         //amount = 1;
-        for (int i = bufind; i < (BLOCK * 8); i++) { //For loop to zero out the bits
+        for (int i = bufind; i < (BLOCK*8); i++) { //For loop to zero out the bits
             buf[i / 8] &= ~(0x1 << (i % 8));
         }
+        amount += bufind / 8 + 1;
 
-        printf("bufind %u", bufind);
-        if (bufind % 8 == 0) {
-            amount += bufind / 8;
-        } else {
-            amount += bufind / 8 + 1;
-        }
-
-        write_bytes(outfile, buf, amount);
     }
+    else{amount +=bufind/8 +1;}
+        write_bytes(outfile, buf, amount);
+
+
 }
