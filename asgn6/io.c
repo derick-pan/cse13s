@@ -57,15 +57,12 @@ bool read_bit(int infile, uint8_t *bit) { //Calls read_bytes, used in main
         //if (bufind == (BLOCK * 8)|| bufind == 0) {
         //Fill the buffer if fillable
         //printf("yo");
-        //printf("%d",read_bytes(infile, buf, BLOCK));  //Returning 9
+        //printf("%d",read_bytes(infile, buf, BLOCK));
         if (read_bytes(infile, buf, BLOCK) <= 0) {
             return false;
         }
         bufind = 0;
     }
-
-    //bufind = 0;
-
     //pass back bit at bufind
     *bit = (buf[bufind / 8] >> (bufind % 8) & 0x1); //Get the bit
     bufind += 1;
@@ -74,12 +71,15 @@ bool read_bit(int infile, uint8_t *bit) { //Calls read_bytes, used in main
 
 //External Function
 void write_code(int outfile, Code *c) { //calls write bytes , used in main
-    bufind = 0;
+
+    //bufind = 0;
     //Each bit in the code c is buffered into the buffer
     //Create a loop to iterate over the buffer
     //uint8_t temp;
     //Code is based off of Euguene's Pseudocode
+
     for (uint32_t i = 0; i < c->top; i++) {
+
         if ((c->bits[i / 8] >> (i % 8) & 0x1) == 1) { //If this bit is a 1
             //Set the bit to 1 at buffer
             buf[bufind / 8] |= 0x1 << (bufind % 8);
@@ -87,6 +87,7 @@ void write_code(int outfile, Code *c) { //calls write bytes , used in main
             //Set the bit to 0 at the buffer location
             buf[bufind / 8] &= ~(0x1 << (bufind % 8));
         }
+
         bufind += 1;
 
         //buffind is in bits, block in bytes
@@ -104,6 +105,9 @@ void write_code(int outfile, Code *c) { //calls write bytes , used in main
 void flush_codes(int outfile) { //Write out any leftover buffered bits.
     printf("%u\n", bufind);
     uint32_t amount = 0;
+    //ex.
+    //250 bits left in buffer . I need minimum 256/8 bits =32 bytes
+
     if (bufind % 8 != 0) {
         //convert num of bits in the buffer to least num of bytes possible
         //if (bufind % 8 > 0) {
@@ -116,5 +120,5 @@ void flush_codes(int outfile) { //Write out any leftover buffered bits.
     } else {
         amount += bufind / 8 + 1;
     }
-    write_bytes(outfile, buf, amount);
+    write_bytes(outfile, buf, 32);
 }
