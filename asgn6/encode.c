@@ -22,16 +22,16 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-char usage[1000] = "SYNOPSIS\n";
-
-void postorder(Node *root) {
-    //Code c = code_init(); //Doesn't allocate any memory so make as many as i want
-    if (root != NULL) {
-        postorder(root->left);
-        postorder(root->right);
-        printf("%c", root->symbol);
-    }
-}
+char usage[1000] = "SYNOPSIS\n\
+  A Huffman encoder.\n\
+  Compresses a file using the Huffman coding algorithm.\n\n\
+USAGE\n\
+  ./encode [-h] [-i infile] [-o outfile]\n\n\
+OPTIONS\n\
+  -h             Program usage and help.\n\
+  -v             Print compression statistics.\n\
+  -i infile      Input file to compress.\n\
+  -o outfile     Output of compressed data.\n";
 
 int main(int argc, char *argv[]) {
     int choice;
@@ -84,10 +84,9 @@ int main(int argc, char *argv[]) {
         if (counter % 8 == 0 && temp > 0) {
             counter = 0;
             hist[temp] += 1; // MAY NOT BE THIS? BUT SHOULD BE
-            printf(" FING PRINT %u \n AND MY FREQUENCY IS: %" PRIu64 "\n", temp, hist[temp]);
+            printf("Ascii and index: %u  frequency: %" PRIu64 "\n", temp, hist[temp]);
         }
     }
-
     hist[0] += 1; //Min of 2 elements
     hist[255] += 1;
 
@@ -101,14 +100,19 @@ int main(int argc, char *argv[]) {
 
     Node root = *build_tree(hist);
 
-    Code c = code_init();
-    node_print(&root);
+    Code c[ALPHABET];
 
-    build_codes(&root, &c); //ur problematic
+    build_codes(&root, c); //ur problematic
+
+    printf("Back at main:\n");
+    code_print(&c[97]);
+    for (int i = 0; i < ALPHABET; i++) {
+        code_print(&c[i]);
+    }
 
     printf("end here");
     exit(1);
-    printf("crash here");
+    //printf("crash here");
 
     typedef struct Header {
         uint32_t magic;
@@ -127,5 +131,4 @@ int main(int argc, char *argv[]) {
     //Write the header to outfile
 
     //Create the dump
-    postorder(&root);
 }

@@ -54,10 +54,9 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
     //pq_delete(&q);
     return j;
 }
-uint8_t temp;
-void build_codes(Node *root, Code table[static ALPHABET]) {
 
-    Code c = *table;
+void build_codes(Node *root, Code table[static ALPHABET]) {
+    Code c = *table; //Current code
     uint8_t temp = 0;
     //While i'm an interior node
     //If Current node is a leaf then save the code it took to get here
@@ -65,30 +64,37 @@ void build_codes(Node *root, Code table[static ALPHABET]) {
         //If there's a left kid then there's a right, same vice versa
         //Save this code into code table.
         //Already in the code no?
-        printf("how many times am i here?\n");
-        //node_print(root);
-        memcpy(&table[root->symbol], &c, 8);
-        temp = 0;
-        return;
-    }
 
-    code_push_bit(&c, 0); // Push a 0 because we're going left
-    build_codes(root->left, &c); // RECURSE to left link
-    code_pop_bit(&c, &temp);
+        printf("Ascii and index: %u\n", root->symbol);
+        //code_print(&c);
+
+        table[root->symbol] = c;
+        code_print(&table[root->symbol]);
+        return;
+
+    } else { //Must be an interior node
+
+        code_push_bit(&c, 0); // Push a 0 because we're going left
+        build_codes(root->left, &c); // RECURSE to left link
+        code_pop_bit(&c, &temp);
+
+        //Push, recurse right, pop
+        code_push_bit(&c, 1);
+        build_codes(root->right, &c); // RECURSE to right
+        code_pop_bit(&c, &temp); // pop from c
+
+        /*
+        //Code c = code_init(); //Current code
+    code_push_bit(table, 0); // Push a 0 because we're going left
+    build_codes(root->left, table); // RECURSE to left link
+    code_pop_bit(table, &temp);
 
     //Push, recurse right, pop
-    code_push_bit(&c, 1);
-    build_codes(root->right, &c); // RECURSE to right
-    code_pop_bit(&c, &temp); // pop from c
-
-    printf("sup");
-
-    //&table[root->symbol] = &temp;
-
-    //table->top = root->symbol-1; //Skip forward to the correct indice
-
-    //code_pop_bit(table, &temp );
-    //code_push_bit(table, root->symbol / 64)
+    code_push_bit(table, 1);
+    build_codes(root->right, table); // RECURSE to right
+    code_pop_bit(table, &temp); // pop from c
+*/
+    }
 }
 
 Node *rebuild_tree(uint16_t nbytes, uint8_t tree[static nbytes]);
