@@ -54,21 +54,19 @@ bool read_bit(int infile, uint8_t *bit) { //Calls read_bytes, used in main
 
     //When buffer empty, fill it
 
-    //if (bufind == (BLOCK*8) -1)
     if (bufind == BLOCK * 8 || bufind == 0) {
         //if (bufind == (BLOCK * 8)|| bufind == 0) {
         //Fill the buffer if fillable
         //printf("yo");
         //printf("%d",read_bytes(infile, buf, BLOCK));  //Returning 9
-        read_bytes(infile, buf, BLOCK);
-
-        if (bufind == BLOCK*8) {
-            printf("bufind: %u",bufind); //32768 bits read
-            printf("  Block is full \n");
+        if (read_bytes(infile, buf, BLOCK) <= 0) {
             return false;
         }
         bufind = 0;
     }
+
+    //bufind = 0;
+
     //pass back bit at bufind
     *bit = (buf[bufind / 8] >> (bufind % 8) & 0x1); //Get the bit
     bufind += 1;
