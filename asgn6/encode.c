@@ -101,15 +101,18 @@ int main(int argc, char *argv[]) {
     Node root = *build_tree(hist);
 
     Code c[ALPHABET];
+    for (int i = 0; i < ALPHABET; i++) {
+        c->bits[i] = 0;
+    }
 
     build_codes(&root, c); //ur problematic
 
     printf("Back at main:\n");
-    code_print(&c[97]);
-    for (int i = 0; i < ALPHABET; i++) {
-        code_print(&c[i]);
-    }
-
+    printf("%u\n", *c[97].bits);
+    printf("next\n");
+    printf("%u\n", *c[98].bits);
+    printf("next\n");
+    printf("%u\n", *c[99].bits);
     printf("end here");
     exit(1);
     //printf("crash here");
