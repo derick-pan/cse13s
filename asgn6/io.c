@@ -36,8 +36,7 @@ int read_bytes(int infile, uint8_t *buf, int nbytes) { //Internal function
 int write_bytes(int outfile, uint8_t *buf, int nbytes) {
     int bytes = 0; //Number of bytes written in one write
     int localbytes = 0;
-    while (
-        (bytes = write(outfile, buf, nbytes)) > 0 /* && (int) bytes_written != nbytes*/) {
+    while ((bytes = write(outfile, buf, nbytes)) > 0 /* && (int) bytes_written != nbytes*/) {
         buf += bytes; //Increase position of buffer
         bytes_written += bytes;
         localbytes += bytes;
@@ -109,14 +108,13 @@ void flush_codes(int outfile) { //Write out any leftover buffered bits.
         //convert num of bits in the buffer to least num of bytes possible
         //if (bufind % 8 > 0) {
         //amount = 1;
-        for (int i = bufind; i < (BLOCK*8); i++) { //For loop to zero out the bits
+        for (int i = bufind; i < (BLOCK * 8); i++) { //For loop to zero out the bits
             buf[i / 8] &= ~(0x1 << (i % 8));
         }
         amount += bufind / 8 + 1;
 
+    } else {
+        amount += bufind / 8 + 1;
     }
-    else{amount +=bufind/8 +1;}
-        write_bytes(outfile, buf, amount);
-
-
+    write_bytes(outfile, buf, amount);
 }
