@@ -60,8 +60,11 @@ bool read_bit(int infile, uint8_t *bit) { //Calls read_bytes, used in main
         //Fill the buffer if fillable
         //printf("yo");
         //printf("%d",read_bytes(infile, buf, BLOCK));  //Returning 9
-        if (read_bytes(infile, buf, BLOCK) <= 0) {
-            printf("done");
+        read_bytes(infile, buf, BLOCK);
+
+        if (bufind == BLOCK*8) {
+            printf("bufind: %u",bufind); //32768 bits read
+            printf("  Block is full \n");
             return false;
         }
         bufind = 0;
@@ -74,7 +77,7 @@ bool read_bit(int infile, uint8_t *bit) { //Calls read_bytes, used in main
 
 //External Function
 void write_code(int outfile, Code *c) { //calls write bytes , used in main
-    //bufind = 0;
+    bufind = 0;
     //Each bit in the code c is buffered into the buffer
     //Create a loop to iterate over the buffer
     //uint8_t temp;
@@ -90,7 +93,7 @@ void write_code(int outfile, Code *c) { //calls write bytes , used in main
         bufind += 1;
 
         //buffind is in bits, block in bytes
-        if (bufind == BLOCK * 8 -1) {
+        if (bufind == BLOCK * 8) {
             //Fill the buffer if fillable
             printf("Should not be in here");
             write_bytes(outfile, buf, BLOCK);
@@ -99,6 +102,7 @@ void write_code(int outfile, Code *c) { //calls write bytes , used in main
     }
     //printf("¯_(ツ)_/¯ \n");
 }
+
 //bufind is the next slot
 void flush_codes(int outfile) { //Write out any leftover buffered bits.
     printf("%u\n", bufind);
@@ -111,6 +115,7 @@ void flush_codes(int outfile) { //Write out any leftover buffered bits.
             buf[i / 8] &= ~(0x1 << (i % 8));
         }
         amount += bufind / 8 + 1;
+
     }
     else{amount +=bufind/8 +1;}
         write_bytes(outfile, buf, amount);
