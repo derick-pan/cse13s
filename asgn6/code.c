@@ -71,7 +71,7 @@ bool code_push_bit(Code *c, uint8_t bit) { // Push one bit at a time
     } else {
         c->bits[c->top / 8] &= ~(0x1 << (c->top % 8));
     }
-
+ 
     c->top += 1;
     return true;
 }
