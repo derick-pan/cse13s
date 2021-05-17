@@ -4,6 +4,7 @@
 
 #include "code.h"
 #include "defines.h"
+#include "header.h"
 #include "huffman.h"
 #include "io.h"
 #include "node.h"
@@ -81,81 +82,74 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    //########## Construct HISTOGRAM ###########
-    //256 index, each index has 64 bits
-    uint64_t hist[ALPHABET];
-    for (int i = 0; i < ALPHABET; i++) {
+    /* ################## Step 1&2 #################  */
+    /* Read through infile to construct histogram     */
+
+    uint64_t hist[ALPHABET]; // Histogram
+    int uniquesym = 2; // Unique Symbols counter;
+    uint8_t readingbuff; // Buffer for bytes while reading
+
+    for (int i = 0; i < ALPHABET; i++) { //Clear the bits in histogram
         hist[i] = 0;
     }
 
-    uint8_t readingbuff;
-    uint8_t temp = 0;
-    uint8_t counter = 0;
-    while (read_bit(infile, &readingbuff)) {
-        if (readingbuff == 1) { //If this bit is a 1
-            //Set the bit to 1 at buffer
-            temp |= 0x1 << counter;
-        } else {
-            //Set the bit to 0 at the buffer location
-            temp &= ~(0x1 << counter);
-        }
-        counter += 1;
-        if (counter % 8 == 0 && temp > 0) {
-            counter = 0;
-            hist[temp] += 1;
-            //printf("Ascii and index: %u  frequency: %" PRIu64 "\n", temp, hist[temp]);
+    while (read_bytes(infile, &readingbuff, 1) > 0) {
+        hist[readingbuff] += 1; //Increment position in histogram
+
+        if (hist[readingbuff] == 1) {
+            uniquesym += 1; //Unique symbols counter
         }
     }
-    hist[0] += 1; //Min of 2 elements
-    hist[255] += 1;
+    /* Increment the two counts for handling specific cases */
+    hist[0] += 1, hist[255] += 1;
 
-    //Calculate How many Unique symbols:
-    int uniquesym = 0;
-    for (int i = 0; i < ALPHABET; i++) {
-        if (hist[i] > 0) {
-            uniquesym += 1;
-            //printf("The unique symbol is %"PRIu64 " at index: %d \n",hist[i], i);
-        }
-    }
-
-    // Step 3- Construct the Huffman Tree
+    /* ################## Step 3. ################## */
+    /* Construct the Huffman Tree using build_tree   */
     Node root = *build_tree(hist);
 
-    //Step 4- Construct code table
+    /* ################## Step 4. ################## */
+    /* Construct a code table by using build_codes   */
     Code c[ALPHABET];
     for (int i = 0; i < ALPHABET; i++) {
         c->bits[i] = 0;
     }
     build_codes(&root, c);
 
-    printf("Unique Symbol's: %d\n", uniquesym);
-    //Step 5, Construct a header
-    typedef struct Header {
-        uint32_t magic;
-        uint16_t permissions;
-        uint16_t tree_size;
-        uint64_t file_size;
-    } Header;
+    /* ################ Step 5 & 6 ################# */
+    /*          Construct and write a header         */
+    /*
+        Terms in header
+        magic          Identifies this file as compressed
+        permissions    Input File Permissions
+        tree_size      Tree size in bytes
+        file_size      File size of Input
+    */
     struct stat statbuf;
     Header myheader;
-    myheader.magic = MAGIC;
+    myheader.magic = MAGIC; // Identifies this file as compressed
     myheader.permissions = fstat(infile, &statbuf);
-    fchmod(outfile, statbuf.st_mode);
+    fchmod(outfile, statbuf.st_mode); //Set perms of outfile
     myheader.tree_size = (3 * uniquesym) - 1;
     myheader.file_size = statbuf.st_size;
 
     write(outfile, &myheader, sizeof(Header));
 
-    //Create the dump
+    /* ################## Step 7. ################## */
+    /*              Create the tree dump             */
     post_traversal(&root, outfile);
-    //write the coresponding codes
 
+    /* ################## Step 8. ################## */
+    /*            Write corresponding codes          */
     for (int i = 0; i < ALPHABET; i++) {
         if (hist[i] > 0) {
             write_code(outfile, &c[i]);
-            printf("Symbol: %c", i);
-            code_print(&c[i]);
+            //printf("Symbol: %c", i);
+            //code_print(&c[i]);
         }
     }
     flush_codes(outfile);
+
+    /* ### Free leftover memory ### */
+    close(infile);
+    close(outfile);
 }
