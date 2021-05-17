@@ -1,13 +1,13 @@
 //Derick Pan
 //dpan7
 //huffman.c
-//#include "huffman.h"
 #include "huffman.h"
 
 #include "code.h"
 #include "defines.h"
 #include "node.h"
 #include "pq.h"
+#include "stack.h"
 
 #include <ctype.h>
 #include <inttypes.h>
@@ -82,10 +82,43 @@ void build_codes(Node *root, Code table[static ALPHABET]) {
         code_push_bit(c, 1);
         build_codes(root->right, c); // RECURSE to right
         code_pop_bit(c, &temp); // pop from c
-
     }
 }
 
-Node *rebuild_tree(uint16_t nbytes, uint8_t tree[static nbytes]);
+Node *rebuild_tree(uint16_t nbytes, uint8_t tree[static nbytes]) {
 
-void delete_tree(Node **root);
+    Stack *s = stack_create(nbytes);
+    //uint8_t treedump = *tree;
+
+    for (uint8_t i = 0; i < nbytes; i++) {
+
+        if (tree[i] == 'L') {
+            Node n = *node_create('L', i);
+            stack_push(s, &n);
+        } else if (tree[i] == 'I') {
+            Node *r;
+            stack_pop(s, &r);
+            Node *l;
+            stack_pop(s, &l);
+            node_join(l, r);
+        }
+    }
+    Node *root;
+    stack_pop(s, &root);
+    return root;
+}
+
+void delete_tree(Node **root) {
+
+    //printf("Deleting the tree\n");
+
+    if ((*root)->left == NULL && (*root)->right == NULL) {
+
+        printf("L%c ", (*root)->symbol);
+
+        return;
+    } else { //Must be an interior node
+        delete_tree(&(*root)->left); // RECURSE to left link
+        delete_tree(&(*root)->right); // RECURSE to right
+    }
+}
