@@ -22,7 +22,7 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
     //uint32_t freq;
     Node *temp;
     PriorityQueue *q = pq_create(ALPHABET);
-    for (uint32_t i = 1; i < ALPHABET; i++) {
+    for (uint32_t i = 0; i < ALPHABET; i++) {
         if (hist[i] > 0) {
             printf("index here: %u Frequency here: %" PRIu64 "\n", i, hist[i]);
             temp = node_create(i, hist[i]);
@@ -65,7 +65,7 @@ void build_codes(Node *root, Code table[static ALPHABET]) {
         //Save this code into code table.
         //Already in the code no?
 
-        printf("Ascii and index: %u\n", root->symbol);
+        //printf("Ascii and index: %u\n", root->symbol);
         //code_print(&c);
 
         table[root->symbol] = *table;
