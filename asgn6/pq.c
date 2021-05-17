@@ -44,9 +44,14 @@ PriorityQueue *pq_create(uint32_t capacity) {
 }
 
 void pq_delete(PriorityQueue **q) {
-    free((*q)->items);
-    free(*q);
-    *q = NULL;
+    if (*q) {
+        if ((*q)->size > 0) {
+            node_delete((*q)->items);
+        }
+        free((*q)->items);
+        free(*q);
+        *q = NULL;
+    }
 }
 
 bool pq_empty(PriorityQueue *q) {

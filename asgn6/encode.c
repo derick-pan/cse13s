@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
 
     /* ################## Step 3. ################## */
     /* Construct the Huffman Tree using build_tree   */
-    Node root = *build_tree(hist);
+    Node *root = build_tree(hist);
 
     /* ################## Step 4. ################## */
     /* Construct a code table by using build_codes   */
@@ -113,7 +113,7 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < ALPHABET; i++) {
         c->bits[i] = 0;
     }
-    build_codes(&root, c);
+    build_codes(root, c);
 
     /* ################ Step 5 & 6 ################# */
     /*          Construct and write a header         */
@@ -136,20 +136,19 @@ int main(int argc, char *argv[]) {
 
     /* ################## Step 7. ################## */
     /*              Create the tree dump             */
-    post_traversal(&root, outfile);
+    post_traversal(root, outfile);
 
     /* ################## Step 8. ################## */
     /*            Write corresponding codes          */
     for (int i = 0; i < ALPHABET; i++) {
         if (hist[i] > 0) {
             write_code(outfile, &c[i]);
-            //printf("Symbol: %c", i);
-            //code_print(&c[i]);
         }
     }
     flush_codes(outfile);
 
     /* ### Free leftover memory ### */
+    delete_tree(&root);
     close(infile);
     close(outfile);
 }

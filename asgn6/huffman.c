@@ -48,41 +48,34 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
         //pq_print(q);
         //printf("\n\nQUEUEUEUEUEUEUE\n");
     }
-    //node_delete(&l), node_delete(&r);
-    // The one node left in priority queue is the root node
     dequeue(q, &j);
-    //pq_delete(&q);
+    printf("printing the queuee\n");
+    pq_print(q);
+    pq_delete(&q);
+
     return j;
 }
 
 void build_codes(Node *root, Code table[static ALPHABET]) {
-
-    uint8_t temp = 0;
     //While i'm an interior node
     //If Current node is a leaf then save the code it took to get here
     if (root->left == NULL && root->left == NULL) {
-        //If there's a left kid then there's a right, same vice versa
-        //Save this code into code table.
-        //Already in the code no?
-
-        //printf("Ascii and index: %u\n", root->symbol);
-        //code_print(&c);
 
         table[root->symbol] = *table;
         //code_print(&table[root->symbol]);
 
         return;
-    } else { //Must be an interior node
-        Code *c = table; //Current code
-        code_push_bit(c, 0); // Push a 0 because we're going left
-        build_codes(root->left, c); // RECURSE to left link
-        code_pop_bit(c, &temp);
+    } //Must be an interior node
+    uint8_t temp;
+    Code *c = table; //Current code
+    code_push_bit(c, 0); // Push a 0 because we're going left
+    build_codes(root->left, c); // RECURSE to left link
+    code_pop_bit(c, &temp);
 
-        //Push, recurse right, pop
-        code_push_bit(c, 1);
-        build_codes(root->right, c); // RECURSE to right
-        code_pop_bit(c, &temp); // pop from c
-    }
+    //Push, recurse right, pop
+    code_push_bit(c, 1);
+    build_codes(root->right, c); // RECURSE to right
+    code_pop_bit(c, &temp); // pop from c
 }
 
 Node *rebuild_tree(uint16_t nbytes, uint8_t tree[static nbytes]) {
@@ -114,11 +107,12 @@ void delete_tree(Node **root) {
 
     if ((*root)->left == NULL && (*root)->right == NULL) {
 
-        printf("L%c ", (*root)->symbol);
+        node_delete(root);
 
         return;
     } else { //Must be an interior node
         delete_tree(&(*root)->left); // RECURSE to left link
         delete_tree(&(*root)->right); // RECURSE to right
+        node_delete(root);
     }
 }
