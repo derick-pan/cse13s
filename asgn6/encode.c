@@ -41,7 +41,8 @@ void post_traversal(Node *root, int outfile) {
         uint8_t out[2]; //Ascii code for leaf
         out[0] = 'L';
         out[1] = root->symbol;
-        write(outfile, &out, 2);
+        //write(outfile, &out, 2);
+        write_bytes(outfile, out, 2);
         printf("L%c ", root->symbol);
 
         return;
@@ -49,7 +50,8 @@ void post_traversal(Node *root, int outfile) {
         post_traversal(root->left, outfile); // RECURSE to left link
         post_traversal(root->right, outfile); // RECURSE to right
         uint8_t i = 'I';
-        write(outfile, &i, 1); //Either call write here or call write_bytes
+        write_bytes(outfile, &i, 1);
+        //write(outfile, &i, 1); //Either call write here or call write_bytes
         printf("I ");
     }
 }
@@ -111,7 +113,9 @@ int main(int argc, char *argv[]) {
     /* Construct a code table by using build_codes   */
     Code c[ALPHABET];
     for (int i = 0; i < ALPHABET; i++) {
-        c->bits[i] = 0;
+        if (hist[i] > 0) {
+            c[i] = code_init();
+        }
     }
     build_codes(root, c);
 

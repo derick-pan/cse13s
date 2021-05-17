@@ -59,15 +59,21 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
 void build_codes(Node *root, Code table[static ALPHABET]) {
     //While i'm an interior node
     //If Current node is a leaf then save the code it took to get here
-    if (root->left == NULL && root->left == NULL) {
+    //
 
+    if (root->left == NULL && root->left == NULL) {
         table[root->symbol] = *table;
-        //code_print(&table[root->symbol]);
+
+        printf("symbol: %c\n", root->symbol);
+
+        code_print(&table[root->symbol]);
 
         return;
     } //Must be an interior node
+
     uint8_t temp;
     Code *c = table; //Current code
+
     code_push_bit(c, 0); // Push a 0 because we're going left
     build_codes(root->left, c); // RECURSE to left link
     code_pop_bit(c, &temp);
