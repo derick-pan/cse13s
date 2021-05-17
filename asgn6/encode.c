@@ -33,6 +33,30 @@ OPTIONS\n\
   -i infile      Input file to compress.\n\
   -o outfile     Output of compressed data.\n";
 
+  void post_traversal(Node *root, int outfile) {
+
+      if (root->left == NULL && root->left == NULL) {
+          //bytes = write(outfile, buf, nbytes); //Print I
+          uint8_t out[2]; //Ascii code for leaf
+          out[0] = 'L';
+          out[1] = root->symbol;
+          write(outfile, &out, 2);
+          printf("L%c ",root->symbol);
+          return;
+      }
+      else { //Must be an interior node
+          post_traversal(root->left, outfile); // RECURSE to left link
+          post_traversal(root->right, outfile); // RECURSE to right
+          uint8_t i = 'I';
+          write(outfile, &i, 1); //Either call write here or call write_bytes
+          printf("I ");
+      }
+}
+
+// L98 L10 L99 I I L100 L255 I L97 I I
+// L L
+//I Lc Ld I I L? Lb I La I I
+
 int main(int argc, char *argv[]) {
     int choice;
     bool stats = false;
@@ -79,12 +103,11 @@ int main(int argc, char *argv[]) {
             //Set the bit to 0 at the buffer location
             temp &= ~(0x1 << counter);
         }
-
         counter += 1;
         if (counter % 8 == 0 && temp > 0) {
             counter = 0;
             hist[temp] += 1; // MAY NOT BE THIS? BUT SHOULD BE
-            printf("Ascii and index: %u  frequency: %" PRIu64 "\n", temp, hist[temp]);
+            //printf("Ascii and index: %u  frequency: %" PRIu64 "\n", temp, hist[temp]);
         }
     }
     hist[0] += 1; //Min of 2 elements
@@ -92,31 +115,26 @@ int main(int argc, char *argv[]) {
 
     //Calculate How many Unique symbols:
     int uniquesym = 0;
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < ALPHABET; i++) {
         if (hist[i] > 0) {
             uniquesym += 1;
+            printf("The unique symbol is %"PRIu64 " at index: %d \n",hist[i], i);
         }
     }
 
+    // Step 3- Construct the Huffman Tree
     Node root = *build_tree(hist);
 
+    //Step 4- Construct code table
     Code c[ALPHABET];
     for (int i = 0; i < ALPHABET; i++) {
         c->bits[i] = 0;
     }
-
     build_codes(&root, c); //ur problematic
 
-    printf("Back at main:\n");
-    printf("%u\n", *c[97].bits);
-    printf("next\n");
-    printf("%u\n", *c[98].bits);
-    printf("next\n");
-    printf("%u\n", *c[99].bits);
-    printf("end here");
-    exit(1);
-    //printf("crash here");
 
+    printf("Unique Symbol's: %d\n", uniquesym);
+    //Step 5, Construct a header
     typedef struct Header {
         uint32_t magic;
         uint16_t permissions;
@@ -125,13 +143,17 @@ int main(int argc, char *argv[]) {
     } Header;
     struct stat statbuf;
     Header myheader;
-    myheader.magic = MAGIC;
-    myheader.permissions = fstat(infile, &statbuf);
-    fchmod(outfile, statbuf.st_mode);
-    myheader.tree_size = (3 * uniquesym) - 1;
-    myheader.file_size = statbuf.st_size;
+        myheader.magic = MAGIC;
+        myheader.permissions = fstat(infile, &statbuf);
+        fchmod(outfile, statbuf.st_mode);
+        myheader.tree_size = (3 * uniquesym) - 1;
+        myheader.file_size = statbuf.st_size;
+
+    write(outfile, &myheader, sizeof(Header));
 
     //Write the header to outfile
 
     //Create the dump
+    post_traversal(&root, outfile);
+    exit(1);
 }
