@@ -17,7 +17,7 @@ uint64_t bytes_written = 0;
 //extern uint64_t bytes_read;
 //extern uint64_t bytes_written;
 //Block = 4096
-static uint8_t buf[BLOCK]; //Declare buffer in io.c
+static uint8_t buf[BLOCK]; //Declare buffer in io.c //4096 items of uint8_t's
 static int bufind = 0; //Declare buffer index
 
 int read_bytes(int infile, uint8_t *buf, int nbytes) { //Internal function
@@ -54,11 +54,9 @@ bool read_bit(int infile, uint8_t *bit) { //Calls read_bytes, used in main
     //When buffer empty, fill it
 
     if (bufind == BLOCK * 8 || bufind == 0) {
-        //if (bufind == (BLOCK * 8)|| bufind == 0) {
-        //Fill the buffer if fillable
-        //printf("yo");
-        //printf("%d",read_bytes(infile, buf, BLOCK));
+
         if (read_bytes(infile, buf, BLOCK) <= 0) {
+            bufind = 0; //    TESTING TESTING TESTING SEEMS GOOD
             return false;
         }
         bufind = 0;
@@ -71,11 +69,11 @@ bool read_bit(int infile, uint8_t *bit) { //Calls read_bytes, used in main
 
 //External Function
 void write_code(int outfile, Code *c) { //calls write bytes , used in main
-
+    //printf("Bufind: %u\n", bufind);
     //bufind = 0;
     //Each bit in the code c is buffered into the buffer
     //Create a loop to iterate over the buffer
-    //uint8_t temp;
+
     //Code is based off of Euguene's Pseudocode
 
     for (uint32_t i = 0; i < c->top; i++) {
@@ -103,22 +101,17 @@ void write_code(int outfile, Code *c) { //calls write bytes , used in main
 
 //bufind is the next slot
 void flush_codes(int outfile) { //Write out any leftover buffered bits.
-    printf("%u\n", bufind);
-    uint32_t amount = 0;
+    printf("\n bufind: %u\n", bufind);
+    uint32_t amount = bufind;
     //ex.
     //250 bits left in buffer . I need minimum 256/8 bits =32 bytes
-
     if (bufind % 8 != 0) {
-        //convert num of bits in the buffer to least num of bytes possible
-        //if (bufind % 8 > 0) {
-        //amount = 1;
-        for (int i = bufind; i < (BLOCK * 8); i++) { //For loop to zero out the bits
+        amount += 8 - (bufind % 8); //In bits
+        for (uint32_t i = bufind; i < amount; i++) { //For loop to zero out the bits till next byte
             buf[i / 8] &= ~(0x1 << (i % 8));
         }
-        amount += bufind / 8 + 1;
-
-    } else {
-        amount += bufind / 8 + 1;
+        //printf("buffer0: %u \n",buf[0]);
+        //printf("buffer1: %u \n",buf[1]);
+        write_bytes(outfile, buf, amount / 8);
     }
-    write_bytes(outfile, buf, 32);
 }

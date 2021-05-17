@@ -99,16 +99,16 @@ int main(int argc, char *argv[]) {
             //Set the bit to 0 at the buffer location
             temp &= ~(0x1 << counter);
         }
-
         counter += 1;
         if (counter % 8 == 0 && temp > 0) {
             counter = 0;
-            hist[temp] += 1; // MAY NOT BE THIS? BUT SHOULD BE
-            printf("Ascii and index: %u  frequency: %" PRIu64 "\n", temp, hist[temp]);
+            hist[temp] += 1;
+            //printf("Ascii and index: %u  frequency: %" PRIu64 "\n", temp, hist[temp]);
         }
     }
     hist[0] += 1; //Min of 2 elements
     hist[255] += 1;
+
     //Calculate How many Unique symbols:
     int uniquesym = 0;
     for (int i = 0; i < ALPHABET; i++) {
@@ -126,7 +126,7 @@ int main(int argc, char *argv[]) {
     for (int i = 0; i < ALPHABET; i++) {
         c->bits[i] = 0;
     }
-    build_codes(&root, c); //ur problematic
+    build_codes(&root, c);
 
     printf("Unique Symbol's: %d\n", uniquesym);
     //Step 5, Construct a header
@@ -144,16 +144,18 @@ int main(int argc, char *argv[]) {
     myheader.tree_size = (3 * uniquesym) - 1;
     myheader.file_size = statbuf.st_size;
 
-    //Write the header to outfile
     write(outfile, &myheader, sizeof(Header));
 
     //Create the dump
     post_traversal(&root, outfile);
-
     //write the coresponding codes
-    Code symbolcodes = code_init();
-    uint8_t symcodes;
-    while (read_bit(infile, &symcodes)) {
-        code_push_bit(&symbolcodes, symcodes);
+
+    for (int i = 0; i < ALPHABET; i++) {
+        if (hist[i] > 0) {
+            write_code(outfile, &c[i]);
+            printf("Symbol: %c", i);
+            code_print(&c[i]);
+        }
     }
+    flush_codes(outfile);
 }

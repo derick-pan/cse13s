@@ -24,14 +24,14 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
     PriorityQueue *q = pq_create(ALPHABET);
     for (uint32_t i = 0; i < ALPHABET; i++) {
         if (hist[i] > 0) {
-            printf("index here: %u Frequency here: %" PRIu64 "\n", i, hist[i]);
+            //printf("index here: %u Frequency here: %" PRIu64 "\n", i, hist[i]);
             temp = node_create(i, hist[i]);
             enqueue(q, temp);
         }
     }
-    printf("QUEUEUEUEUEUEUE\n\n");
-    pq_print(q);
-    printf("\n\nQUEUEUEUEUEUEUE\n");
+    //printf("QUEUEUEUEUEUEUE\n\n");
+    //pq_print(q);
+    //printf("\n\nQUEUEUEUEUEUEUE\n");
     //node_delete(&temp); //This node is no longer needed
     Node *l;
     Node *r;
@@ -44,9 +44,9 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
         j = node_join(l, r);
         //printf("Dq L sym: %u, R: %u ", l->symbol,  r->symbol);
         enqueue(q, j);
-        printf("QUEUEUEUEUEUEUE\n\n");
-        pq_print(q);
-        printf("\n\nQUEUEUEUEUEUEUE\n");
+        //printf("QUEUEUEUEUEUEUE\n\n");
+        //pq_print(q);
+        //printf("\n\nQUEUEUEUEUEUEUE\n");
     }
     //node_delete(&l), node_delete(&r);
     // The one node left in priority queue is the root node
@@ -69,7 +69,7 @@ void build_codes(Node *root, Code table[static ALPHABET]) {
         //code_print(&c);
 
         table[root->symbol] = *table;
-        code_print(&table[root->symbol]);
+        //code_print(&table[root->symbol]);
 
         return;
     } else { //Must be an interior node
@@ -83,17 +83,6 @@ void build_codes(Node *root, Code table[static ALPHABET]) {
         build_codes(root->right, c); // RECURSE to right
         code_pop_bit(c, &temp); // pop from c
 
-        /*
-        //Code c = code_init(); //Current code
-    code_push_bit(table, 0); // Push a 0 because we're going left
-    build_codes(root->left, table); // RECURSE to left link
-    code_pop_bit(table, &temp);
-
-    //Push, recurse right, pop
-    code_push_bit(table, 1);
-    build_codes(root->right, table); // RECURSE to right
-    code_pop_bit(table, &temp); // pop from c
-*/
     }
 }
 
