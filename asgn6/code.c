@@ -50,7 +50,7 @@ bool code_empty(Code *c) {
 
 //return true if code is full
 bool code_full(Code *c) {
-    if (c->top == ALPHABET) {
+    if (c->top == MAX_CODE_SIZE) {
         return true;
     }
     return false;
@@ -71,7 +71,7 @@ bool code_push_bit(Code *c, uint8_t bit) { // Push one bit at a time
     } else {
         c->bits[c->top / 8] &= ~(0x1 << (c->top % 8));
     }
- 
+
     c->top += 1;
     return true;
 }
@@ -85,7 +85,7 @@ bool code_pop_bit(Code *c, uint8_t *bit) {
 
     //*bit = c->bits[c->top / 8] >> (c->top % 8) & 0x1; //Get the bit
     *bit = code_get_bit(c, c->top);
-    c->bits[c->top / 8] &= ~(0x1 << (c->top % 8)); //Clear the bit
+    //c->bits[c->top / 8] &= ~(0x1 << (c->top % 8)); //Clear the bit
     return true;
 }
 
