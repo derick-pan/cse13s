@@ -109,7 +109,7 @@ int main(int argc, char *argv[]) {
         printf("%c ", tree[i]);
     }
 
-    printf("\nWe seg fauly here HELLO123OOO\n\n\n");
+    //printf("\nWe seg fauly here HELLO123OOO\n\n\n");
     Node *root = rebuild_tree(myheader.tree_size, tree);
 
     //node_print(root);
@@ -119,13 +119,6 @@ int main(int argc, char *argv[]) {
     uint8_t writeout[myheader.file_size];
 
     while (decodedsym != myheader.file_size && read_bit(infile, &temp)) {
-
-        if (walk->left == NULL && walk->left == NULL) {
-            writeout[decodedsym] = temp;
-            decodedsym += 1;
-            walk = root;
-        }
-
         //printf("nothing?? %u\n\n", temp);
         if (temp == 0) {
             //Walk down to left child
@@ -134,9 +127,19 @@ int main(int argc, char *argv[]) {
             //Walk down to right
             walk = walk->right;
         }
+        if (walk->left == NULL && walk->left == NULL) {
+            writeout[decodedsym] = walk->symbol;
+            decodedsym += 1;
+            walk = root;
+        }
     }
+    printf("decoded sym: %u\n", decodedsym);
 
-    write_bytes(outfile, writeout, myheader.file_size);
+    for (uint8_t i = 0; i < myheader.file_size; i++) {
+        printf("%c ", writeout[i]);
+    }
+    printf("um\n");
+    write_bytes(outfile, writeout, (int) decodedsym);
 
     /* ### Free leftover memory ### */
     close(infile);

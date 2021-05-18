@@ -89,18 +89,21 @@ Node *rebuild_tree(uint16_t nbytes, uint8_t tree[static nbytes]) {
     for (uint8_t i = 0; i < nbytes; i += 1) {
         //printf("Tree: %c \n", tree[i]);
         if (tree[i] == 'L') {
-            Node *n = node_create(tree[i + 1], 0); //What's the frequency
+            printf("Push Leaf\n");
+            Node *n = node_create(tree[i + 1], 3); //What's the frequency
             stack_push(s, n);
-            //stack_print(s);
+            stack_print(s);
+            //i+=1;
         } else if (tree[i] == 'I') {
             printf("Push I\n");
-            stack_print(s);
+
             Node *r;
             stack_pop(s, &r); //Right Child
             Node *l;
             stack_pop(s, &l); //Left Child
             Node *d = node_join(l, r);
             stack_push(s, d);
+            stack_print(s);
             //stack_print(s);
         }
     }
