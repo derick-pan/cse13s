@@ -69,6 +69,7 @@ int main(int argc, char *argv[]) {
     //Check magic number
 
     read_bytes(infile, readingbuff, sizeof(Header));
+
     for (int i = 3; i >= 0; i--) { //Grabbing Magic Number
         myheader.magic <<= 8;
         myheader.magic |= readingbuff[i];
@@ -80,6 +81,7 @@ int main(int argc, char *argv[]) {
 
     /* ### Grabbing all of the information from the header of infile ### */
     for (int i = 5; i >= 4; i--) {
+
         myheader.permissions <<= 8;
         myheader.permissions |= readingbuff[i];
     }
@@ -88,18 +90,25 @@ int main(int argc, char *argv[]) {
         myheader.tree_size |= readingbuff[i];
     }
     for (int i = 15; i >= 8; i--) {
+        //printf("%u",readingbuff[i]);
         myheader.file_size <<= 8;
         myheader.file_size |= readingbuff[i];
     }
+    fchmod(outfile, myheader.permissions); //Set perms of outfile
+    printf("Permissions: %u , Tree_size %u , File Size: %" PRIu64 "\n", myheader.permissions,
+        myheader.tree_size, myheader.file_size);
 
     /* ################## Step 3 ###################  */
     // Reconstruct the Huffman Tree
     uint8_t temp; // A buffer
     uint8_t tree[myheader.tree_size]; // The dumped tree
 
+    //printf("tree dump:\n");
+    //Problem Not in this tree dump loop
     for (uint8_t i = 0; i < myheader.tree_size; i++) { // Read tree dump
         read_bytes(infile, &temp, 1);
         tree[i] = temp;
+        //printf("%c ", tree[i]);
     }
 
     Node *root = rebuild_tree(myheader.tree_size, tree);
