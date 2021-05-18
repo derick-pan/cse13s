@@ -24,7 +24,6 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
     PriorityQueue *q = pq_create(ALPHABET);
     for (uint32_t i = 0; i < ALPHABET; i++) {
         if (hist[i] > 0) {
-            printf("index here: %u Frequency here: %" PRIu64 "\n", i, hist[i]);
             temp = node_create(i, hist[i]);
             enqueue(q, temp);
         }
@@ -49,7 +48,6 @@ void build_codes(Node *root, Code table[static ALPHABET]) {
     //If root is a Leaf Node: then print it
     if (root->left == NULL && root->left == NULL) {
         table[root->symbol] = *table;
-        code_print(&table[root->symbol]);
         return;
     }
     //Else root is an Interior Node
