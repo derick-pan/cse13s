@@ -1,7 +1,6 @@
 //Derick Pan
 //dpan7
 //encode.c
-
 #include "code.h"
 #include "defines.h"
 #include "header.h"
@@ -37,22 +36,16 @@ OPTIONS\n\
 void post_traversal(Node *root, int outfile) {
 
     if (root->left == NULL && root->left == NULL) {
-        //bytes = write(outfile, buf, nbytes); //Print I
         uint8_t out[2]; //Ascii code for leaf
         out[0] = 'L';
         out[1] = root->symbol;
-        //write(outfile, &out, 2);
         write_bytes(outfile, out, 2);
-        printf("L%c ", root->symbol);
-
         return;
     } else { //Must be an interior node
         post_traversal(root->left, outfile); // RECURSE to left link
         post_traversal(root->right, outfile); // RECURSE to right
         uint8_t i = 'I';
         write_bytes(outfile, &i, 1);
-        //write(outfile, &i, 1); //Either call write here or call write_bytes
-        printf("I ");
     }
 }
 
@@ -97,7 +90,6 @@ int main(int argc, char *argv[]) {
 
     while (read_bytes(infile, &readingbuff, 1) > 0) {
         hist[readingbuff] += 1; //Increment position in histogram
-
         if (hist[readingbuff] == 1) {
             uniquesym += 1; //Unique symbols counter
         }
@@ -107,14 +99,12 @@ int main(int argc, char *argv[]) {
 
     /* ################## Step 3. ################## */
     /* Construct the Huffman Tree using build_tree   */
-
     Node *root = build_tree(hist);
-    printf("root is:\n");
-    node_print(root);
+
     /* ################## Step 4. ################## */
     /* Construct a code table by using build_codes   */
     Code c[ALPHABET];
-    for (int i = 0; i < ALPHABET; i++) {
+    for (int i = 0; i < ALPHABET; i++) { // Initalize all of the codes
         if (hist[i] > 0) {
             c[i] = code_init();
         }
@@ -135,27 +125,19 @@ int main(int argc, char *argv[]) {
     myheader.magic = MAGIC; // Identifies this file as compressed
     fstat(infile, &statbuf);
     myheader.permissions = statbuf.st_mode;
-    printf("MODE: %u\n", statbuf.st_mode);
     fchmod(outfile, statbuf.st_mode); //Set perms of outfile
-    //fchmod(outfile, statbuf.st_mode); //Set perms of outfile
-
     myheader.tree_size = (3 * uniquesym) - 1;
     myheader.file_size = statbuf.st_size;
 
-    printf("Permissions: %u , Tree_size %u , File Size: %" PRIu64 "\n", myheader.permissions,
-        myheader.tree_size, myheader.file_size);
-
-    write(outfile, &myheader, sizeof(myheader)); //Can i do this
+    write(outfile, &myheader, sizeof(myheader));
 
     /* ################## Step 7. ################## */
     /*              Create the tree dump             */
-    printf("\nTree dump Start\n");
     post_traversal(root, outfile);
-    printf("\nTree dump done\n");
 
     /* ################## Step 8. ################## */
     /*            Write corresponding codes          */
-    lseek(infile, 0, SEEK_SET);
+    lseek(infile, 0, SEEK_SET); // Reset pointer of read to beginning
 
     while (read_bytes(infile, &readingbuff, 1) > 0) {
         write_code(outfile, &c[readingbuff]);

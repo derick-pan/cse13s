@@ -16,10 +16,10 @@
 #include <string.h>
 #include <unistd.h>
 
-#define ALPHABET 256
+/*  ALPHABET = 256
+    BLOCK = 4096   */
 
 Node *build_tree(uint64_t hist[static ALPHABET]) {
-    //uint32_t freq;
     Node *temp;
     PriorityQueue *q = pq_create(ALPHABET);
     for (uint32_t i = 0; i < ALPHABET; i++) {
@@ -29,103 +29,82 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
             enqueue(q, temp);
         }
     }
-    //printf("QUEUEUEUEUEUEUE\n\n");
-    //pq_print(q);
-    //printf("\n\nQUEUEUEUEUEUEUE\n");
-    //node_delete(&temp); //This node is no longer needed
     Node *l;
     Node *r;
     Node *j;
     while (pq_size(q) >= 2) {
-        dequeue(q, &l);
-        dequeue(q, &r);
-        //printf("Dq L sym: %u, R: %u ", l->symbol,  r->symbol);
-
-        j = node_join(l, r);
-        //printf("Dq L sym: %u, R: %u ", l->symbol,  r->symbol);
+        dequeue(q, &l); // dequeue the left node
+        dequeue(q, &r); // dequeue the right node
+        j = node_join(l, r); // Join the Nodes together and enqueue it
         enqueue(q, j);
-        //printf("QUEUEUEUEUEUEUE\n\n");
-        //pq_print(q);
-        //printf("\n\nQUEUEUEUEUEUEUE\n");
     }
-    dequeue(q, &j);
-    printf("printing the queuee\n");
-    pq_print(q);
-    pq_delete(&q);
 
-    return j;
+    dequeue(q, &j); // dequeue the Root Node
+    pq_delete(&q); // Delete the Queue
+    return j; // Return the Root Node
 }
 
 void build_codes(Node *root, Code table[static ALPHABET]) {
-    //While i'm an interior node
 
+    //If root is a Leaf Node: then print it
     if (root->left == NULL && root->left == NULL) {
         table[root->symbol] = *table;
-
-        printf("symbol: %c\n", root->symbol);
-
         code_print(&table[root->symbol]);
-
         return;
-    } //Must be an interior node
+    }
+    //Else root is an Interior Node
 
-    uint8_t temp;
+    uint8_t temp; //Holder for the popped bits
     Code *c = table; //Current code
+
     code_push_bit(c, 0); // Push a 0 because we're going left
     build_codes(root->left, c); // RECURSE to left link
-    code_pop_bit(c, &temp);
+    code_pop_bit(c, &temp); // Pop from c
 
-    //Push, recurse right, pop
-    code_push_bit(c, 1);
-    build_codes(root->right, c); // RECURSE to right
+    code_push_bit(c, 1); // Push a 1 because we're going right
+    build_codes(root->right, c); // RECURSE to right link
     code_pop_bit(c, &temp); // pop from c
 }
 
 Node *rebuild_tree(uint16_t nbytes, uint8_t tree[static nbytes]) {
+    Stack *s = stack_create(nbytes); // Stack to reconstruct tree
 
-    Stack *s = stack_create(nbytes);
-    //uint8_t treedump = *tree;
-
+    // Iterate over contents of the tree dump
     for (uint8_t i = 0; i < nbytes; i += 1) {
-        //printf("Tree: %c \n", tree[i]);
-        if (tree[i] == 'L') {
-            printf("Push Leaf\n");
-            Node *n = node_create(tree[i + 1], 3); //What's the frequency
-            stack_push(s, n);
-            stack_print(s);
-            //i+=1;
-        } else if (tree[i] == 'I') {
-            printf("Push I\n");
 
+        //If element is an L then we create a node
+        if (tree[i] == 'L') {
+            // We create & push a node where the frequency doesn't matter
+            Node *n = node_create(tree[i + 1], 3);
+            stack_push(s, n);
+
+        } // otherwise element is an interior node so we create a parent node.
+        else if (tree[i] == 'I') {
             Node *r;
-            stack_pop(s, &r); //Right Child
+            stack_pop(s, &r); // Right Child
             Node *l;
-            stack_pop(s, &l); //Left Child
-            Node *d = node_join(l, r);
+            stack_pop(s, &l); // Left Child
+            Node *d = node_join(l, r); // Parent
             stack_push(s, d);
-            stack_print(s);
-            //stack_print(s);
         }
     }
-    stack_print(s);
     Node *root;
-    stack_pop(s, &root);
+    stack_pop(s, &root); //We Pop the Parent Node and return it
     stack_delete(&s);
     return root;
 }
 
 void delete_tree(Node **root) {
 
-    //printf("Deleting the tree\n");
-
+    //If i'm a leaf then delete node
     if ((*root)->left == NULL && (*root)->right == NULL) {
 
         node_delete(root);
 
         return;
-    } else { //Must be an interior node
+    } else { //Must be an interior node so recurse left and right
         delete_tree(&(*root)->left); // RECURSE to left link
-        delete_tree(&(*root)->right); // RECURSE to right
+        delete_tree(&(*root)->right); // RECURSE to right link
         node_delete(root);
     }
 }

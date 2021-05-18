@@ -14,102 +14,86 @@
 #include <unistd.h>
 uint64_t bytes_read = 0;
 uint64_t bytes_written = 0;
-//extern uint64_t bytes_read;
-//extern uint64_t bytes_written;
-//Block = 4096
-static uint8_t buf[BLOCK]; //Declare buffer in io.c //4096 items of uint8_t's
-static int bufind = 0; //Declare buffer index
 
-int read_bytes(int infile, uint8_t *buf, int nbytes) { //Internal function
-    int bytes = 0; //Number of bytes read
-    int localbytes = 0;
+static uint8_t buf[BLOCK];
+static int bufind = 0;
+
+//Wrapper function to read()
+int read_bytes(int infile, uint8_t *buf, int nbytes) {
+    int bytes = 0; //Number of bytes read with each read
+    int localbytes = 0; //Number of bytes read total in current call
     while ((bytes = read(infile, buf, nbytes)) > 0) {
         buf += bytes; //Increase position of buffer
-        bytes_read += bytes;
-        nbytes -= bytes;
-        localbytes += bytes;
+        bytes_read += bytes; //Increase total bytes read
+        nbytes -= bytes; //Decrease bytes still need to be read
+        localbytes += bytes; //Increase bytes just read
     }
-    return localbytes;
+    return localbytes; //Return number of bytes just read
 }
 
-//Internal Function
+//Wrapper function to write()
 int write_bytes(int outfile, uint8_t *buf, int nbytes) {
     int bytes = 0; //Number of bytes written in one write
-    int localbytes = 0;
-    while ((bytes = write(outfile, buf, nbytes)) > 0 /* && (int) bytes_written != nbytes*/) {
+    int localbytes = 0; //Number of bytes read total in current call
+    while ((bytes = write(outfile, buf, nbytes)) > 0) {
         buf += bytes; //Increase position of buffer
-        bytes_written += bytes;
-        localbytes += bytes;
-        nbytes -= bytes;
+        bytes_written += bytes; //Increase total bytes written
+        localbytes += bytes; //Decrease bytes still need to be written
+        nbytes -= bytes; //Increase bytes just written
     }
-    return localbytes;
+    return localbytes; //Return number of bytes just written
 }
 
-//External Function
-bool read_bit(int infile, uint8_t *bit) { //Calls read_bytes, used in main
-    //Uses functionality of read_bytes
-    //if buffer empty or the buffer's index is the size of a block
+// Function that doles out bits read one at a time
+bool read_bit(int infile, uint8_t *bit) {
 
     // If buffer is full    or buffer is empty
     if (bufind == BLOCK * 8 || bufind == 0) {
 
-        if (read_bytes(infile, buf, BLOCK) <= 0) { // If I can read
+        if (read_bytes(infile, buf, BLOCK) <= 0) { //If file is readable
             bufind = 0; //Reset index
             return false; // return false
         }
         bufind = 0;
     }
-    //pass back bit at bufind
+    //pass back bit at bufind through pointer
     *bit = (buf[bufind / 8] >> (bufind % 8) & 0x1); //Get the bit
     bufind += 1;
     return true;
 }
 
-//External Function
+// Function to write out codes
+//Code is based off of Euguene's Pseudocode
 void write_code(int outfile, Code *c) { //calls write bytes , used in main
-    //printf("Bufind: %u\n", bufind);
-    //bufind = 0;
     //Each bit in the code c is buffered into the buffer
     //Create a loop to iterate over the buffer
-
-    //Code is based off of Euguene's Pseudocode
-
     for (uint32_t i = 0; i < c->top; i++) {
 
-        if ((c->bits[i / 8] >> (i % 8) & 0x1) == 1) { //If this bit is a 1
+        if ((c->bits[i / 8] >> (i % 8) & 0x1) == 1) { //If bit is a 1
             //Set the bit to 1 at buffer
             buf[bufind / 8] |= 0x1 << (bufind % 8);
         } else {
             //Set the bit to 0 at the buffer location
             buf[bufind / 8] &= ~(0x1 << (bufind % 8));
         }
-
         bufind += 1;
 
-        //buffind is in bits, block in bytes
+        //If the Buffer is full, write it!
         if (bufind == BLOCK * 8) {
-            //Fill the buffer if fillable
-            printf("Should not be in here");
             write_bytes(outfile, buf, BLOCK);
             bufind = 0;
         }
     }
-    //printf("¯_(ツ)_/¯ \n");
 }
 
-//bufind is the next slot
+//Writes out the code if the buffer isn't size of BLOCk
 void flush_codes(int outfile) { //Write out any leftover buffered bits.
-    printf("\n bufind: %u\n", bufind);
-    uint32_t amount = bufind;
-    //ex.
-    //250 bits left in buffer . I need minimum 256/8 bits =32 bytes
+    uint32_t amount = bufind; // Amount of bits to write
     if (bufind % 8 != 0) {
         amount += 8 - (bufind % 8); //In bits
         for (uint32_t i = bufind; i < amount; i++) { //For loop to zero out the bits till next byte
             buf[i / 8] &= ~(0x1 << (i % 8));
         }
-        //printf("buffer0: %u \n",buf[0]);
-        //printf("buffer1: %u \n",buf[1]);
         write_bytes(outfile, buf, amount / 8);
     }
 }

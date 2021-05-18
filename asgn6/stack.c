@@ -1,7 +1,6 @@
 // Derick Pan
 // dpan 7
 // stack.c
-
 #include "stack.h"
 
 #include <ctype.h>
@@ -17,6 +16,7 @@ typedef struct Stack {
     Node **items;
 } Stack;
 
+//Allocate Memory for stack
 Stack *stack_create(uint32_t capacity) {
     Stack *s = (Stack *) malloc(sizeof(Stack));
     if (s) {
@@ -30,6 +30,7 @@ Stack *stack_create(uint32_t capacity) {
     }
     return s;
 }
+
 //Deallocate memory for stack
 void stack_delete(Stack **s) {
     if (*s) {
@@ -41,6 +42,7 @@ void stack_delete(Stack **s) {
         *s = NULL;
     }
 }
+
 //return true if stack is empty
 bool stack_empty(Stack *s) {
     if (s->top == 0) {
@@ -48,6 +50,7 @@ bool stack_empty(Stack *s) {
     }
     return false;
 }
+
 //return true if stack is full
 bool stack_full(Stack *s) {
     if (s->top == s->capacity) {
@@ -55,6 +58,7 @@ bool stack_full(Stack *s) {
     }
     return false;
 }
+
 //Return the size of the stack
 uint32_t stack_size(Stack *s) {
     return s->top;
@@ -80,6 +84,7 @@ bool stack_pop(Stack *s, Node **n) {
     return true;
 }
 
+//Function to print a stack
 void stack_print(Stack *s) {
     for (uint32_t i = 0; i < s->top; i += 1) {
         node_print(s->items[i]);

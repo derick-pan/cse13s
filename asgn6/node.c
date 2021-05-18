@@ -1,7 +1,6 @@
 //Derick Pan
 //dpan7
 //node.c
-//
 #include "node.h"
 
 #include <ctype.h>
@@ -11,7 +10,8 @@
 #include <string.h>
 #include <unistd.h>
 typedef struct Node Node;
-//Set node's symbol as symbol, frequency as frequency
+
+// Constructor function for a node
 Node *node_create(uint8_t symbol, uint64_t frequency) {
     Node *n = (Node *) malloc(sizeof(Node));
     n->symbol = symbol;
@@ -21,6 +21,7 @@ Node *node_create(uint8_t symbol, uint64_t frequency) {
     return n;
 }
 
+// Destructor function for a node
 void node_delete(Node **n) {
     free(*n);
     *n = NULL;
@@ -28,15 +29,14 @@ void node_delete(Node **n) {
 
 //Join left and child node, and return parent
 Node *node_join(Node *left, Node *right) {
-    //uint8_t name = (uint8_t) strtoul("$",NULL,10);
-    //uint64_t freq = ;
-    //printf( "Frequency: %" PRIu64 "\n"  ,freq);
-    Node *parentn = node_create(36, (left->frequency + right->frequency));
-    parentn->left = left;
-    parentn->right = right;
-    return parentn;
+    uint8_t dollasign = 36;
+    Node *parent = node_create(dollasign, (left->frequency + right->frequency));
+    parent->left = left;
+    parent->right = right;
+    return parent;
 }
 
+//Debug function to print node
 void node_print(Node *n) {
     if (n) {
         printf("symbol: %c | ", n->symbol);

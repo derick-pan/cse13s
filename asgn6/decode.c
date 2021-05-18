@@ -62,25 +62,23 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    uint8_t readingbuff[sizeof(Header)]; // Buffer for bytes while reading.
+    Header myheader; // Initalize the Header
+
     /* ################## Step 1&2 #################  */
     //Check magic number
-    //  read_bytes(infile, &readingbuff, 4);
-
-    uint8_t readingbuff[sizeof(Header)]; // Buffer for bytes while reading.
-    Header myheader;
-    uint32_t magictest = 0x00000000;
 
     read_bytes(infile, readingbuff, sizeof(Header));
-
-    for (int i = 3; i >= 0; i--) { // Testing Magic Number
-        magictest <<= 8;
-        magictest |= readingbuff[i];
+    for (int i = 3; i >= 0; i--) { //Grabbing Magic Number
+        myheader.magic <<= 8;
+        myheader.magic |= readingbuff[i];
     }
-    if (magictest != MAGIC) {
+    if (myheader.magic != MAGIC) {
         printf("Invalid Magic Number.\n");
         exit(1);
     }
 
+    /* ### Grabbing all of the information from the header of infile ### */
     for (int i = 5; i >= 4; i--) {
         myheader.permissions <<= 8;
         myheader.permissions |= readingbuff[i];
@@ -94,32 +92,24 @@ int main(int argc, char *argv[]) {
         myheader.file_size |= readingbuff[i];
     }
 
-    // Perms, Perms, Tree, Tree, File, file,
-    printf("\n");
+    /* ################## Step 3 ###################  */
+    // Reconstruct the Huffman Tree
+    uint8_t temp; // A buffer
+    uint8_t tree[myheader.tree_size]; // The dumped tree
 
-    printf("Permissions: %u , Tree_size %u , File Size: %" PRIu64 "\n", myheader.permissions,
-        myheader.tree_size, myheader.file_size);
-
-    uint8_t temp;
-    uint8_t tree[myheader.tree_size];
-
-    for (uint8_t i = 0; i < myheader.tree_size; i++) {
+    for (uint8_t i = 0; i < myheader.tree_size; i++) { // Read tree dump
         read_bytes(infile, &temp, 1);
         tree[i] = temp;
-        printf("%c ", tree[i]);
     }
 
-    //printf("\nWe seg fauly here HELLO123OOO\n\n\n");
     Node *root = rebuild_tree(myheader.tree_size, tree);
 
-    //node_print(root);
-
-    uint16_t decodedsym = 0;
-    Node *walk = root;
-    uint8_t writeout[myheader.file_size];
+    uint16_t decodedsym = 0; // Counter for amount of decoded symbols
+    Node *walk = root; // Copy of the root node
+    uint8_t writeout[myheader.file_size]; // Buffer of symbols
 
     while (decodedsym != myheader.file_size && read_bit(infile, &temp)) {
-        //printf("nothing?? %u\n\n", temp);
+
         if (temp == 0) {
             //Walk down to left child
             walk = walk->left;
@@ -127,6 +117,7 @@ int main(int argc, char *argv[]) {
             //Walk down to right
             walk = walk->right;
         }
+        // If I am at a leaf then add symbol to the buffer.
         if (walk->left == NULL && walk->left == NULL) {
             writeout[decodedsym] = walk->symbol;
             decodedsym += 1;
