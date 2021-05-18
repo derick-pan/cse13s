@@ -34,9 +34,6 @@ OPTIONS\n\
   -i infile      Input file to decompress.\n\
   -o outfile     Output of decompressed data.\n";
 
-
-
-
 int main(int argc, char *argv[]) {
     int choice;
     bool stats = false;
@@ -102,6 +99,44 @@ int main(int argc, char *argv[]) {
 
     printf("Permissions: %u , Tree_size %u , File Size: %" PRIu64 "\n", myheader.permissions,
         myheader.tree_size, myheader.file_size);
+
+    uint8_t temp;
+    uint8_t tree[myheader.tree_size];
+
+    for (uint8_t i = 0; i < myheader.tree_size; i++) {
+        read_bytes(infile, &temp, 1);
+        tree[i] = temp;
+        printf("%c ", tree[i]);
+    }
+
+    printf("\nWe seg fauly here HELLO123OOO\n\n\n");
+    Node *root = rebuild_tree(myheader.tree_size, tree);
+
+    //node_print(root);
+
+    uint16_t decodedsym = 0;
+    Node *walk = root;
+    uint8_t writeout[myheader.file_size];
+
+    while (decodedsym != myheader.file_size && read_bit(infile, &temp)) {
+
+        if (walk->left == NULL && walk->left == NULL) {
+            writeout[decodedsym] = temp;
+            decodedsym += 1;
+            walk = root;
+        }
+
+        //printf("nothing?? %u\n\n", temp);
+        if (temp == 0) {
+            //Walk down to left child
+            walk = walk->left;
+        } else {
+            //Walk down to right
+            walk = walk->right;
+        }
+    }
+
+    write_bytes(outfile, writeout, myheader.file_size);
 
     /* ### Free leftover memory ### */
     close(infile);

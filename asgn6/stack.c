@@ -40,11 +40,14 @@ void stack_delete(Stack **s) {
 }
 //return true if stack is empty
 bool stack_empty(Stack *s) {
-    return s->top;
+    if (s->top == 0) {
+        return true;
+    }
+    return false;
 }
 //return true if stack is full
 bool stack_full(Stack *s) {
-    if (s->top == 0) {
+    if (s->top == s->capacity) {
         return true;
     }
     return false;
@@ -75,7 +78,7 @@ bool stack_pop(Stack *s, Node **n) {
 }
 
 void stack_print(Stack *s) {
-    for (uint32_t i = 0; i < stack_size(s); i += 1) {
+    for (uint32_t i = 0; i < s->top; i += 1) {
         node_print(s->items[i]);
     }
     printf("(•_•)\n<)   )╯\n/\n");

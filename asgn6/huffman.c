@@ -58,8 +58,6 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
 
 void build_codes(Node *root, Code table[static ALPHABET]) {
     //While i'm an interior node
-    //If Current node is a leaf then save the code it took to get here
-    //
 
     if (root->left == NULL && root->left == NULL) {
         table[root->symbol] = *table;
@@ -73,7 +71,6 @@ void build_codes(Node *root, Code table[static ALPHABET]) {
 
     uint8_t temp;
     Code *c = table; //Current code
-
     code_push_bit(c, 0); // Push a 0 because we're going left
     build_codes(root->left, c); // RECURSE to left link
     code_pop_bit(c, &temp);
@@ -89,19 +86,25 @@ Node *rebuild_tree(uint16_t nbytes, uint8_t tree[static nbytes]) {
     Stack *s = stack_create(nbytes);
     //uint8_t treedump = *tree;
 
-    for (uint8_t i = 0; i < nbytes; i++) {
-
+    for (uint8_t i = 0; i < nbytes; i += 1) {
+        //printf("Tree: %c \n", tree[i]);
         if (tree[i] == 'L') {
-            Node n = *node_create('L', i);
-            stack_push(s, &n);
+            Node *n = node_create(tree[i + 1], 0); //What's the frequency
+            stack_push(s, n);
+            //stack_print(s);
         } else if (tree[i] == 'I') {
+            printf("Push I\n");
+            stack_print(s);
             Node *r;
-            stack_pop(s, &r);
+            stack_pop(s, &r); //Right Child
             Node *l;
-            stack_pop(s, &l);
-            node_join(l, r);
+            stack_pop(s, &l); //Left Child
+            Node *d = node_join(l, r);
+            stack_push(s, d);
+            //stack_print(s);
         }
     }
+    stack_print(s);
     Node *root;
     stack_pop(s, &root);
     return root;
