@@ -24,7 +24,7 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
     PriorityQueue *q = pq_create(ALPHABET);
     for (uint32_t i = 0; i < ALPHABET; i++) {
         if (hist[i] > 0) {
-            //printf("index here: %u Frequency here: %" PRIu64 "\n", i, hist[i]);
+            printf("index here: %u Frequency here: %" PRIu64 "\n", i, hist[i]);
             temp = node_create(i, hist[i]);
             enqueue(q, temp);
         }

@@ -107,8 +107,10 @@ int main(int argc, char *argv[]) {
 
     /* ################## Step 3. ################## */
     /* Construct the Huffman Tree using build_tree   */
-    Node *root = build_tree(hist);
 
+    Node *root = build_tree(hist);
+    printf("root is:\n");
+    node_print(root);
     /* ################## Step 4. ################## */
     /* Construct a code table by using build_codes   */
     Code c[ALPHABET];
@@ -131,22 +133,33 @@ int main(int argc, char *argv[]) {
     struct stat statbuf;
     Header myheader;
     myheader.magic = MAGIC; // Identifies this file as compressed
-    myheader.permissions = fstat(infile, &statbuf);
+    fstat(infile, &statbuf);
+    myheader.permissions = statbuf.st_mode;
+    printf("MODE: %u\n", statbuf.st_mode);
     fchmod(outfile, statbuf.st_mode); //Set perms of outfile
+    //fchmod(outfile, statbuf.st_mode); //Set perms of outfile
+
     myheader.tree_size = (3 * uniquesym) - 1;
     myheader.file_size = statbuf.st_size;
 
-    write(outfile, &myheader, sizeof(Header));
+    printf("Permissions: %u , Tree_size %u , File Size: %" PRIu64 "\n", myheader.permissions,
+        myheader.tree_size, myheader.file_size);
+
+    write(outfile, &myheader, sizeof(myheader)); //Can i do this
 
     /* ################## Step 7. ################## */
     /*              Create the tree dump             */
+    printf("\nTree dump Start\n");
     post_traversal(root, outfile);
+    printf("\nTree dump done\n");
 
     /* ################## Step 8. ################## */
     /*            Write corresponding codes          */
     for (int i = 0; i < ALPHABET; i++) {
         if (hist[i] > 0) {
-            write_code(outfile, &c[i]);
+            for (uint64_t j = 0; j < hist[i]; j++) {
+                write_code(outfile, &c[i]);
+            }
         }
     }
     flush_codes(outfile);
