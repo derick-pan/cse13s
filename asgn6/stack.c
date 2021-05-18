@@ -32,7 +32,10 @@ Stack *stack_create(uint32_t capacity) {
 }
 //Deallocate memory for stack
 void stack_delete(Stack **s) {
-    if (*s && (*s)->items) {
+    if (*s) {
+        if ((*s)->top > 0) {
+            node_delete((*s)->items);
+        }
         free((*s)->items);
         free(*s);
         *s = NULL;

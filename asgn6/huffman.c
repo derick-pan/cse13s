@@ -110,6 +110,7 @@ Node *rebuild_tree(uint16_t nbytes, uint8_t tree[static nbytes]) {
     stack_print(s);
     Node *root;
     stack_pop(s, &root);
+    stack_delete(&s);
     return root;
 }
 

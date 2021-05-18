@@ -155,12 +155,10 @@ int main(int argc, char *argv[]) {
 
     /* ################## Step 8. ################## */
     /*            Write corresponding codes          */
-    for (int i = 0; i < ALPHABET; i++) {
-        if (hist[i] > 0) {
-            for (uint64_t j = 0; j < hist[i]; j++) {
-                write_code(outfile, &c[i]);
-            }
-        }
+    lseek(infile, 0, SEEK_SET);
+
+    while (read_bytes(infile, &readingbuff, 1) > 0) {
+        write_code(outfile, &c[readingbuff]);
     }
     flush_codes(outfile);
 

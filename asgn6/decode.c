@@ -133,15 +133,11 @@ int main(int argc, char *argv[]) {
             walk = root;
         }
     }
-    printf("decoded sym: %u\n", decodedsym);
 
-    for (uint8_t i = 0; i < myheader.file_size; i++) {
-        printf("%c ", writeout[i]);
-    }
-    printf("um\n");
     write_bytes(outfile, writeout, (int) decodedsym);
 
     /* ### Free leftover memory ### */
+    delete_tree(&root);
     close(infile);
     close(outfile);
 }

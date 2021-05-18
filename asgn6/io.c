@@ -49,15 +49,13 @@ int write_bytes(int outfile, uint8_t *buf, int nbytes) {
 bool read_bit(int infile, uint8_t *bit) { //Calls read_bytes, used in main
     //Uses functionality of read_bytes
     //if buffer empty or the buffer's index is the size of a block
-    //Or if the index is 0, meaning buffer is empty
 
-    //When buffer empty, fill it
-
+    // If buffer is full    or buffer is empty
     if (bufind == BLOCK * 8 || bufind == 0) {
 
-        if (read_bytes(infile, buf, BLOCK) <= 0) {
-            bufind = 0; //    TESTING TESTING TESTING SEEMS GOOD
-            return false;
+        if (read_bytes(infile, buf, BLOCK) <= 0) { // If I can read
+            bufind = 0; //Reset index
+            return false; // return false
         }
         bufind = 0;
     }
