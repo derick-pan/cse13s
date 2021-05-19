@@ -40,14 +40,12 @@ void post_traversal(Node *root, int outfile) {
         out[0] = 'L';
         out[1] = root->symbol;
         write_bytes(outfile, out, 2);
-        //printf("%c%c ",out[0],out[1]);
         return;
     } else { //Must be an interior node
         post_traversal(root->left, outfile); // RECURSE to left link
         post_traversal(root->right, outfile); // RECURSE to right
         uint8_t i = 'I';
         write_bytes(outfile, &i, 1);
-        //printf("%c ",i);
     }
 }
 
@@ -130,9 +128,6 @@ int main(int argc, char *argv[]) {
     fchmod(outfile, statbuf.st_mode); //Set perms of outfile
     myheader.tree_size = (3 * uniquesym) - 1;
     myheader.file_size = statbuf.st_size;
-
-    printf("Permissions: %u , Tree_size %u , File Size: %" PRIu64 "\n", myheader.permissions,
-        myheader.tree_size, myheader.file_size);
     write(outfile, &myheader, sizeof(myheader));
 
     /* ################## Step 7. ################## */

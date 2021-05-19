@@ -90,15 +90,11 @@ int main(int argc, char *argv[]) {
         myheader.tree_size |= readingbuff[i];
     }
     for (int i = 15; i >= 8; i--) {
-        //printf("%u",readingbuff[i]);
         myheader.file_size <<= 8;
         myheader.file_size |= readingbuff[i];
     }
 
     fchmod(outfile, myheader.permissions); //Set perms of outfile
-    printf("Permissions: %u , Tree_size %u , File Size: %" PRIu64 "\n", myheader.permissions,
-        myheader.tree_size, myheader.file_size);
-
     /* ################## Step 3 ###################  */
     // Reconstruct the Huffman Tree
     uint8_t temp; // A buffer
