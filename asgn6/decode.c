@@ -94,6 +94,7 @@ int main(int argc, char *argv[]) {
         myheader.file_size <<= 8;
         myheader.file_size |= readingbuff[i];
     }
+
     fchmod(outfile, myheader.permissions); //Set perms of outfile
     printf("Permissions: %u , Tree_size %u , File Size: %" PRIu64 "\n", myheader.permissions,
         myheader.tree_size, myheader.file_size);
@@ -103,22 +104,18 @@ int main(int argc, char *argv[]) {
     uint8_t temp; // A buffer
     uint8_t tree[myheader.tree_size]; // The dumped tree
 
-    //printf("tree dump:\n");
     //Problem Not in this tree dump loop
     for (uint8_t i = 0; i < myheader.tree_size; i++) { // Read tree dump
         read_bytes(infile, &temp, 1);
         tree[i] = temp;
-        //printf("%c ", tree[i]);
     }
 
     Node *root = rebuild_tree(myheader.tree_size, tree);
-
-    uint16_t decodedsym = 0; // Counter for amount of decoded symbols
+    uint64_t decodedsym = 0; // Counter for amount of decoded symbols
     Node *walk = root; // Copy of the root node
     uint8_t writeout[myheader.file_size]; // Buffer of symbols
 
-    while (decodedsym != myheader.file_size && read_bit(infile, &temp)) {
-
+    while (myheader.file_size > decodedsym && read_bit(infile, &temp)) {
         if (temp == 0) {
             //Walk down to left child
             walk = walk->left;
@@ -127,15 +124,13 @@ int main(int argc, char *argv[]) {
             walk = walk->right;
         }
         // If I am at a leaf then add symbol to the buffer.
-        if (walk->left == NULL && walk->left == NULL) {
+        if (walk->left == NULL && walk->right == NULL) {
             writeout[decodedsym] = walk->symbol;
             decodedsym += 1;
             walk = root;
         }
     }
-
     write_bytes(outfile, writeout, (int) decodedsym);
-
     /* ### Free leftover memory ### */
     delete_tree(&root);
     close(infile);
