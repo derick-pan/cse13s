@@ -111,7 +111,7 @@ int main(int argc, char *argv[]) {
     Node *walk = root; // Copy of the root node
     uint8_t writeout[myheader.file_size]; // Buffer of symbols
 
-    while (myheader.file_size >= decodedsym && read_bit(infile, &temp)) {
+    while (myheader.file_size != decodedsym && read_bit(infile, &temp)) {
         if (temp == 0) {
             //Walk down to left child
             walk = walk->left;
@@ -126,7 +126,8 @@ int main(int argc, char *argv[]) {
             walk = root;
         }
     }
-    write_bytes(outfile, writeout, decodedsym + 1);
+
+    write_bytes(outfile, writeout, myheader.file_size);
     /* ### Free leftover memory ### */
     delete_tree(&root);
     close(infile);
