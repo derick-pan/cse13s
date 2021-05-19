@@ -17,9 +17,9 @@ encode.o:
 	$(CC) $(CFLAGS) -c encode.c node.c pq.c stack.c code.c io.c huffman.c
 
 entropy: entropy.o
-	$(CC) -o entropy entropy.o -lm
+	$(CC) -o entropy entropy.o node.o pq.o stack.o code.o io.o huffman.o -lm
 entropy.o:
-	$(CC) $(CFLAGS) -c entropy.c 
+	$(CC) $(CFLAGS) -c entropy.c node.c pq.c stack.c code.c io.c huffman.c
 
 clean:
 	rm -f encode encode.o decode decode.o entropy entropy.o node.o pq.o stack.o code.o io.o huffman.o
