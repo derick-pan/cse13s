@@ -1,5 +1,5 @@
 CC = clang
-CFLAGS = -Wall -Wextra -g -Werror -Wpedantic -Werror -Wnewline-eof
+CFLAGS = -Wall -Wextra -g -Werror -Wpedantic -Werror
 
 all: encode decode entropy
 

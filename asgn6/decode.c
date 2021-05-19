@@ -129,6 +129,15 @@ int main(int argc, char *argv[]) {
 
     write_bytes(outfile, writeout, myheader.file_size);
     /* ### Free leftover memory ### */
+    if (stats == true) {
+        struct stat st;
+        fstat(infile, &st);
+        double spacesave = (100 * (1 - ((double) st.st_size / myheader.file_size)));
+        fprintf(stderr, "Compressed file size: %lu bytes\n\
+Decompressed file size: %lu bytes\n\
+Space saving: %.2lf%%\n",
+            st.st_size, myheader.file_size, spacesave);
+    }
     delete_tree(&root);
     close(infile);
     close(outfile);

@@ -13,6 +13,7 @@
 #include <ctype.h>
 #include <fcntl.h>
 #include <inttypes.h>
+#include <math.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -138,6 +139,7 @@ int main(int argc, char *argv[]) {
     fchmod(outfile, statbuf.st_mode); //Set perms of outfile
     myheader.tree_size = (3 * uniquesym) - 1;
     myheader.file_size = statbuf.st_size;
+
     write(outfile, &myheader, sizeof(myheader));
 
     /* ################## Step 7. ################## */
@@ -153,6 +155,18 @@ int main(int argc, char *argv[]) {
         write_code(outfile, &c[readingbuff]);
     }
     flush_codes(outfile);
+
+    //If the user wants statistics then we print out the stats.
+    if (stats == true) {
+        struct stat st;
+        fstat(outfile, &st);
+        double spacesave = (100 * (1 - ((double) st.st_size / myheader.file_size)));
+        printf("spacespace: %.2lf \n", spacesave);
+        fprintf(stderr, "Uncompressed file size: %lu bytes\n\
+Compressed file size: %lu bytes\n\
+Space saving: %.2lf%%\n",
+            myheader.file_size, st.st_size, spacesave);
+    }
 
     /* ### Free leftover memory ### */
     delete_tree(&root);
