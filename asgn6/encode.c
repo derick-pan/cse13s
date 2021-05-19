@@ -80,9 +80,19 @@ int main(int argc, char *argv[]) {
     /* ################## Step 1&2 #################  */
     /* Read through infile to construct histogram     */
 
+    uint8_t readingbuff; // Buffer for bytes while reading
+
+    if (infile == 0) { //If input is stdin then I will create a temporary file
+        int path = creat("t3mp0r6rY_hOIdlng_fi1e", S_IRWXU);
+        while (read_bytes(infile, &readingbuff, 1) > 0) { //Write stdin into file
+            write_bytes(path, &readingbuff, 1);
+        }
+        close(infile);
+        infile = open("t3mp0r6rY_hOIdlng_fi1e", O_RDONLY);
+    }
+
     uint64_t hist[ALPHABET]; // Histogram
     int uniquesym = 2; // Unique Symbols counter;
-    uint8_t readingbuff; // Buffer for bytes while reading
 
     for (int i = 0; i < ALPHABET; i++) { //Clear the bits in histogram
         hist[i] = 0;
@@ -136,15 +146,17 @@ int main(int argc, char *argv[]) {
 
     /* ################## Step 8. ################## */
     /*            Write corresponding codes          */
+
     lseek(infile, 0, SEEK_SET); // Reset pointer of read to beginning
 
-    while (read_bytes(infile, &readingbuff, 1) >= 0) {
+    while (read_bytes(infile, &readingbuff, 1) > 0) {
         write_code(outfile, &c[readingbuff]);
     }
     flush_codes(outfile);
 
     /* ### Free leftover memory ### */
     delete_tree(&root);
+
     close(infile);
     close(outfile);
 }
