@@ -156,7 +156,7 @@ int main(int argc, char *argv[]) {
 
     /* ### Free leftover memory ### */
     delete_tree(&root);
-
     close(infile);
+    remove("t3mp0r6rY_hOIdlng_fi1e");
     close(outfile);
 }
