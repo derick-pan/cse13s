@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
 
     uint8_t readingbuff[sizeof(Header)]; // Buffer for bytes while reading.
     Header myheader; // Initalize the Header
-
+    myheader.permissions = 0, myheader.tree_size = 0, myheader.file_size = 0, myheader.magic = 0;
     /* ################## Step 1&2 #################  */
     //Check magic number
 
@@ -80,6 +80,7 @@ int main(int argc, char *argv[]) {
     }
 
     /* ### Grabbing all of the information from the header of infile ### */
+    myheader.permissions = 0, myheader.tree_size = 0, myheader.file_size = 0;
     for (int i = 5; i >= 4; i--) {
 
         myheader.permissions <<= 8;

@@ -95,14 +95,13 @@ Node *rebuild_tree(uint16_t nbytes, uint8_t tree[static nbytes]) {
 void delete_tree(Node **root) {
 
     //If i'm a leaf then delete node
-    if ((*root)->left == NULL && (*root)->right == NULL) {
-
-        node_delete(root);
-
-        return;
-    } else { //Must be an interior node so recurse left and right
+    if ((*root)->left != NULL && (*root)->right != NULL) {
         delete_tree(&(*root)->left); // RECURSE to left link
         delete_tree(&(*root)->right); // RECURSE to right link
         node_delete(root);
+
+    } else { //Must be an interior node so recurse left and right
+        node_delete(root);
+        return;
     }
 }
