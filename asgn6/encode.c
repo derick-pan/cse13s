@@ -116,6 +116,7 @@ int main(int argc, char *argv[]) {
     }
     build_codes(root, c);
 
+
     /* ################ Step 5 & 6 ################# */
     /*          Construct and write a header         */
     /*
