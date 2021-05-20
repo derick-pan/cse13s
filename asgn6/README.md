@@ -13,7 +13,12 @@ has code 1. Traveling through the entire tree to a leaf node would add up to the
 In order to decode my Huffman encoded file: I confirm that the file was encoded through huffman by a
 secret variable called "0xDEADBEEF" Once I confirm that the file is legit, I read through the tree dump to
 recreate the huffman tree, then read through the codes of the file to eventually come up with the decoded file.
-
+-----------------------------------------------------
+IMPORANT
+	The Encoder will create and destory a file name "t3mp0r6rY_hOIdlng_fi1e" if you choose to use
+stdin to encode something rather than supplying a file. If there's a slim change you already have a
+file named "t3mp0r6rY_hOIdlng_fi1e" Please back it up or else it will be destroyed.
+					You have been warned
 -----------------------------------------------------
 FILES
 
