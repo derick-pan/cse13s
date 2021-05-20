@@ -66,10 +66,10 @@ void build_codes(Node *root, Code table[static ALPHABET]) {
 
 Node *rebuild_tree(uint16_t nbytes, uint8_t tree[static nbytes]) {
     Stack *s = stack_create(nbytes); // Stack to reconstruct tree
-
+    printf("rebuild nbytes: %u\n", nbytes);
     // Iterate over contents of the tree dump
-    for (uint8_t i = 0; i < nbytes; i += 1) {
-
+    for (uint16_t i = 0; i < nbytes; i += 1) {
+        printf("%u ", i);
         //If element is an L then we create a node
         if (tree[i] == 'L') {
             // We create & push a node where the frequency doesn't matter
