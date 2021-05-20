@@ -91,9 +91,10 @@ void flush_codes(int outfile) { //Write out any leftover buffered bits.
     uint32_t amount = bufind; // Amount of bits to write
     if (bufind % 8 != 0) {
         amount += 8 - (bufind % 8); //In bits
-        for (uint32_t i = bufind; i < amount; i++) { //For loop to zero out the bits till next byte
+        for (uint32_t i = bufind; i <= amount; i++) { //For loop to zero out the bits till next byte
             buf[i / 8] &= ~(0x1 << (i % 8));
         }
-        write_bytes(outfile, buf, amount / 8);
+        write_bytes(outfile, buf, amount / 8 +1);
     }
+    printf("Flush code buffer index: %u \n", bufind);
 }

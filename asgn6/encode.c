@@ -36,7 +36,7 @@ OPTIONS\n\
 
 void post_traversal(Node *root, int outfile) {
 
-    if (root->left == NULL && root->left == NULL) {
+    if (root->left == NULL && root->right == NULL) {
         uint8_t out[2]; //Ascii code for leaf
         out[0] = 'L';
         out[1] = root->symbol;
@@ -83,14 +83,7 @@ int main(int argc, char *argv[]) {
 
     uint8_t readingbuff; // Buffer for bytes while reading
 
-    if (infile == 0) { //If input is stdin then I will create a temporary file
-        int path = creat("t3mp0r6rY_hOIdlng_fi1e", S_IRWXU);
-        while (read_bytes(infile, &readingbuff, 1) > 0) { //Write stdin into file
-            write_bytes(path, &readingbuff, 1);
-        }
-        close(infile);
-        infile = open("t3mp0r6rY_hOIdlng_fi1e", O_RDONLY);
-    }
+
 
     uint64_t hist[ALPHABET]; // Histogram
     int uniquesym = 2; // Unique Symbols counter;
@@ -139,7 +132,8 @@ int main(int argc, char *argv[]) {
     fchmod(outfile, statbuf.st_mode); //Set perms of outfile
     myheader.tree_size = (3 * uniquesym) - 1;
     myheader.file_size = statbuf.st_size;
-
+    printf("Permissions: %u , Tree_size %u , File Size: %" PRIu64 "\n", myheader.permissions,
+        myheader.tree_size, myheader.file_size);
     write(outfile, &myheader, sizeof(myheader));
 
     /* ################## Step 7. ################## */
@@ -151,26 +145,17 @@ int main(int argc, char *argv[]) {
 
     lseek(infile, 0, SEEK_SET); // Reset pointer of read to beginning
 
-    while (read_bytes(infile, &readingbuff, 1) >= 0) {
+    while (read_bytes(infile, &readingbuff, 1) > 0) {
         write_code(outfile, &c[readingbuff]);
     }
     flush_codes(outfile);
 
     //If the user wants statistics then we print out the stats.
-    if (stats == true) {
-        struct stat st;
-        fstat(outfile, &st);
-        double spacesave = (100 * (1 - ((double) st.st_size / myheader.file_size)));
-        printf("spacespace: %.2lf \n", spacesave);
-        fprintf(stderr, "Uncompressed file size: %lu bytes\n\
-Compressed file size: %lu bytes\n\
-Space saving: %.2lf%%\n",
-            myheader.file_size, st.st_size, spacesave);
-    }
+
 
     /* ### Free leftover memory ### */
     delete_tree(&root);
     close(infile);
-    remove("t3mp0r6rY_hOIdlng_fi1e");
+
     close(outfile);
 }

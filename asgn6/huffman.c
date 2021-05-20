@@ -46,7 +46,7 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
 void build_codes(Node *root, Code table[static ALPHABET]) {
 
     //If root is a Leaf Node: then set it
-    if (root->left == NULL && root->left == NULL) {
+    if (root->left == NULL && root->right == NULL) {
         table[root->symbol] = *table;
         return;
     }
@@ -73,7 +73,7 @@ Node *rebuild_tree(uint16_t nbytes, uint8_t tree[static nbytes]) {
         //If element is an L then we create a node
         if (tree[i] == 'L') {
             // We create & push a node where the frequency doesn't matter
-            Node *n = node_create(tree[i + 1], 0);
+            Node *n = node_create(tree[i + 1], 1);
             stack_push(s, n);
             i += 1;
         } // otherwise element is an interior node so we create a parent node.

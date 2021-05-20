@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
 
     uint8_t readingbuff[sizeof(Header)]; // Buffer for bytes while reading.
     Header myheader; // Initalize the Header
-    myheader.permissions = 0, myheader.tree_size = 0, myheader.file_size = 0, myheader.magic = 0;
+    myheader.permissions = 0, myheader.tree_size = 0, myheader.file_size = 0, myheader.magic = 0x00000000;
     /* ################## Step 1&2 #################  */
     //Check magic number
 
@@ -82,7 +82,6 @@ int main(int argc, char *argv[]) {
     /* ### Grabbing all of the information from the header of infile ### */
     myheader.permissions = 0, myheader.tree_size = 0, myheader.file_size = 0;
     for (int i = 5; i >= 4; i--) {
-
         myheader.permissions <<= 8;
         myheader.permissions |= readingbuff[i];
     }
@@ -94,6 +93,9 @@ int main(int argc, char *argv[]) {
         myheader.file_size <<= 8;
         myheader.file_size |= readingbuff[i];
     }
+
+    printf("Permissions: %u , Tree_size %u , File Size: %" PRIu64 "\n", myheader.permissions,
+        myheader.tree_size, myheader.file_size);
 
     fchmod(outfile, myheader.permissions); //Set perms of outfile
     /* ################## Step 3 ###################  */
@@ -108,6 +110,7 @@ int main(int argc, char *argv[]) {
     }
 
     Node *root = rebuild_tree(myheader.tree_size, tree);
+
     uint64_t decodedsym = 0; // Counter for amount of decoded symbols
     Node *walk = root; // Copy of the root node
     uint8_t writeout[myheader.file_size]; // Buffer of symbols
@@ -128,18 +131,9 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    write_bytes(outfile, writeout, myheader.file_size);
-
-    /* ### Print the statistics ### */
-    if (stats == true) {
-        struct stat st;
-        fstat(infile, &st);
-        double spacesave = (100 * (1 - ((double) st.st_size / myheader.file_size)));
-        fprintf(stderr, "Compressed file size: %lu bytes\n\
-Decompressed file size: %lu bytes\n\
-Space saving: %.2lf%%\n",
-            st.st_size, myheader.file_size, spacesave);
-    }
+    printf("Decoded Symbols: %"PRIu64 "\n", decodedsym);
+    
+    write_bytes(outfile, writeout,(int) decodedsym);
 
     /* ### Free leftover memory ### */
     delete_tree(&root);
