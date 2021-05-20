@@ -26,6 +26,7 @@ int read_bytes(int infile, uint8_t *buf, int nbytes) {
         buf += bytes; //Increase position of buffer
         bytes_read += bytes; //Increase total bytes read
         nbytes -= bytes; //Decrease bytes still need to be read
+
         localbytes += bytes; //Increase bytes just read
     }
     return localbytes; //Return number of bytes just read
@@ -34,12 +35,12 @@ int read_bytes(int infile, uint8_t *buf, int nbytes) {
 //Wrapper function to write()
 int write_bytes(int outfile, uint8_t *buf, int nbytes) {
     int bytes = 0; //Number of bytes written in one write
-    int localbytes = 0; //Number of bytes read total in current call
+    int localbytes = 0; //Number of bytes writen total in current call
     while ((bytes = write(outfile, buf, nbytes)) > 0) {
         buf += bytes; //Increase position of buffer
         bytes_written += bytes; //Increase total bytes written
-        localbytes += bytes; //Decrease bytes still need to be written
-        nbytes -= bytes; //Increase bytes just written
+        localbytes += bytes; //Increase bytes just written
+        nbytes -= bytes;//Decrease bytes still need to be written
     }
     return localbytes; //Return number of bytes just written
 }
@@ -89,12 +90,13 @@ void write_code(int outfile, Code *c) { //calls write bytes , used in main
 //Writes out the code if the buffer isn't size of BLOCk
 void flush_codes(int outfile) { //Write out any leftover buffered bits.
     uint32_t amount = bufind; // Amount of bits to write
+    printf("buffer index is %u\n",bufind);
     if (bufind % 8 != 0) {
         amount += 8 - (bufind % 8); //In bits
-        for (uint32_t i = bufind; i <= amount; i++) { //For loop to zero out the bits till next byte
+        for (uint32_t i = bufind; i < amount; i++) { //For loop to zero out the bits till next byte
             buf[i / 8] &= ~(0x1 << (i % 8));
         }
-        write_bytes(outfile, buf, amount / 8 +1);
+        write_bytes(outfile, buf, amount / 8);
     }
     printf("Flush code buffer index: %u \n", bufind);
 }

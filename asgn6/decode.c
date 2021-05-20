@@ -104,12 +104,14 @@ int main(int argc, char *argv[]) {
     uint8_t tree[myheader.tree_size]; // The dumped tree
 
     //Problem Not in this tree dump loop
-    for (uint8_t i = 0; i < myheader.tree_size; i++) { // Read tree dump
+    for (uint16_t i = 0; i < myheader.tree_size; i++) { // Read tree dump
+
         read_bytes(infile, &temp, 1);
         tree[i] = temp;
-    }
 
-    Node *root = rebuild_tree(myheader.tree_size, tree);
+    }
+    printf("MainTree Size: %u\n", myheader.tree_size);
+    Node *root = rebuild_tree(myheader.tree_size, tree); //lcet10 stuck here
 
     uint64_t decodedsym = 0; // Counter for amount of decoded symbols
     Node *walk = root; // Copy of the root node
@@ -129,11 +131,12 @@ int main(int argc, char *argv[]) {
             decodedsym += 1;
             walk = root;
         }
+
     }
 
     printf("Decoded Symbols: %"PRIu64 "\n", decodedsym);
-    
-    write_bytes(outfile, writeout,(int) decodedsym);
+
+    write_bytes(outfile, writeout,(double) decodedsym);
 
     /* ### Free leftover memory ### */
     delete_tree(&root);

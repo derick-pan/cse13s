@@ -34,8 +34,9 @@ OPTIONS\n\
   -i infile      Input file to compress.\n\
   -o outfile     Output of compressed data.\n";
 
-void post_traversal(Node *root, int outfile) {
 
+//Creating Tree Dump should work Fine
+void post_traversal(Node *root, int outfile) {
     if (root->left == NULL && root->right == NULL) {
         uint8_t out[2]; //Ascii code for leaf
         out[0] = 'L';
@@ -43,9 +44,9 @@ void post_traversal(Node *root, int outfile) {
         write_bytes(outfile, out, 2);
         return;
     } else { //Must be an interior node
+        uint8_t i = 'I';
         post_traversal(root->left, outfile); // RECURSE to left link
         post_traversal(root->right, outfile); // RECURSE to right
-        uint8_t i = 'I';
         write_bytes(outfile, &i, 1);
     }
 }
@@ -134,6 +135,7 @@ int main(int argc, char *argv[]) {
     myheader.file_size = statbuf.st_size;
     printf("Permissions: %u , Tree_size %u , File Size: %" PRIu64 "\n", myheader.permissions,
         myheader.tree_size, myheader.file_size);
+    //printf("Size of header: %lu",sizeof(myheader));
     write(outfile, &myheader, sizeof(myheader));
 
     /* ################## Step 7. ################## */
@@ -147,6 +149,8 @@ int main(int argc, char *argv[]) {
 
     while (read_bytes(infile, &readingbuff, 1) > 0) {
         write_code(outfile, &c[readingbuff]);
+        printf("%c \n",readingbuff);
+        code_print(&c[readingbuff]);
     }
     flush_codes(outfile);
 

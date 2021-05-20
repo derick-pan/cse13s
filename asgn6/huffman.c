@@ -24,7 +24,7 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
     PriorityQueue *q = pq_create(ALPHABET);
     for (uint32_t i = 0; i < ALPHABET; i++) {
         if (hist[i] > 0) {
-            temp = node_create(i, hist[i]);
+            temp = node_create( (uint8_t) i, hist[i]);
             enqueue(q, temp);
         }
     }
@@ -66,10 +66,10 @@ void build_codes(Node *root, Code table[static ALPHABET]) {
 
 Node *rebuild_tree(uint16_t nbytes, uint8_t tree[static nbytes]) {
     Stack *s = stack_create(nbytes); // Stack to reconstruct tree
-    printf("rebuild nbytes: %u\n", nbytes);
+    //printf("rebuild nbytes: %u\n", nbytes);
     // Iterate over contents of the tree dump
     for (uint16_t i = 0; i < nbytes; i += 1) {
-        printf("%u ", i);
+        //printf("%u ", i);
         //If element is an L then we create a node
         if (tree[i] == 'L') {
             // We create & push a node where the frequency doesn't matter
