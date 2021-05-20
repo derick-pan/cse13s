@@ -78,13 +78,15 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    /* ################## Step 1&2 #################  */
-    /* Read through infile to construct histogram     */
-    uint8_t readingbuff; // Buffer for bytes while reading
-    uint8_t transferring[BLOCK];
-    uint16_t bufinda = 0;
+    /* If user supplied No file and wants stdin to be encoded then this if
+    statement will execute, creating a temporary file and deleting it later on.*/
 
+    uint8_t readingbuff; // Buffer for bytes while reading
+    uint8_t transferring[BLOCK]; // A second Buffer with Size of Block.
     if (infile == 0) { //If input is stdin then I will create a temporary file
+        uint16_t bufinda = 0;
+        //Temporary file has a unique name as to have an incredibly low chance of
+        //user having the exact same file name.
         int path = creat("t3mp0r6rY_hOIdlng_fi1e", S_IRWXU);
         while (read_bytes(infile, &readingbuff, 1) > 0) { //Write stdin into file
             transferring[bufinda] = readingbuff;
@@ -95,23 +97,22 @@ int main(int argc, char *argv[]) {
                 bufinda = 0;
             }
         }
-        //Flush out the write_bytes if any remaining
-        if (bufinda != 0) {
+        if (bufinda != 0) { //Flush out the write_bytes if any remaining
             write_bytes(path, transferring, bufinda);
-            bufinda = 0;
         }
         infile = open("t3mp0r6rY_hOIdlng_fi1e", O_RDONLY);
         bytes_written = 0;
     }
 
-
+    /* ################## Step 1&2 #################  */
+    /* Read through infile to construct histogram     */
     uint64_t hist[ALPHABET]; // Histogram
     int uniquesym = 2; // Unique Symbols counter;
     for (int i = 0; i < ALPHABET; i++) { //Clear the bits in histogram
         hist[i] = 0;
     }
 
-    while (read_bytes(infile, &readingbuff, 1) > 0) {
+    while (read_bytes(infile, &readingbuff, 1) > 0) { //Generate Histogram
         hist[readingbuff] += 1; //Increment position in histogram
         if (hist[readingbuff] == 1) {
             uniquesym += 1; //Unique symbols counter
@@ -127,7 +128,7 @@ int main(int argc, char *argv[]) {
     /* ################## Step 4. ################## */
     /* Construct a code table by using build_codes   */
     Code c[ALPHABET];
-    for (int i = 0; i < ALPHABET; i++) { // Initalize all of the codes
+    for (int i = 0; i < ALPHABET; i++) { // Initalize ONLY positions to be used
         if (hist[i] > 0) {
             c[i] = code_init();
         }
@@ -141,19 +142,19 @@ int main(int argc, char *argv[]) {
         magic          Identifies this file as compressed
         permissions    Input File Permissions
         tree_size      Tree size in bytes
-        file_size      File size of Input
-    */
+        file_size      File size of Input            */
     struct stat statbuf;
-    Header myheader;
+    Header myheader; // Create the Header
     myheader.magic = MAGIC; // Identifies this file as compressed
-    fstat(infile, &statbuf);
-    myheader.permissions = statbuf.st_mode;
+    fstat(infile, &statbuf); // Grab the stats of infile
+    myheader.permissions = statbuf.st_mode; //Copy the permissions
     fchmod(outfile, statbuf.st_mode); //Set perms of outfile
-    myheader.tree_size = (3 * uniquesym) - 1;
-    myheader.file_size = statbuf.st_size;
+    myheader.tree_size = (3 * uniquesym) - 1; //Get the size of the Tree
+    myheader.file_size = statbuf.st_size; //Get the file size
 
-    write(outfile, &myheader, sizeof(myheader));
-    bytes_written +=16;
+    write(outfile, &myheader, sizeof(myheader)); // Write Header to outfile
+    bytes_written += 16; //Increment bytes_written
+
     /* ################## Step 7. ################## */
     /*              Create the tree dump             */
     post_traversal(root, outfile);
@@ -167,8 +168,7 @@ int main(int argc, char *argv[]) {
     }
     flush_codes(outfile);
 
-
-    //If the user wants statistics then we print out the stats.
+    /* If the user wants statistics then we print out the stats. */
     if (stats == true) {
         double spacesave = (100 * (1 - ((double) bytes_written / myheader.file_size)));
         fprintf(stderr, "Uncompressed file size: %lu bytes\n\
@@ -176,7 +176,6 @@ Compressed file size: %lu bytes\n\
 Space saving: %.2lf%%\n",
             myheader.file_size, bytes_written, spacesave);
     }
-
 
     /* ### Free leftover memory ### */
     delete_tree(&root);

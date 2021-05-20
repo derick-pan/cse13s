@@ -45,16 +45,14 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
 
 void build_codes(Node *root, Code table[static ALPHABET]) {
 
-    //If root is a Leaf Node: then set it
+    //If node is a Leaf Node: then save it
     if (NULL == root->left && NULL == root->right) {
-        //if (root->left == NULL && root->right == NULL) {
         table[root->symbol] = *table;
         return;
     }
     //Else root is an Interior Node
-
-    uint8_t temp; //Holder for the popped bits
-    Code *c = table; //Current code
+    uint8_t temp; // Holder for the popped bits
+    Code *c = table; // Current code
 
     code_push_bit(c, 0); // Push a 0 because we're going left
     build_codes(root->left, c); // RECURSE to left link
@@ -67,10 +65,8 @@ void build_codes(Node *root, Code table[static ALPHABET]) {
 
 Node *rebuild_tree(uint16_t nbytes, uint8_t tree[static nbytes]) {
     Stack *s = stack_create(nbytes); // Stack to reconstruct tree
-    //printf("rebuild nbytes: %u\n", nbytes);
     // Iterate over contents of the tree dump
     for (uint16_t i = 0; i < nbytes; i += 1) {
-        //printf("%u ", i);
         //If element is an L then we create a node
         if (tree[i] == 'L') {
             // We create & push a node where the frequency doesn't matter
@@ -95,13 +91,13 @@ Node *rebuild_tree(uint16_t nbytes, uint8_t tree[static nbytes]) {
 
 void delete_tree(Node **root) {
 
-    //If i'm a leaf then delete node
+    //If I am interior node, recurse left and right then delete the node
     if ((*root)->left != NULL && (*root)->right != NULL) {
         delete_tree(&(*root)->left); // RECURSE to left link
         delete_tree(&(*root)->right); // RECURSE to right link
         node_delete(root);
 
-    } else { //Must be an interior node so recurse left and right
+    } else { //If i'm a leaf then delete node
         node_delete(root);
         return;
     }

@@ -33,6 +33,7 @@ OPTIONS\n\
   -v             Print compression statistics.\n\
   -i infile      Input file to decompress.\n\
   -o outfile     Output of decompressed data.\n";
+
 uint64_t bytes_read;
 int main(int argc, char *argv[]) {
     int choice;
@@ -64,24 +65,23 @@ int main(int argc, char *argv[]) {
 
     uint8_t readingbuff[sizeof(Header)]; // Buffer for bytes while reading.
     Header myheader; // Initalize the Header
-    myheader.permissions = 0, myheader.tree_size = 0, myheader.file_size = 0,
-    myheader.magic = 0x00000000;
-    /* ################## Step 1&2 #################  */
-    //Check magic number
+    myheader.permissions = 0, myheader.tree_size = 0, myheader.file_size = 0, myheader.magic = 0;
 
-    read_bytes(infile, readingbuff, sizeof(Header));
+    /* ################## Step 1&2 #################  */
+    // Authenticate MAGIC Number
+
+    read_bytes(infile, readingbuff, sizeof(Header)); // Read the header ONLY
 
     for (int i = 3; i >= 0; i--) { //Grabbing Magic Number
         myheader.magic <<= 8;
         myheader.magic |= readingbuff[i];
     }
     if (myheader.magic != MAGIC) {
-        printf("Invalid Magic Number.\n");
+        fprintf(stderr, "Invalid Magic Number.\n");
         exit(1);
     }
 
     /* ### Grabbing all of the information from the header of infile ### */
-    myheader.permissions = 0, myheader.tree_size = 0, myheader.file_size = 0;
     for (int i = 5; i >= 4; i--) {
         myheader.permissions <<= 8;
         myheader.permissions |= readingbuff[i];
@@ -94,31 +94,27 @@ int main(int argc, char *argv[]) {
         myheader.file_size <<= 8;
         myheader.file_size |= readingbuff[i];
     }
-
-    //  printf("Permissions: %u , Tree_size %u , File Size: %" PRIu64 "\n", myheader.permissions,
-    //      myheader.tree_size, myheader.file_size);
-
     fchmod(outfile, myheader.permissions); //Set perms of outfile
+
     /* ################## Step 3 ###################  */
     // Reconstruct the Huffman Tree
     uint8_t temp; // A buffer
     uint8_t tree[myheader.tree_size]; // The dumped tree
 
-    //Problem Not in this tree dump loop
-    for (uint16_t i = 0; i < myheader.tree_size; i++) { // Read tree dump
+    for (uint16_t i = 0; i < myheader.tree_size; i++) { // Read&Save tree dump
         read_bytes(infile, &temp, 1);
         tree[i] = temp;
     }
-    //printf("MainTree Size: %u\n", myheader.tree_size);
-    Node *root = rebuild_tree(myheader.tree_size, tree); //lcet10 stuck here
+
+    Node *root = rebuild_tree(myheader.tree_size, tree); // Rebuild the Tree
 
     uint64_t decodedsym = 0; // Counter for amount of decoded symbols
     Node *walk = root; // Copy of the root node
     uint8_t writeout[BLOCK]; // Buffer of symbols
-    uint16_t bufind = 0;
+    uint16_t bufind = 0; // Buffer Index used when writing symbols
 
     while (myheader.file_size != decodedsym) {
-        // If I am at a leaf then add symbol to the buffer.
+        // If node am at a leaf then add node->symbol to the buffer.
         if (walk->left == NULL && walk->right == NULL) {
             writeout[bufind] = walk->symbol;
             bufind += 1;
@@ -126,7 +122,7 @@ int main(int argc, char *argv[]) {
             walk = root;
         }
         read_bit(infile, &temp);
-        if (bufind == BLOCK) {
+        if (bufind == BLOCK) { // If buffer is full then write it out.
             write_bytes(outfile, writeout, BLOCK);
             bufind = 0;
         }
@@ -138,15 +134,12 @@ int main(int argc, char *argv[]) {
             walk = walk->right;
         }
     }
-
-    if (bufind != 0) {
+    if (bufind != 0) { // Flush out left over bits
         write_bytes(outfile, writeout, bufind);
     }
 
     /* ### Print the statistics ### */
     if (stats == true) {
-        struct stat st;
-        fstat(infile, &st);
         double spacesave = (100 * (1 - ((double) bytes_read / myheader.file_size)));
         fprintf(stderr, "Compressed file size: %lu bytes\n\
 Decompressed file size: %lu bytes\n\
