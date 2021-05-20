@@ -46,7 +46,8 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
 void build_codes(Node *root, Code table[static ALPHABET]) {
 
     //If root is a Leaf Node: then set it
-    if (root->left == NULL && root->right == NULL) {
+    if (NULL == root->left && NULL == root->right) {
+        //if (root->left == NULL && root->right == NULL) {
         table[root->symbol] = *table;
         return;
     }

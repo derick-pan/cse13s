@@ -36,7 +36,7 @@ OPTIONS\n\
 
 //Creating Tree Dump should work Fine
 void post_traversal(Node *root, int outfile) {
-    if (root->left == NULL && root->right == NULL) {
+    if (NULL == root->left && NULL == root->right) {
         uint8_t out[2]; //Ascii code for leaf
         out[0] = 'L';
         out[1] = root->symbol;
@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
 
     /* ################## Step 1&2 #################  */
     /* Read through infile to construct histogram     */
-      uint8_t readingbuff; // Buffer for bytes while reading
+    uint8_t readingbuff; // Buffer for bytes while reading
 
     if (infile == 0) { //If input is stdin then I will create a temporary file
         int path = creat("t3mp0r6rY_hOIdlng_fi1e", S_IRWXU);
@@ -90,7 +90,6 @@ int main(int argc, char *argv[]) {
         close(infile);
         infile = open("t3mp0r6rY_hOIdlng_fi1e", O_RDONLY);
     }
-
 
     uint64_t hist[ALPHABET]; // Histogram
     int uniquesym = 2; // Unique Symbols counter;
