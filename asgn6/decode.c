@@ -33,7 +33,7 @@ OPTIONS\n\
   -v             Print compression statistics.\n\
   -i infile      Input file to decompress.\n\
   -o outfile     Output of decompressed data.\n";
-
+uint64_t bytes_read;
 int main(int argc, char *argv[]) {
     int choice;
     bool stats = false;
@@ -142,16 +142,16 @@ int main(int argc, char *argv[]) {
     if (bufind != 0) {
         write_bytes(outfile, writeout, bufind);
     }
-    //  printf("Decoded Symbols: %"PRIu64 "\n", decodedsym);
+
     /* ### Print the statistics ### */
     if (stats == true) {
         struct stat st;
         fstat(infile, &st);
-        double spacesave = (100 * (1 - ((double) st.st_size / myheader.file_size)));
+        double spacesave = (100 * (1 - ((double) bytes_read / myheader.file_size)));
         fprintf(stderr, "Compressed file size: %lu bytes\n\
 Decompressed file size: %lu bytes\n\
 Space saving: %.2lf%%\n",
-            st.st_size, myheader.file_size, spacesave);
+            bytes_read, myheader.file_size, spacesave);
     }
 
     /* ### Free leftover memory ### */

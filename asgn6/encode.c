@@ -49,7 +49,7 @@ void post_traversal(Node *root, int outfile) {
         write_bytes(outfile, &i, 1);
     }
 }
-
+uint64_t bytes_written;
 int main(int argc, char *argv[]) {
     int choice;
     bool stats = false;
@@ -81,15 +81,29 @@ int main(int argc, char *argv[]) {
     /* ################## Step 1&2 #################  */
     /* Read through infile to construct histogram     */
     uint8_t readingbuff; // Buffer for bytes while reading
+    uint8_t transferring[BLOCK];
+    uint16_t bufinda = 0;
 
     if (infile == 0) { //If input is stdin then I will create a temporary file
         int path = creat("t3mp0r6rY_hOIdlng_fi1e", S_IRWXU);
         while (read_bytes(infile, &readingbuff, 1) > 0) { //Write stdin into file
-            write_bytes(path, &readingbuff, 1);
+            transferring[bufinda] = readingbuff;
+            bufinda += 1;
+            //If bufind size of block then write_bytes
+            if (bufinda == BLOCK) {
+                write_bytes(path, transferring, BLOCK);
+                bufinda = 0;
+            }
         }
-        close(infile);
+        //Flush out the write_bytes if any remaining
+        if (bufinda != 0) {
+            write_bytes(path, transferring, bufinda);
+            bufinda = 0;
+        }
         infile = open("t3mp0r6rY_hOIdlng_fi1e", O_RDONLY);
+        bytes_written = 0;
     }
+
 
     uint64_t hist[ALPHABET]; // Histogram
     int uniquesym = 2; // Unique Symbols counter;
@@ -137,11 +151,9 @@ int main(int argc, char *argv[]) {
     fchmod(outfile, statbuf.st_mode); //Set perms of outfile
     myheader.tree_size = (3 * uniquesym) - 1;
     myheader.file_size = statbuf.st_size;
-    //  printf("Permissions: %u , Tree_size %u , File Size: %" PRIu64 "\n", myheader.permissions,
-    //        myheader.tree_size, myheader.file_size);
-    //printf("Size of header: %lu",sizeof(myheader));
-    write(outfile, &myheader, sizeof(myheader));
 
+    write(outfile, &myheader, sizeof(myheader));
+    bytes_written +=16;
     /* ################## Step 7. ################## */
     /*              Create the tree dump             */
     post_traversal(root, outfile);
@@ -155,21 +167,21 @@ int main(int argc, char *argv[]) {
     }
     flush_codes(outfile);
 
+
     //If the user wants statistics then we print out the stats.
     if (stats == true) {
-        struct stat st;
-        fstat(outfile, &st);
-        double spacesave = (100 * (1 - ((double) st.st_size / myheader.file_size)));
-        printf("spacespace: %.2lf \n", spacesave);
+        double spacesave = (100 * (1 - ((double) bytes_written / myheader.file_size)));
         fprintf(stderr, "Uncompressed file size: %lu bytes\n\
 Compressed file size: %lu bytes\n\
 Space saving: %.2lf%%\n",
-            myheader.file_size, st.st_size, spacesave);
+            myheader.file_size, bytes_written, spacesave);
     }
+
 
     /* ### Free leftover memory ### */
     delete_tree(&root);
     close(infile);
+    remove("t3mp0r6rY_hOId0Ut_fi1e");
     remove("t3mp0r6rY_hOIdlng_fi1e");
     close(outfile);
 }
