@@ -129,7 +129,8 @@ int main(int argc, char *argv[]) {
     }
 
     write_bytes(outfile, writeout, myheader.file_size);
-    /* ### Free leftover memory ### */
+
+    /* ### Print the statistics ### */
     if (stats == true) {
         struct stat st;
         fstat(infile, &st);
@@ -139,6 +140,8 @@ Decompressed file size: %lu bytes\n\
 Space saving: %.2lf%%\n",
             st.st_size, myheader.file_size, spacesave);
     }
+
+    /* ### Free leftover memory ### */
     delete_tree(&root);
     close(infile);
     close(outfile);

@@ -151,7 +151,7 @@ int main(int argc, char *argv[]) {
 
     lseek(infile, 0, SEEK_SET); // Reset pointer of read to beginning
 
-    while (read_bytes(infile, &readingbuff, 1) > 0) {
+    while (read_bytes(infile, &readingbuff, 1) >= 0) {
         write_code(outfile, &c[readingbuff]);
     }
     flush_codes(outfile);
