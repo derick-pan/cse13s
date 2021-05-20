@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
             break;
         case 'o':
             if (optarg != NULL) {
-                outfile = open(optarg, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+                outfile = open(optarg, O_WRONLY | O_CREAT);
                 break;
             }
             fprintf(stderr, "Error: failed to open infile.\n");
@@ -80,8 +80,18 @@ int main(int argc, char *argv[]) {
 
     /* ################## Step 1&2 #################  */
     /* Read through infile to construct histogram     */
+      uint8_t readingbuff; // Buffer for bytes while reading
 
-    uint8_t readingbuff; // Buffer for bytes while reading
+    if (infile == 0) { //If input is stdin then I will create a temporary file
+        int path = creat("t3mp0r6rY_hOIdlng_fi1e", S_IRWXU);
+        while (read_bytes(infile, &readingbuff, 1) > 0) { //Write stdin into file
+            write_bytes(path, &readingbuff, 1);
+        }
+        close(infile);
+        infile = open("t3mp0r6rY_hOIdlng_fi1e", O_RDONLY);
+    }
+
+
     uint64_t hist[ALPHABET]; // Histogram
     int uniquesym = 2; // Unique Symbols counter;
     for (int i = 0; i < ALPHABET; i++) { //Clear the bits in histogram
@@ -141,12 +151,8 @@ int main(int argc, char *argv[]) {
     /*            Write corresponding codes          */
 
     lseek(infile, 0, SEEK_SET); // Reset pointer of read to beginning
-
     while (read_bytes(infile, &readingbuff, 1) > 0) {
         write_code(outfile, &c[readingbuff]);
-        if (code_empty(&c[readingbuff])) {
-            code_print(c);
-        }
     }
     flush_codes(outfile);
 

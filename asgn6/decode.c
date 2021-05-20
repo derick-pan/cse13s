@@ -53,7 +53,7 @@ int main(int argc, char *argv[]) {
             break;
         case 'o':
             if (optarg != NULL) {
-                outfile = open(optarg, O_WRONLY | O_CREAT | O_TRUNC, 0600);
+                outfile = open(optarg, O_WRONLY | O_CREAT);
                 break;
             }
             fprintf(stderr, "Error: failed to open infile.\n");
@@ -126,12 +126,10 @@ int main(int argc, char *argv[]) {
             walk = root;
         }
         read_bit(infile, &temp);
-
         if (bufind == BLOCK) {
             write_bytes(outfile, writeout, BLOCK);
             bufind = 0;
         }
-
         if (temp == 0) {
             //Walk down to left child
             walk = walk->left;
@@ -145,7 +143,6 @@ int main(int argc, char *argv[]) {
         write_bytes(outfile, writeout, bufind);
     }
     //  printf("Decoded Symbols: %"PRIu64 "\n", decodedsym);
-
     /* ### Print the statistics ### */
     if (stats == true) {
         struct stat st;
