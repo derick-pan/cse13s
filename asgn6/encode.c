@@ -34,7 +34,6 @@ OPTIONS\n\
   -i infile      Input file to compress.\n\
   -o outfile     Output of compressed data.\n";
 
-
 //Creating Tree Dump should work Fine
 void post_traversal(Node *root, int outfile) {
     if (root->left == NULL && root->right == NULL) {
@@ -83,12 +82,8 @@ int main(int argc, char *argv[]) {
     /* Read through infile to construct histogram     */
 
     uint8_t readingbuff; // Buffer for bytes while reading
-
-
-
     uint64_t hist[ALPHABET]; // Histogram
     int uniquesym = 2; // Unique Symbols counter;
-
     for (int i = 0; i < ALPHABET; i++) { //Clear the bits in histogram
         hist[i] = 0;
     }
@@ -116,7 +111,6 @@ int main(int argc, char *argv[]) {
     }
     build_codes(root, c);
 
-
     /* ################ Step 5 & 6 ################# */
     /*          Construct and write a header         */
     /*
@@ -134,8 +128,8 @@ int main(int argc, char *argv[]) {
     fchmod(outfile, statbuf.st_mode); //Set perms of outfile
     myheader.tree_size = (3 * uniquesym) - 1;
     myheader.file_size = statbuf.st_size;
-    printf("Permissions: %u , Tree_size %u , File Size: %" PRIu64 "\n", myheader.permissions,
-        myheader.tree_size, myheader.file_size);
+    //  printf("Permissions: %u , Tree_size %u , File Size: %" PRIu64 "\n", myheader.permissions,
+    //        myheader.tree_size, myheader.file_size);
     //printf("Size of header: %lu",sizeof(myheader));
     write(outfile, &myheader, sizeof(myheader));
 
@@ -150,17 +144,27 @@ int main(int argc, char *argv[]) {
 
     while (read_bytes(infile, &readingbuff, 1) > 0) {
         write_code(outfile, &c[readingbuff]);
-        printf("%c \n",readingbuff);
-        code_print(&c[readingbuff]);
+        if (code_empty(&c[readingbuff])) {
+            code_print(c);
+        }
     }
     flush_codes(outfile);
 
     //If the user wants statistics then we print out the stats.
-
+    if (stats == true) {
+        struct stat st;
+        fstat(outfile, &st);
+        double spacesave = (100 * (1 - ((double) st.st_size / myheader.file_size)));
+        printf("spacespace: %.2lf \n", spacesave);
+        fprintf(stderr, "Uncompressed file size: %lu bytes\n\
+Compressed file size: %lu bytes\n\
+Space saving: %.2lf%%\n",
+            myheader.file_size, st.st_size, spacesave);
+    }
 
     /* ### Free leftover memory ### */
     delete_tree(&root);
     close(infile);
-
+    remove("t3mp0r6rY_hOIdlng_fi1e");
     close(outfile);
 }

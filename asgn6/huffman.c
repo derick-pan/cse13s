@@ -24,7 +24,7 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
     PriorityQueue *q = pq_create(ALPHABET);
     for (uint32_t i = 0; i < ALPHABET; i++) {
         if (hist[i] > 0) {
-            temp = node_create( (uint8_t) i, hist[i]);
+            temp = node_create((uint8_t) i, hist[i]);
             enqueue(q, temp);
         }
     }

@@ -64,7 +64,8 @@ int main(int argc, char *argv[]) {
 
     uint8_t readingbuff[sizeof(Header)]; // Buffer for bytes while reading.
     Header myheader; // Initalize the Header
-    myheader.permissions = 0, myheader.tree_size = 0, myheader.file_size = 0, myheader.magic = 0x00000000;
+    myheader.permissions = 0, myheader.tree_size = 0, myheader.file_size = 0,
+    myheader.magic = 0x00000000;
     /* ################## Step 1&2 #################  */
     //Check magic number
 
@@ -94,8 +95,8 @@ int main(int argc, char *argv[]) {
         myheader.file_size |= readingbuff[i];
     }
 
-    printf("Permissions: %u , Tree_size %u , File Size: %" PRIu64 "\n", myheader.permissions,
-        myheader.tree_size, myheader.file_size);
+    //  printf("Permissions: %u , Tree_size %u , File Size: %" PRIu64 "\n", myheader.permissions,
+    //      myheader.tree_size, myheader.file_size);
 
     fchmod(outfile, myheader.permissions); //Set perms of outfile
     /* ################## Step 3 ###################  */
@@ -105,19 +106,32 @@ int main(int argc, char *argv[]) {
 
     //Problem Not in this tree dump loop
     for (uint16_t i = 0; i < myheader.tree_size; i++) { // Read tree dump
-
         read_bytes(infile, &temp, 1);
         tree[i] = temp;
-
     }
-    printf("MainTree Size: %u\n", myheader.tree_size);
+    //printf("MainTree Size: %u\n", myheader.tree_size);
     Node *root = rebuild_tree(myheader.tree_size, tree); //lcet10 stuck here
 
     uint64_t decodedsym = 0; // Counter for amount of decoded symbols
     Node *walk = root; // Copy of the root node
-    uint8_t writeout[myheader.file_size]; // Buffer of symbols
+    uint8_t writeout[BLOCK]; // Buffer of symbols
+    uint16_t bufind = 0;
 
-    while (myheader.file_size != decodedsym && read_bit(infile, &temp)) {
+    while (myheader.file_size != decodedsym) {
+        // If I am at a leaf then add symbol to the buffer.
+        if (walk->left == NULL && walk->right == NULL) {
+            writeout[bufind] = walk->symbol;
+            bufind += 1;
+            decodedsym += 1;
+            walk = root;
+        }
+        read_bit(infile, &temp);
+
+        if (bufind == BLOCK) {
+            write_bytes(outfile, writeout, BLOCK);
+            bufind = 0;
+        }
+
         if (temp == 0) {
             //Walk down to left child
             walk = walk->left;
@@ -125,18 +139,23 @@ int main(int argc, char *argv[]) {
             //Walk down to right
             walk = walk->right;
         }
-        // If I am at a leaf then add symbol to the buffer.
-        if (walk->left == NULL && walk->right == NULL) {
-            writeout[decodedsym] = walk->symbol;
-            decodedsym += 1;
-            walk = root;
-        }
-
     }
 
-    printf("Decoded Symbols: %"PRIu64 "\n", decodedsym);
+    if (bufind != 0) {
+        write_bytes(outfile, writeout, bufind);
+    }
+    //  printf("Decoded Symbols: %"PRIu64 "\n", decodedsym);
 
-    write_bytes(outfile, writeout,(double) decodedsym);
+    /* ### Print the statistics ### */
+    if (stats == true) {
+        struct stat st;
+        fstat(infile, &st);
+        double spacesave = (100 * (1 - ((double) st.st_size / myheader.file_size)));
+        fprintf(stderr, "Compressed file size: %lu bytes\n\
+Decompressed file size: %lu bytes\n\
+Space saving: %.2lf%%\n",
+            st.st_size, myheader.file_size, spacesave);
+    }
 
     /* ### Free leftover memory ### */
     delete_tree(&root);

@@ -40,7 +40,7 @@ int write_bytes(int outfile, uint8_t *buf, int nbytes) {
         buf += bytes; //Increase position of buffer
         bytes_written += bytes; //Increase total bytes written
         localbytes += bytes; //Increase bytes just written
-        nbytes -= bytes;//Decrease bytes still need to be written
+        nbytes -= bytes; //Decrease bytes still need to be written
     }
     return localbytes; //Return number of bytes just written
 }
@@ -90,13 +90,13 @@ void write_code(int outfile, Code *c) { //calls write bytes , used in main
 //Writes out the code if the buffer isn't size of BLOCk
 void flush_codes(int outfile) { //Write out any leftover buffered bits.
     uint32_t amount = bufind; // Amount of bits to write
-    printf("buffer index is %u\n",bufind);
+    //printf("buffer index is %u\n",bufind);
     if (bufind % 8 != 0) {
         amount += 8 - (bufind % 8); //In bits
         for (uint32_t i = bufind; i < amount; i++) { //For loop to zero out the bits till next byte
             buf[i / 8] &= ~(0x1 << (i % 8));
         }
-        write_bytes(outfile, buf, amount / 8);
     }
-    printf("Flush code buffer index: %u \n", bufind);
+    write_bytes(outfile, buf, amount / 8);
+    //printf("Flush code buffer index: %u \n", bufind);
 }
