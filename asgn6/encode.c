@@ -128,6 +128,7 @@ int main(int argc, char *argv[]) {
     /* ################## Step 4. ################## */
     /* Construct a code table by using build_codes   */
     Code c[ALPHABET];
+
     for (int i = 0; i < ALPHABET; i++) { // Initalize ONLY positions to be used
         if (hist[i] > 0) {
             c[i] = code_init();
@@ -143,6 +144,7 @@ int main(int argc, char *argv[]) {
         permissions    Input File Permissions
         tree_size      Tree size in bytes
         file_size      File size of Input            */
+    bytes_written = 0;
     struct stat statbuf;
     Header myheader; // Create the Header
     myheader.magic = MAGIC; // Identifies this file as compressed
@@ -152,8 +154,8 @@ int main(int argc, char *argv[]) {
     myheader.tree_size = (3 * uniquesym) - 1; //Get the size of the Tree
     myheader.file_size = statbuf.st_size; //Get the file size
 
-    write(outfile, &myheader, sizeof(myheader)); // Write Header to outfile
-    bytes_written += 16; //Increment bytes_written
+    write_bytes(outfile, (uint8_t *) &myheader, sizeof(Header)); // Write Header to outfile
+
 
     /* ################## Step 7. ################## */
     /*              Create the tree dump             */

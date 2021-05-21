@@ -63,25 +63,31 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    uint8_t readingbuff[sizeof(Header)]; // Buffer for bytes while reading.
+    //uint8_t readingbuff[sizeof(Header)]; // Buffer for bytes while reading.
     Header myheader; // Initalize the Header
-    myheader.permissions = 0, myheader.tree_size = 0, myheader.file_size = 0, myheader.magic = 0;
+//    myheader.permissions = 0, myheader.tree_size = 0, myheader.file_size = 0, myheader.magic = 0;
 
     /* ################## Step 1&2 #################  */
     // Authenticate MAGIC Number
 
-    read_bytes(infile, readingbuff, sizeof(Header)); // Read the header ONLY
+    //read_bytes(infile, readingbuff, sizeof(Header)); // Read the header ONLY
+    //
 
+
+    read_bytes(infile, (uint8_t *) &myheader, sizeof(Header)); // Read the header ONLY
+
+    /*
     for (int i = 3; i >= 0; i--) { //Grabbing Magic Number
         myheader.magic <<= 8;
         myheader.magic |= readingbuff[i];
-    }
+    }*/
+
     if (myheader.magic != MAGIC) {
         fprintf(stderr, "Invalid Magic Number.\n");
         exit(1);
     }
-
-    /* ### Grabbing all of the information from the header of infile ### */
+/*
+     ### Grabbing all of the information from the header of infile ###
     for (int i = 5; i >= 4; i--) {
         myheader.permissions <<= 8;
         myheader.permissions |= readingbuff[i];
@@ -93,7 +99,7 @@ int main(int argc, char *argv[]) {
     for (int i = 15; i >= 8; i--) {
         myheader.file_size <<= 8;
         myheader.file_size |= readingbuff[i];
-    }
+    }*/
     fchmod(outfile, myheader.permissions); //Set perms of outfile
 
     /* ################## Step 3 ###################  */
@@ -111,20 +117,20 @@ int main(int argc, char *argv[]) {
     uint64_t decodedsym = 0; // Counter for amount of decoded symbols
     Node *walk = root; // Copy of the root node
     uint8_t writeout[BLOCK]; // Buffer of symbols
-    uint16_t bufind = 0; // Buffer Index used when writing symbols
+    uint16_t bufind1 = 0; // Buffer Index used when writing symbols
 
     while (myheader.file_size != decodedsym) {
         // If node am at a leaf then add node->symbol to the buffer.
-        if (walk->left == NULL && walk->right == NULL) {
-            writeout[bufind] = walk->symbol;
-            bufind += 1;
+        if (NULL == walk->left  && NULL == walk->right ) {
+            writeout[bufind1] = walk->symbol;
+            bufind1 += 1;
             decodedsym += 1;
             walk = root;
         }
         read_bit(infile, &temp);
-        if (bufind == BLOCK) { // If buffer is full then write it out.
+        if (bufind1 == BLOCK) { // If buffer is full then write it out.
             write_bytes(outfile, writeout, BLOCK);
-            bufind = 0;
+            bufind1 = 0;
         }
         if (temp == 0) {
             //Walk down to left child
@@ -134,8 +140,8 @@ int main(int argc, char *argv[]) {
             walk = walk->right;
         }
     }
-    if (bufind != 0) { // Flush out left over bits
-        write_bytes(outfile, writeout, bufind);
+    if (bufind1 != 0) { // Flush out left over bits
+        write_bytes(outfile, writeout, bufind1);
     }
 
     /* ### Print the statistics ### */
