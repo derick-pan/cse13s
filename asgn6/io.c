@@ -46,7 +46,6 @@ int write_bytes(int outfile, uint8_t *buf, int nbytes) {
 
 // Function that doles out bits read one at a time
 bool read_bit(int infile, uint8_t *bit) {
-
     // If buffer is full    or buffer is empty
     if (bufind == BLOCK * 8 || bufind == 0) {
         if (read_bytes(infile, buf, BLOCK) <= 0) { //If file is empty then exit

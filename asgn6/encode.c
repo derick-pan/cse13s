@@ -107,7 +107,7 @@ int main(int argc, char *argv[]) {
     /* ################## Step 1&2 #################  */
     /* Read through infile to construct histogram     */
     uint64_t hist[ALPHABET]; // Histogram
-    int uniquesym = 2; // Unique Symbols counter;
+    uint16_t uniquesym = 2; // Unique Symbols counter;
     for (int i = 0; i < ALPHABET; i++) { //Clear the bits in histogram
         hist[i] = 0;
     }
@@ -128,12 +128,6 @@ int main(int argc, char *argv[]) {
     /* ################## Step 4. ################## */
     /* Construct a code table by using build_codes   */
     Code c[ALPHABET];
-
-    for (int i = 0; i < ALPHABET; i++) { // Initalize ONLY positions to be used
-        if (hist[i] > 0) {
-            c[i] = code_init();
-        }
-    }
     build_codes(root, c);
 
     /* ################ Step 5 & 6 ################# */
@@ -151,11 +145,9 @@ int main(int argc, char *argv[]) {
     fstat(infile, &statbuf); // Grab the stats of infile
     myheader.permissions = statbuf.st_mode; //Copy the permissions
     fchmod(outfile, statbuf.st_mode); //Set perms of outfile
-    myheader.tree_size = (3 * uniquesym) - 1; //Get the size of the Tree
+    myheader.tree_size = ((3 * uniquesym) - 1); //Get the size of the Tree
     myheader.file_size = statbuf.st_size; //Get the file size
-
     write_bytes(outfile, (uint8_t *) &myheader, sizeof(Header)); // Write Header to outfile
-
 
     /* ################## Step 7. ################## */
     /*              Create the tree dump             */

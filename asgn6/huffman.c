@@ -42,25 +42,22 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
     pq_delete(&q); // Delete the Queue
     return j; // Return the Root Node
 }
-
+Code c = { 0, { 0 } }; //Makes sure c.top =0 and c.bits = array of all zeroes
 void build_codes(Node *root, Code table[static ALPHABET]) {
+    if (root) {
+        if (root->left == NULL && root->right == NULL) {
+            table[root->symbol] = c;
+            return;
+        }
+        uint8_t temp;
+        code_push_bit(&c, 0); // Push a 0 because we're going left
+        build_codes(root->left, table); // RECURSE to left link
+        code_pop_bit(&c, &temp); // Pop from c
 
-    //If node is a Leaf Node: then save it
-    if (NULL == root->left && NULL == root->right) {
-        table[root->symbol] = *table;
-        return;
+        code_push_bit(&c, 1); // Push a 1 because we're going right
+        build_codes(root->right, table); // RECURSE to right link
+        code_pop_bit(&c, &temp); // pop from c
     }
-    //Else root is an Interior Node
-    uint8_t temp; // Holder for the popped bits
-    Code *c = table; // Current code
-
-    code_push_bit(c, 0); // Push a 0 because we're going left
-    build_codes(root->left, c); // RECURSE to left link
-    code_pop_bit(c, &temp); // Pop from c
-
-    code_push_bit(c, 1); // Push a 1 because we're going right
-    build_codes(root->right, c); // RECURSE to right link
-    code_pop_bit(c, &temp); // pop from c
 }
 
 Node *rebuild_tree(uint16_t nbytes, uint8_t tree[static nbytes]) {
