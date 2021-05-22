@@ -37,7 +37,6 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
         j = node_join(l, r); // Join the Nodes together and enqueue it
         enqueue(q, j);
     }
-
     dequeue(q, &j); // dequeue the Root Node
     pq_delete(&q); // Delete the Queue
     return j; // Return the Root Node

@@ -84,7 +84,7 @@ int main(int argc, char *argv[]) {
     uint8_t readingbuff; // Buffer for bytes while reading
     uint8_t transferring[BLOCK]; // A second Buffer with Size of Block.
     if (infile == 0) { //If input is stdin then I will create a temporary file
-        uint16_t bufinda = 0;
+        int bufinda = 0;
         //Temporary file has a unique name as to have an incredibly low chance of
         //user having the exact same file name.
         int path = creat("t3mp0r6rY_hOIdlng_fi1e", S_IRWXU);
