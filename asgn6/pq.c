@@ -2,6 +2,7 @@
 //dpan7
 //pq.c
 #include "pq.h"
+
 #include "node.h"
 
 #include <ctype.h>
