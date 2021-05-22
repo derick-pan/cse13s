@@ -1,7 +1,7 @@
 Derick Pan
 dpan7
 Spring 2021
-Asgn 6: Huffman Coding
+Asgn6: Huffman Coding
 
 ---------------------------------------------
 DESCRIPTION
@@ -90,5 +90,3 @@ OPTIONS
 
 These two files will encode and or decode at your will using command
 arguments.
-
-

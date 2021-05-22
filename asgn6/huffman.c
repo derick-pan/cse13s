@@ -2,7 +2,6 @@
 //dpan7
 //huffman.c
 #include "huffman.h"
-
 #include "code.h"
 #include "defines.h"
 #include "node.h"
@@ -18,7 +17,7 @@
 
 /*  ALPHABET = 256
     BLOCK = 4096   */
-
+//Function to construct a huffman tree given a computed Histogram
 Node *build_tree(uint64_t hist[static ALPHABET]) {
     Node *temp;
     PriorityQueue *q = pq_create(ALPHABET);
@@ -41,6 +40,8 @@ Node *build_tree(uint64_t hist[static ALPHABET]) {
     pq_delete(&q); // Delete the Queue
     return j; // Return the Root Node
 }
+
+//Function to populate a code table for each symbol in Huffman Tree
 Code c = { 0, { 0 } }; //Makes sure c.top =0 and c.bits = array of all zeroes
 void build_codes(Node *root, Code table[static ALPHABET]) {
     if (root) {
@@ -59,6 +60,7 @@ void build_codes(Node *root, Code table[static ALPHABET]) {
     }
 }
 
+//Function that reconstructs a Huffman tree input as treedump
 Node *rebuild_tree(uint16_t nbytes, uint8_t tree[static nbytes]) {
     Stack *s = stack_create(nbytes); // Stack to reconstruct tree
     // Iterate over contents of the tree dump
@@ -85,8 +87,8 @@ Node *rebuild_tree(uint16_t nbytes, uint8_t tree[static nbytes]) {
     return root;
 }
 
+//Destructor function for the Huffman Tree
 void delete_tree(Node **root) {
-
     //If I am interior node, recurse left and right then delete the node
     if ((*root)->left != NULL && (*root)->right != NULL) {
         delete_tree(&(*root)->left); // RECURSE to left link

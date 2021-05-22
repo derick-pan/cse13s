@@ -89,6 +89,6 @@ void stack_print(Stack *s) {
     for (uint32_t i = 0; i < s->top; i += 1) {
         node_print(s->items[i]);
     }
-    printf("(•_•)\n<)   )╯\n/\n");
+    printf("(•_•)\n<)   )╯\n/\n");// prints out a fun stick man to indicate end of stackprint.
     return;
 }

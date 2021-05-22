@@ -1,7 +1,6 @@
 //Derick Pan
 //dpan7
 //decode.c
-
 #include "code.h"
 #include "defines.h"
 #include "header.h"
@@ -64,7 +63,6 @@ int main(int argc, char *argv[]) {
     }
 
     Header myheader; // Initalize the Header
-    //    myheader.permissions = 0, myheader.tree_size = 0, myheader.file_size = 0, myheader.magic = 0;
 
     /* ################## Step 1&2 #################  */
     read_bytes(infile, (uint8_t *) &myheader, sizeof(Header)); // Read the header ONLY
@@ -91,6 +89,8 @@ int main(int argc, char *argv[]) {
     uint8_t writeout[BLOCK]; // Buffer of symbols
     uint16_t bufind1 = 0; // Buffer Index used when writing symbols
 
+    /*##################### Step 4 ################### */
+    // Read the infile and writing the symbol at leaf
     while (myheader.file_size != decodedsym) {
         // If node am at a leaf then add node->symbol to the buffer.
         if (walk) {

@@ -2,7 +2,6 @@
 //dpan7
 //code.c
 #include "code.h"
-
 #include "defines.h"
 #include "stack.h"
 
@@ -12,7 +11,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-/*BLOCK         4096          // 4KB blocks.
+
+/* Defining variables for ease of use.
+  BLOCK         4096          // 4KB blocks.
   ALPHABET      256           // ASCII + Extended ASCII.
   MAGIC         0xDEADBEEF    // 32-bit magic number.
   MAX_CODE_SIZE (ALPHABET / 8) // Bytes for a maximum, 256-bit code.

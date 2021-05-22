@@ -34,7 +34,7 @@ OPTIONS\n\
   -i infile      Input file to compress.\n\
   -o outfile     Output of compressed data.\n";
 
-//Creating Tree Dump should work Fine
+//Recursively print the tree dump
 void post_traversal(Node *root, int outfile) {
     if (NULL == root->left && NULL == root->right) {
         uint8_t out[2]; //Ascii code for leaf
@@ -49,6 +49,7 @@ void post_traversal(Node *root, int outfile) {
         write_bytes(outfile, &i, 1);
     }
 }
+
 uint64_t bytes_written;
 int main(int argc, char *argv[]) {
     int choice;
