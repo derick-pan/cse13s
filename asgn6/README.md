@@ -2,6 +2,7 @@ Derick Pan
 dpan7
 Spring 2021
 Asgn 6: Huffman Coding
+
 ---------------------------------------------
 DESCRIPTION
 	This assignment is about encoding and decoding through Huffman Coding. Huffman coding algorithm
@@ -13,6 +14,7 @@ has code 1. Traveling through the entire tree to a leaf node would add up to the
 In order to decode my Huffman encoded file: I confirm that the file was encoded through huffman by a
 secret variable called "0xDEADBEEF" Once I confirm that the file is legit, I read through the tree dump to
 recreate the huffman tree, then read through the codes of the file to eventually come up with the decoded file.
+
 -----------------------------------------------------
 IMPORANT
 	The Encoder will create and destory a file name "t3mp0r6rY_hOIdlng_fi1e" if you choose to use
@@ -53,7 +55,7 @@ the code and create several executables.
 Make encode will build just the encoder
 Make decode will build just the decoder
 Make entropy will build just the supplied entropy-measure program
-make clean will remove all files created from Make
+make clean will remove all files created from make
 make format will format all the code
 =========================================
 ENCODE:

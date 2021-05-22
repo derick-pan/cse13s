@@ -174,7 +174,6 @@ Space saving: %.2lf%%\n",
     /* ### Free leftover memory ### */
     delete_tree(&root);
     close(infile);
-    remove("t3mp0r6rY_hOId0Ut_fi1e");
     remove("t3mp0r6rY_hOIdlng_fi1e");
     close(outfile);
 }
