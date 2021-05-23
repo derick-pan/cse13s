@@ -51,29 +51,42 @@ uint32_t ll_length(LinkedList *ll){
 
 Node *ll_lookup(LinkedList *ll, char *oldspeak){
 	Node *current = ll->head;
+	Node *past = NULL, *future = NULL;
 	while (current != NULL){
 		if (strcmp(current->oldspeak, oldspeak)){
 			//Found the node
-			break;
-			//If mtf{}
+			if (ll->mtf ){
+				//Move current to front of the linked list
+				//Take current out of current position
+				past->next = current->next;
+				future->prev = current->prev;
+				//Place it infront of head and redirect pointers on right side
+				(ll->head->next)->prev = current;
+				current->next = (ll->head)->next;
+				//Redirect pointers on left side
+				current->prev = ll->head;
+				(ll->head)->next = current;
+			}
+			return current;
 		}
+		past = current;
 		current = current->next;
+		future = current->next;
 	}
-	return current;
+	return NULL;
 }
 
 void ll_insert(LinkedList *ll, char *oldspeak, char *newspeak){
-
 	if (ll_lookup(ll, oldspeak)){
 		//don't insert
 		return;
 	}
 	Node *node = node_create(oldspeak, newspeak);
 	(ll->head->next)->prev = node;	//Right side of node
-	node->next = ll->head->next;
+	node->next = (ll->head)->next;
 
-	ll->head->next = node; //Left side of node
-	node->prev = ll->head;
+	node->prev = ll->head;		//Left side of node
+	(ll->head)->next = node;
 	return;
 }
 
