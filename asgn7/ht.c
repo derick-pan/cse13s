@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+
 typedef struct HashTable{
 	uint64_t salt[2];
 	uint32_t size;
@@ -47,6 +48,7 @@ uint32_t ht_size(HashTable *ht){
 	return ht->size;
 }
 
+//Search for a node that contains oldspeak
 Node *ht_lookup(HashTable *ht, char *oldspeak){
 
 	uint32_t index = hash(ht->salt,oldspeak);
@@ -60,7 +62,6 @@ void ht_insert(HashTable *ht, char *oldspeak, char *newspeak){
 		ll_create(ht->mtf);
 	}
 	ll_insert(ht->lists[index], oldspeak, newspeak);
-	//ht->size++;
 }
 
 //Returns the num of non-NULL ll in the hash table

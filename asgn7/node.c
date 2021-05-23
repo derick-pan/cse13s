@@ -14,7 +14,7 @@ struct Node {
     Node *prev;
 };*/
 typedef struct Node Node;
-
+//Each node contains a pointer to previous node and the next node in the ll
 //Function that mimics strdup()
 char *stringdup(char *before){
 	int size = strlen(before)+1;
@@ -30,6 +30,8 @@ Node *node_create(char *oldspeak, char *newspeak) {
 	Node *n = (Node *) malloc(sizeof(Node));
  	n->oldspeak = stringdup(oldspeak);
   	n->newspeak = stringdup(newspeak);
+	n->next = NULL;
+	n->prev = NULL;
   return n;
 
 }

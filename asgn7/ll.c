@@ -69,12 +69,16 @@ void ll_insert(LinkedList *ll, char *oldspeak, char *newspeak){
 		return;
 	}
 	Node *node = node_create(oldspeak, newspeak);
-	ll->head->next->prev = node->next; //redirect the original node's prev person
-	ll->head->next = node->prev;	//Redirect heads next person
+	(ll->head->next)->prev = node;	//Right side of node
+	node->next = ll->head->next;
+
+	ll->head->next = node; //Left side of node
+	node->prev = ll->head;
 	return;
 }
 
 void ll_print(LinkedList *ll){
+
 	Node *current = ll->head->next;
 	while (current != ll->tail){
 		node_print(current);

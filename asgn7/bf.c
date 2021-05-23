@@ -46,7 +46,7 @@ void bf_delete(BloomFilter **bf){
 	*bf = NULL;
 }
 
-//Return size ofbf the Bloom Filter
+//Return size of bf the Bloom Filter
 uint32_t bf_size(BloomFilter *bf){
 	//return length of underlying bit vector
 	return bv_length(bf->filter);
@@ -72,9 +72,10 @@ bool bf_probe(BloomFilter *bf, char *oldspeak){
 	return (bv_get_bit(bf->filter,first) && bv_get_bit(bf->filter,second) && bv_get_bit(bf->filter,third));
 }
 
+//Return the num of set bits in Bloom Filter
 uint32_t bf_count(BloomFilter *bf){
 	uint32_t count = 0;
-	for (uint32_t i = 0 ; i < bv_length(bf->filter); i++ ){
+	for (uint32_t i = 0 ; i < bf_size(bf); i++ ){
 		if (bv_get_bit(bf->filter, i) == 1 ){
 			count++;
 		}
