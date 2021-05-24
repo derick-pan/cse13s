@@ -62,13 +62,15 @@ uint32_t ll_length(LinkedList *ll){
 
 Node *ll_lookup(LinkedList *ll, char *oldspeak){
 	printf("in lookup\n");
-	Node *current = ll->head;
+	Node *current = ll->head->next;
 	Node *past = NULL, *future = NULL;
 
 	printf("in lookup2\n");
 	while (current != ll->tail){
 		printf("O\n");
-		if (current->oldspeak == oldspeak){
+		printf("current %s ",current->oldspeak);
+		printf("test current %s\n",oldspeak);
+		if (strcmp(current->oldspeak,oldspeak)==0){
 			//Found the node
 			printf("hereee456\n\n");
 			if (ll->mtf){

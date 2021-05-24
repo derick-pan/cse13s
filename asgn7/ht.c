@@ -55,7 +55,6 @@ uint32_t ht_size(HashTable *ht){
 
 //Search for a node that contains oldspeak
 Node *ht_lookup(HashTable *ht, char *oldspeak){
-
 	uint32_t index = hash(ht->salt,oldspeak)% ht->size;
 	return ll_lookup(ht->lists[index], oldspeak);
 }
