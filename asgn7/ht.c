@@ -1,7 +1,12 @@
 //Derick Pan
 //dpan7
 //ht.c
+#include "bf.h"
+#include "bv.h"
 #include "ht.h"
+#include "ll.h"
+#include "node.h"
+#include "parser.h"
 #include "speck.h"
 
 #include <ctype.h>
@@ -51,16 +56,19 @@ uint32_t ht_size(HashTable *ht){
 //Search for a node that contains oldspeak
 Node *ht_lookup(HashTable *ht, char *oldspeak){
 
-	uint32_t index = hash(ht->salt,oldspeak);
+	uint32_t index = hash(ht->salt,oldspeak)% ht->size;
 	return ll_lookup(ht->lists[index], oldspeak);
 }
 
 void ht_insert(HashTable *ht, char *oldspeak, char *newspeak){
-	uint32_t index = hash(ht->salt,oldspeak);
+	uint32_t index = hash(ht->salt,oldspeak) % ht->size;
 	//if not initialized then create it
-	if (ht->lists[index] == NULL){
-		ll_create(ht->mtf);
+	printf("Index: %u Size: %u\n",index,ht->size);
+	if (!ht->lists[index]){
+		printf("Create ll \n\n");
+		ht->lists[index] = ll_create(ht->mtf);
 	}
+	printf("Crash before insert\n");
 	ll_insert(ht->lists[index], oldspeak, newspeak);
 }
 
@@ -77,7 +85,9 @@ uint32_t ht_count(HashTable *ht){
 
 void ht_print(HashTable *ht){
 	for (uint32_t i = 0 ; i < ht->size; i++){
-		ll_print(ht->lists[i]);
+		if(ht->lists[i]){
+			ll_print(ht->lists[i]);
+		}
 	}
 	return;
 }

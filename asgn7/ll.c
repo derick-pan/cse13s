@@ -1,7 +1,12 @@
 //Derick Pan
 //dpan7
 //ll.c
+#include "bf.h"
+#include "bv.h"
+#include "ht.h"
 #include "ll.h"
+#include "node.h"
+#include "parser.h"
 #include "speck.h"
 
 #include <ctype.h>
@@ -26,12 +31,18 @@ typedef struct LinkedList{
 LinkedList *ll_create(bool mtf){
 	LinkedList *ll = (LinkedList *) malloc(sizeof(LinkedList));
 	if (ll) {
+		printf("I'm in here\n");
 		ll->mtf = mtf;
+		ll->length = sizeof(LinkedList);
 		//Initialized with exactly 2 sentinel nodes
-		ll->head = node_create(0,0);
-		ll->tail = node_create(0,0);
+		ll->head = node_create(NULL,NULL);
+		ll->tail = node_create(NULL,NULL);
+		ll->head->next = ll->tail;
+		ll->tail->next = NULL;
+		ll->tail->prev = ll->head;
 
 	}
+	printf("Create fail\n");
 	return ll;
 }
 
@@ -50,14 +61,20 @@ uint32_t ll_length(LinkedList *ll){
 }
 
 Node *ll_lookup(LinkedList *ll, char *oldspeak){
+	printf("in lookup\n");
 	Node *current = ll->head;
 	Node *past = NULL, *future = NULL;
-	while (current != NULL){
-		if (strcmp(current->oldspeak, oldspeak)){
+
+	printf("in lookup2\n");
+	while (current != ll->tail){
+		printf("O\n");
+		if (current->oldspeak == oldspeak){
 			//Found the node
-			if (ll->mtf ){
+			printf("hereee456\n\n");
+			if (ll->mtf){
 				//Move current to front of the linked list
 				//Take current out of current position
+				printf("hereee412356\n\n");
 				past->next = current->next;
 				future->prev = current->prev;
 				//Place it infront of head and redirect pointers on right side
@@ -67,26 +84,33 @@ Node *ll_lookup(LinkedList *ll, char *oldspeak){
 				current->prev = ll->head;
 				(ll->head)->next = current;
 			}
+
 			return current;
+			//break;
 		}
-		past = current;
+		//past = current;
 		current = current->next;
-		future = current->next;
+		//future = current->next;
 	}
+	printf("returned null\n");
 	return NULL;
 }
 
 void ll_insert(LinkedList *ll, char *oldspeak, char *newspeak){
-	if (ll_lookup(ll, oldspeak)){
+	if (ll_lookup(ll, oldspeak)!= NULL){
 		//don't insert
 		return;
 	}
-	Node *node = node_create(oldspeak, newspeak);
-	(ll->head->next)->prev = node;	//Right side of node
-	node->next = (ll->head)->next;
 
+	printf("past lookup\n");
+	Node *node = node_create(oldspeak, newspeak);
+	printf("ll_insert crash \n");
+	node->next = (ll->head)->next;
 	node->prev = ll->head;		//Left side of node
-	(ll->head)->next = node;
+	(ll->head->next)->prev= node;	//Right side of node
+	ll->head->next = node;
+
+	printf("Why crash  here tho\n");
 	return;
 }
 

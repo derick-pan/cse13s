@@ -56,19 +56,21 @@ uint32_t bf_size(BloomFilter *bf){
 void bf_insert(BloomFilter *bf, char *oldspeak){
 	// Hashing oldspeak with each of three salts for 3 indices
 	// Setting the bits at those indices in underlying bit vector
-	uint32_t first = hash(bf->primary,oldspeak);
-	uint32_t second = hash(bf->secondary,oldspeak);
-	uint32_t third = hash(bf->tertiary,oldspeak);
+	uint32_t first = hash(bf->primary,oldspeak)% bf_size(bf);
 	bv_set_bit(bf->filter,first);
+	uint32_t second = hash(bf->secondary,oldspeak)% bf_size(bf);
 	bv_set_bit(bf->filter,second);
+	uint32_t third = hash(bf->tertiary,oldspeak)% bf_size(bf);
 	bv_set_bit(bf->filter,third);
+	return;
 }
 
 //Check if the bits at those indces are set
 bool bf_probe(BloomFilter *bf, char *oldspeak){
-	uint32_t first = hash(bf->primary,oldspeak);
-	uint32_t second = hash(bf->secondary,oldspeak);
-	uint32_t third = hash(bf->tertiary,oldspeak);
+	uint32_t first = hash(bf->primary,oldspeak) % bf_size(bf);
+	uint32_t second = hash(bf->secondary,oldspeak)% bf_size(bf);
+	uint32_t third = hash(bf->tertiary,oldspeak)% bf_size(bf);
+	printf("First: %u, Second %u, Third %u \n", first,second,third);
 	return (bv_get_bit(bf->filter,first) && bv_get_bit(bf->filter,second) && bv_get_bit(bf->filter,third));
 }
 
@@ -85,8 +87,8 @@ uint32_t bf_count(BloomFilter *bf){
 
 void bf_print(BloomFilter *bf){
 	for (uint8_t i = 0; i < bf_size(bf); i++) {
-        bv_print(bf->filter);
-        printf("\n");
+        printf("%u", bv_get_bit(bf->filter, i));
     }
+	printf("\n");
     return;
 }
