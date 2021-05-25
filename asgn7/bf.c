@@ -3,6 +3,7 @@
 //bf.c
 #include "bf.h"
 
+#include "bv.h"
 #include "speck.h"
 
 #include <ctype.h>

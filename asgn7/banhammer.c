@@ -34,15 +34,12 @@ OPTIONS\n\
   -t size      Specify hash table size (default: 10000).\n\
   -f size      Specify Bloom filter size (default: 2^20).\n";
 
-
-
-
 int main(int argc, char *argv[]) {
     int choice;
     bool stats = false;
-	uint32_t hashsize = 10000; // Default hash table size is 10,000
-	uint32_t bloomsize = 1048576; // Default Bloom filter size
-	bool mtf = false;
+    uint32_t hashsize = 10000; // Default hash table size is 10,000
+    uint32_t bloomsize = 1048576; // Default Bloom filter size
+    bool mtf = false;
     while ((choice = getopt(argc, argv, "hsmt:f:")) != -1) {
         switch (choice) {
         case 'h': fprintf(stderr, "%s", usage); exit(0); // Print helps
@@ -55,35 +52,39 @@ int main(int argc, char *argv[]) {
             }
 
             exit(1);
-		case 'f':
-	    	if (optarg != NULL) {
-	        	bloomsize = (uint32_t) optarg;
-	            break;
-	            }
-	            exit(1);
+        case 'f':
+            if (optarg != NULL) {
+                bloomsize = (uint32_t) optarg;
+                break;
+            }
+            exit(1);
         case '?': fprintf(stderr, "%s", usage); exit(1);
         }
     }
-	// Part 1: Read in a list of badspeak words and add it to bloomfilter& HashTable
+    // Part 1: Read in a list of badspeak words and add it to bloomfilter& HashTable
     char buffer[100];
-	char buffer2[100];
-	BloomFilter *bf = bf_create(hashsize);
-	HashTable *ht = ht_create(bloomsize, mtf);
+    printf("heyy1\n");
+    BloomFilter *bf = bf_create(bloomsize);
+    HashTable *ht = ht_create(hashsize, mtf);
 
-	FILE *badspeaktxt = fopen("badspeak.txt", "r");
+    printf("heyy3\n");
+    FILE *badspeaktxt = fopen("badspeak.txt", "r");
     while (fscanf(badspeaktxt, "%[^\n] ", buffer) != EOF) {
         bf_insert(bf, buffer);
-		ht_insert(ht, buffer, NULL);
+        ht_insert(ht, buffer, NULL);
     }
-	// Part 2: Read newspeak. Add old to bf, and old & new to hash
+    // Part 2: Read newspeak. Add old to bf, and old & new to hash
     fclose(badspeaktxt);
-	printf("Read badspeak.txt, now reading newspeak.txt\n");
-	FILE *newspeaktxt = fopen("newspeak.txt", "r");
-	while (fscanf(newspeaktxt, "%[^\n] ", buffer) != EOF) {
+    printf("Read badspeak.txt, now reading newspeak.txt\n");
+
+    char buffer2[100];
+    FILE *newspeaktxt = fopen("newspeak.txt", "r");
+    while (fscanf(newspeaktxt, "%[^\n] ", buffer) != EOF) {
         bf_insert(bf, buffer);
-		if (fscanf(newspeaktxt, "%[^\n] ", buffer2) != EOF ){
-			ht_insert(ht, buffer, buffer2);
-		}
+        if (fscanf(newspeaktxt, "%[^\n] ", buffer2) != EOF) {
+            ht_insert(ht, buffer, buffer2);
+        }
     }
+
     exit(1);
 }

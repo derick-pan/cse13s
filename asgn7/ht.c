@@ -63,9 +63,9 @@ Node *ht_lookup(HashTable *ht, char *oldspeak) {
 void ht_insert(HashTable *ht, char *oldspeak, char *newspeak) {
     uint32_t index = hash(ht->salt, oldspeak) % ht->size;
     //if not initialized then create it
-    printf("Index: %u Size: %u\n", index, ht->size);
+    //printf("Index: %u Size: %u\n", index, ht->size);
     if (!ht->lists[index]) {
-        printf("Create ll \n\n");
+        //printf("Create ll \n\n");
         ht->lists[index] = ll_create(ht->mtf);
     }
     //printf("Crash before insert\n");

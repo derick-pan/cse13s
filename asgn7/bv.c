@@ -3,6 +3,8 @@
 //bv.c
 #include "bv.h"
 
+#include "bf.h"
+
 #include <ctype.h>
 #include <inttypes.h>
 #include <stdint.h>
@@ -24,8 +26,8 @@ BitVector *bv_create(uint32_t length) { //Inspired by Dr.Long
     BitVector *v = (BitVector *) malloc(sizeof(BitVector));
     v->length = length;
     v->vector = (uint8_t *) calloc(byte_length(length), sizeof(uint8_t));
-    for (uint8_t i = 0; i < (length / 8 + 1); i++) {
-        bv_clr_bit(v, 0);
+    for (uint32_t i = 0; i < (length / 8 + 1); i++) {
+        bv_clr_bit(v, i);
     }
     return v;
 }

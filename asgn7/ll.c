@@ -60,7 +60,7 @@ uint32_t ll_length(LinkedList *ll) {
 }
 
 Node *ll_lookup(LinkedList *ll, char *oldspeak) {
-    printf("Enter ll_lookup\n");
+    //printf("Enter ll_lookup\n");
     Node *current = ll->head->next;
     while (current != ll->tail) {
         if (strcmp(current->oldspeak, oldspeak) == 0) { //if node found
@@ -81,7 +81,7 @@ Node *ll_lookup(LinkedList *ll, char *oldspeak) {
         }
         current = current->next;
     }
-    printf("ll_lookup not found.\n");
+    //printf("ll_lookup not found.\n");
     return NULL;
 }
 
