@@ -61,6 +61,6 @@ uint8_t bv_get_bit(BitVector *v, uint32_t i) { //Inspired by Dr.Long
 
 void bv_print(BitVector *v) {
     for (uint8_t i = 0; i < byte_length(v->length); i++) {
-        printf("%u ",bv_get_bit(v, i));
+        printf("%u ", bv_get_bit(v, i));
     }
 }
