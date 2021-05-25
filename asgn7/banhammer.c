@@ -77,14 +77,22 @@ int main(int argc, char *argv[]) {
     fclose(badspeaktxt);
     printf("Read badspeak.txt, now reading newspeak.txt\n");
 
-    char buffer2[100];
-    FILE *newspeaktxt = fopen("newspeak.txt", "r");
-    while (fscanf(newspeaktxt, "%[^\n] ", buffer) != EOF) {
-        bf_insert(bf, buffer);
-        if (fscanf(newspeaktxt, "%[^\n] ", buffer2) != EOF) {
-            ht_insert(ht, buffer, buffer2);
-        }
+	char * old;
+	char * new;
+	FILE *newspeaktxt = fopen("temp.txt", "r");
+	while (fscanf(newspeaktxt, "%[^\n] ", buffer) != EOF) {
+		old= strtok(buffer, " ");
+		printf("%s ", old);
+        bf_insert(bf, old);
+		//if (fscanf(newspeaktxt, "%[^\n] ", buffer2) != EOF ){
+			//ht_insert(ht, buffer, buffer2);
+		new= strtok(NULL, " ");
+		printf("%s ", new);
+		ht_insert(ht, old, new);
+		//printf("\n");
     }
+	printf("\n");
+	ht_print(ht);
 
     exit(1);
 }
