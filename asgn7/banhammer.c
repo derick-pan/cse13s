@@ -22,8 +22,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-#define WORD "[a-zA-Z0-9,'-]+"
-//#define WORD "[a-zA-Z]+"
+#define WORD "([a-zA-Z0-9]+['-]?[a-zA-Z0-9]+['-]?[a-zA-Z0-9]+)"
 uint64_t seeks = 0; // Number of seeks performed.
 uint64_t links = 0; // Number of links traversed.
 char usage[1000] = "SYNOPSIS\n\
