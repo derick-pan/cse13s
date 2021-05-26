@@ -79,50 +79,50 @@ int main(int argc, char *argv[]) {
     fclose(badspeaktxt);
     printf("Read badspeak.txt, now reading newspeak.txt\n");
 
-	char * old;
-	char * new;
-	FILE *newspeaktxt = fopen("newspeak.txt", "r");
-	while (fscanf(newspeaktxt, "%[^\n] ", buffer) != EOF) {
-		old= strtok(buffer, " ");
+    char *old;
+    char *new;
+    FILE *newspeaktxt = fopen("newspeak.txt", "r");
+    while (fscanf(newspeaktxt, "%[^\n] ", buffer) != EOF) {
+        old = strtok(buffer, " ");
         bf_insert(bf, old);
-		new= strtok(NULL, " ");
-		ht_insert(ht, old, new);
+        new = strtok(NULL, " ");
+        ht_insert(ht, old, new);
     }
-	regex_t reg;
-	char *word = NULL;
+    regex_t reg;
+    char *word = NULL;
 
-	if (regcomp(&reg, WORD, REG_EXTENDED) != 0){
-		fprintf(stderr,"failed");
-		exit(1);
-	}
-	LinkedList *badwords = ll_create(false);
-	LinkedList *oldwords = ll_create(false);
+    if (regcomp(&reg, WORD, REG_EXTENDED) != 0) {
+        fprintf(stderr, "failed");
+        exit(1);
+    }
 
-	Node * node;
-	while ((word = next_word(stdin ,&reg)) != NULL ) {
-		printf ( " Word : %s \n " , word ) ;
+    LinkedList *badwords = ll_create(false);
+    LinkedList *oldwords = ll_create(false);
 
-		if (bf_probe(bf,word)){ //If word not in bloomfilter
-			continue;
-		}
-		else{
-			if ((node = ht_lookup(ht, word)) == NULL){
-			//If hashtable does not have word
-				//No action is taken
-				continue;
-			}
-			else if (node->newspeak == NULL){
-			//If node has NO newspeak translation
-				//Insert badspeak word into a badspeak LIST
-				ll_insert(badwords, node->newspeak, NULL);
-			}
-			else if (node->newspeak != NULL){
-			//If node HAS newspeak translation
-				//Insert oldspeak word into oldspeak list
-				ll_insert(oldwords, node->oldspeak, node->newspeak);
-			}
-		}
-	}
+    Node *node;
+    while ((word = next_word(stdin, &reg)) != NULL) {
+        printf("Word : %s \n", word);
 
-
+        if (bf_probe(bf, word) == false) { //If word is already in bf: continue
+            continue;
+        } else {
+            if ((node = ht_lookup(ht, word)) == NULL) {
+                //If hashtable does not have word
+                //No action is taken
+                continue;
+            } else if (node->newspeak == NULL) {
+                //If node has NO newspeak translation
+                //Insert badspeak word into a badspeak LIST
+                printf("\t\t1a\n");
+                ll_insert(badwords, word, NULL);
+                printf("\t\t2a\n");
+            } else if (node->newspeak != NULL) {
+                //If node HAS newspeak translation
+                //Insert oldspeak word into oldspeak list
+                printf("\t\t1b\n");
+                ll_insert(oldwords, word, node->newspeak);
+                printf("\t\t2b\n");
+            }
+        }
+    }
 }
