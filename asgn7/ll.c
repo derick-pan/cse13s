@@ -64,10 +64,10 @@ Node *ll_lookup(LinkedList *ll, char *oldspeak) {
     Node *current = ll->head->next;
     while (current != ll->tail) {
         if (strcmp(current->oldspeak, oldspeak) == 0) { //if node found
-            printf("ll_lookup found node\n");
+            //printf("ll_lookup found node\n");
 
             if (ll->mtf) {
-                printf("MTF: true \n");
+                //printf("MTF: true \n");
                 //Remove the current node from it's position
                 (current->next)->prev = (current->prev);
                 (current->prev)->next = (current->next);
@@ -105,7 +105,7 @@ void ll_insert(LinkedList *ll, char *oldspeak, char *newspeak) {
 void ll_print(LinkedList *ll) {
 
     Node *current = ll->head->next;
-    while (current != ll->tail) {
+    while (current != NULL) {
         node_print(current);
         current = current->next;
     }

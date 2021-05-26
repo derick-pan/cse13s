@@ -61,7 +61,7 @@ void node_print(Node *n) {
     //If node contains both old and newspeak then print
     if (n->oldspeak && n->newspeak) {
         printf("%s -> %s\n", n->oldspeak, n->newspeak);
-    } else { //Just print oldspeak
+    } else if (n->oldspeak) { //Just print oldspeak
         printf("%s\n", n->oldspeak);
     }
 }

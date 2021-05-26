@@ -68,6 +68,7 @@ void bf_insert(BloomFilter *bf, char *oldspeak) {
 }
 
 //Check if the bits at those indces are set
+//Returns true if oldspeak is probably in
 bool bf_probe(BloomFilter *bf, char *oldspeak) {
     uint32_t first = hash(bf->primary, oldspeak) % bf_size(bf);
     uint32_t second = hash(bf->secondary, oldspeak) % bf_size(bf);

@@ -13,6 +13,7 @@
 #include <fcntl.h>
 #include <inttypes.h>
 #include <math.h>
+#include <regex.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -21,8 +22,8 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-
-#define WORD "[a-zA-Z]+"
+#define WORD "[a-zA-Z0-9,'-]+"
+//#define WORD "[a-zA-Z]+"
 
 char usage[1000] = "SYNOPSIS\n\
   A word filtering program for the GPRSC.\n\
@@ -36,33 +37,11 @@ OPTIONS\n\
   -t size      Specify hash table size (default: 10000).\n\
   -f size      Specify Bloom filter size (default: 2^20).\n";
 
-int main(int argc, char *argv[]) {
-    int choice;
-    bool stats = false;
+int main() {
     uint32_t hashsize = 10000; // Default hash table size is 10,000
     uint32_t bloomsize = 1048576; // Default Bloom filter size
     bool mtf = false;
-    while ((choice = getopt(argc, argv, "hsmt:f:")) != -1) {
-        switch (choice) {
-        case 'h': fprintf(stderr, "%s", usage); exit(0); // Print helps
-        case 's': stats = true; break; //Print stats of decoding
-        case 'm': mtf = true; break; // Move to front rule true
-        case 't':
-            if (optarg != NULL) {
-                hashsize = (uint32_t) optarg;
-                break;
-            }
 
-            exit(1);
-        case 'f':
-            if (optarg != NULL) {
-                bloomsize = (uint32_t) optarg;
-                break;
-            }
-            exit(1);
-        case '?': fprintf(stderr, "%s", usage); exit(1);
-        }
-    }
     // Part 1: Read in a list of badspeak words and add it to bloomfilter& HashTable
     char buffer[100];
     printf("heyy1\n");
@@ -74,6 +53,7 @@ int main(int argc, char *argv[]) {
     while (fscanf(badspeaktxt, "%[^\n] ", buffer) != EOF) {
         bf_insert(bf, buffer);
         ht_insert(ht, buffer, NULL);
+        //printf("heyy\n");
     }
     // Part 2: Read newspeak. Add old to bf, and old & new to hash
     fclose(badspeaktxt);
@@ -88,11 +68,13 @@ int main(int argc, char *argv[]) {
         new = strtok(NULL, " ");
         ht_insert(ht, old, new);
     }
+
+    //Read words from stdin using the parsing module.
     regex_t reg;
     char *word = NULL;
 
-    if (regcomp(&reg, WORD, REG_EXTENDED) != 0) {
-        fprintf(stderr, "failed");
+    if (regcomp(&reg, WORD, REG_EXTENDED)) {
+        fprintf(stderr, "failed\n");
         exit(1);
     }
 
@@ -125,4 +107,6 @@ int main(int argc, char *argv[]) {
             }
         }
     }
+    ll_print(badwords);
+    ll_print(oldwords);
 }
