@@ -68,11 +68,11 @@ int main(int argc, char *argv[]) {
 
     // Part 1: Read in a list of badspeak words and add it to bloomfilter& HashTable
     char buffer[100];
-    printf("heyy1\n");
+    //printf("heyy1\n");
     BloomFilter *bf = bf_create(bloomsize);
     HashTable *ht = ht_create(hashsize, mtf);
 
-    printf("heyy3\n");
+    //printf("heyy3\n");
     FILE *badspeaktxt = fopen("badspeak.txt", "r");
     while (fscanf(badspeaktxt, "%[^\n] ", buffer) != EOF) {
         bf_insert(bf, buffer);
@@ -81,7 +81,7 @@ int main(int argc, char *argv[]) {
     }
     // Part 2: Read newspeak. Add old to bf, and old & new to hash
     fclose(badspeaktxt);
-    printf("Read badspeak.txt, now reading newspeak.txt\n");
+    //printf("Read badspeak.txt, now reading newspeak.txt\n");
 
     char old[100];
     char new[100];
@@ -109,7 +109,7 @@ int main(int argc, char *argv[]) {
         for (uint32_t i = 0; word[i]; i++) {
             word[i] = tolower(word[i]);
         }
-        printf("Word : %s \n", word);
+        //printf("Word : %s \n", word);
 
         if (bf_probe(bf, word) == false) { //If word is already in bf: continue
             continue;
@@ -121,40 +121,41 @@ int main(int argc, char *argv[]) {
             } else if (node->newspeak == NULL) {
                 //If node has NO newspeak translation
                 //Insert badspeak word into a badspeak LIST
-                printf("\t\t1a\n");
+                //printf("\t\t1a\n");
                 ll_insert(badwords, word, NULL);
-                printf("\t\t2a\n");
+                //printf("\t\t2a\n");
             } else if (node->newspeak != NULL) {
                 //If node HAS newspeak translation
                 //Insert oldspeak word into oldspeak list
-                printf("\t\t1b\n");
+                //printf("\t\t1b\n");
                 ll_insert(oldwords, word, node->newspeak);
-                printf("\t\t2b\n");
+                //printf("\t\t2b\n");
             }
         }
     }
     uint32_t badwordlen = ll_length(badwords);
     uint32_t oldwordlen = ll_length(oldwords);
     if (stats == true) {
-        printf("seeks: %lu\n\n", seeks);
-        printf("Average seek length: %f\n\n", (double) links / seeks);
+        printf("Seeks: %lu\n", seeks);
+        printf("Average seek length: %f\n", (double) links / seeks);
         printf("Hash table load: %f%%\n", (double) 100 * ht_count(ht) / ht_size(ht));
         printf("Bloom filter load: %f%%\n", (double) 100 * bf_count(bf) / bf_size(bf));
-        exit(0);
     }
     //Citizen is accused of thoughtcrime & requires counseling on rightspeak
     //I give them a reprimanding mixspeak message.
     else if (badwordlen > 0 && oldwordlen > 0) {
         printf("%s", mixspeak_message);
+        ll_print(badwords);
+        ll_print(oldwords);
     }
     // Citizen is solely accused of thoughtcrime. We give a badspeak message.
     else if (badwordlen > 0 && oldwordlen == 0) {
         printf("%s", badspeak_message);
+        ll_print(badwords);
     }
     // Citizen only requires counseling to correct wrongthink
     else if (badwordlen == 0 && oldwordlen > 0) {
         printf("%s", goodspeak_message);
+        ll_print(oldwords);
     }
-    ll_print(badwords);
-    ll_print(oldwords);
 }
