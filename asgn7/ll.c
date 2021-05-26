@@ -60,14 +60,12 @@ uint32_t ll_length(LinkedList *ll) {
 }
 
 Node *ll_lookup(LinkedList *ll, char *oldspeak) {
-    //printf("Enter ll_lookup\n");
+    seeks += 1; //Increment the amount of linked list lookups
     Node *current = ll->head->next;
     while (current != ll->tail) {
         if (strcmp(current->oldspeak, oldspeak) == 0) { //if node found
             //printf("ll_lookup found node\n");
-
             if (ll->mtf) {
-                //printf("MTF: true \n");
                 //Remove the current node from it's position
                 (current->next)->prev = (current->prev);
                 (current->prev)->next = (current->next);
@@ -79,26 +77,22 @@ Node *ll_lookup(LinkedList *ll, char *oldspeak) {
             }
             return current;
         }
+        links++;
         current = current->next;
     }
-    //printf("ll_lookup not found.\n");
     return NULL;
 }
 
 void ll_insert(LinkedList *ll, char *oldspeak, char *newspeak) {
     if (ll_lookup(ll, oldspeak) != NULL) {
-        //don't insert
         return;
     }
-
-    //printf("past lookup\n");
     Node *node = node_create(oldspeak, newspeak);
     node->next = (ll->head)->next;
     node->prev = ll->head; //Left side of node
     (ll->head->next)->prev = node; //Right side of node
     ll->head->next = node;
 
-    //printf("Why crash  here tho\n");
     return;
 }
 
