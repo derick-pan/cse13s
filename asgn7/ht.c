@@ -42,9 +42,12 @@ HashTable *ht_create(uint32_t size, bool mtf) {
     return ht;
 }
 
+//Each of the linked lists in lists is freed
 void ht_delete(HashTable **ht) {
     if (*ht) {
-        free((*ht)->lists);
+        for (uint32_t i = 0; i < (*ht)->size; i++) {
+            free((*ht)->lists[i]);
+        }
         free(*ht);
         *ht = NULL;
     }
@@ -63,9 +66,7 @@ Node *ht_lookup(HashTable *ht, char *oldspeak) {
 void ht_insert(HashTable *ht, char *oldspeak, char *newspeak) {
     uint32_t index = hash(ht->salt, oldspeak) % ht->size;
     //if not initialized then create it
-    //printf("Index: %u Size: %u\n", index, ht->size);
     if (!ht->lists[index]) {
-        //printf("Create ll \n\n");
         ht->lists[index] = ll_create(ht->mtf);
     }
     //printf("Crash before insert\n");

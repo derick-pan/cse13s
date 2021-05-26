@@ -50,9 +50,9 @@ Node *node_create(char *oldspeak, char *newspeak) {
 
 //Destructor Function for Node
 void node_delete(Node **n) {
-    free(*n);
     free((*n)->oldspeak);
     free((*n)->newspeak);
+    free(*n);
     *n = NULL;
 }
 

@@ -44,6 +44,7 @@ BloomFilter *bf_create(uint32_t size) {
 }
 
 void bf_delete(BloomFilter **bf) {
+    bv_delete(&(*bf)->filter);
     free(*bf);
     *bf = NULL;
 }

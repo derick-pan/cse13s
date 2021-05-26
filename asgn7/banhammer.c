@@ -68,21 +68,17 @@ int main(int argc, char *argv[]) {
 
     // Part 1: Read in a list of badspeak words and add it to bloomfilter& HashTable
     char buffer[100];
-    //printf("heyy1\n");
     BloomFilter *bf = bf_create(bloomsize);
     HashTable *ht = ht_create(hashsize, mtf);
 
-    //printf("heyy3\n");
     FILE *badspeaktxt = fopen("badspeak.txt", "r");
     while (fscanf(badspeaktxt, "%[^\n] ", buffer) != EOF) {
         bf_insert(bf, buffer);
         ht_insert(ht, buffer, NULL);
-        //printf("heyy\n");
     }
-    // Part 2: Read newspeak. Add old to bf, and old & new to hash
     fclose(badspeaktxt);
-    //printf("Read badspeak.txt, now reading newspeak.txt\n");
 
+    // Part 2: Read newspeak. Add old to bf, and old & new to hash
     char old[100];
     char new[100];
     FILE *newspeaktxt = fopen("newspeak.txt", "r");
@@ -90,46 +86,32 @@ int main(int argc, char *argv[]) {
         bf_insert(bf, old);
         ht_insert(ht, old, new);
     }
+    fclose(newspeaktxt);
 
     //Read words from stdin using the parsing module.
     regex_t reg;
     char *word = NULL;
-
     if (regcomp(&reg, WORD, REG_EXTENDED)) {
         fprintf(stderr, "failed\n");
         exit(1);
     }
-
     LinkedList *badwords = ll_create(mtf);
     LinkedList *oldwords = ll_create(mtf);
 
     Node *node;
     while ((word = next_word(stdin, &reg)) != NULL) {
-
         for (uint32_t i = 0; word[i]; i++) {
             word[i] = tolower(word[i]);
         }
-        //printf("Word : %s \n", word);
-
         if (bf_probe(bf, word) == false) { //If word is already in bf: continue
             continue;
         } else {
             if ((node = ht_lookup(ht, word)) == NULL) {
-                //If hashtable does not have word
-                //No action is taken
                 continue;
             } else if (node->newspeak == NULL) {
-                //If node has NO newspeak translation
-                //Insert badspeak word into a badspeak LIST
-                //printf("\t\t1a\n");
                 ll_insert(badwords, word, NULL);
-                //printf("\t\t2a\n");
             } else if (node->newspeak != NULL) {
-                //If node HAS newspeak translation
-                //Insert oldspeak word into oldspeak list
-                //printf("\t\t1b\n");
                 ll_insert(oldwords, word, node->newspeak);
-                //printf("\t\t2b\n");
             }
         }
     }
@@ -158,4 +140,14 @@ int main(int argc, char *argv[]) {
         printf("%s", goodspeak_message);
         ll_print(oldwords);
     }
+
+    regfree(&reg);
+    ht_delete(&ht);
+    printf("Here1?\n");
+    bf_delete(&bf);
+    printf("Here2?\n");
+    ll_delete(&badwords);
+    printf("Here3?\n");
+    ll_delete(&oldwords);
+    printf("Here4?\n");
 }

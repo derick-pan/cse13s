@@ -45,7 +45,20 @@ LinkedList *ll_create(bool mtf) {
     return ll;
 }
 
-void ll_delete(LinkedList **ll);
+//Each node in linked list should be freed using node_delete
+//then set pointer to null
+void ll_delete(LinkedList **ll) {
+    if (ll) {
+        Node *current = (*ll)->head->next;
+        while (current != (*ll)->tail) {
+            current = current->next;
+            node_delete(&current->prev);
+        }
+        node_delete(&(*ll)->head);
+        node_delete(&(*ll)->tail);
+        *ll = NULL;
+    }
+}
 
 //Return length of ll
 uint32_t ll_length(LinkedList *ll) {
@@ -64,7 +77,6 @@ Node *ll_lookup(LinkedList *ll, char *oldspeak) {
     Node *current = ll->head->next;
     while (current != ll->tail) {
         if (strcmp(current->oldspeak, oldspeak) == 0) { //if node found
-            //printf("ll_lookup found node\n");
             if (ll->mtf) {
                 //Remove the current node from it's position
                 (current->next)->prev = (current->prev);
@@ -92,7 +104,6 @@ void ll_insert(LinkedList *ll, char *oldspeak, char *newspeak) {
     node->prev = ll->head; //Left side of node
     (ll->head->next)->prev = node; //Right side of node
     ll->head->next = node;
-
     return;
 }
 
