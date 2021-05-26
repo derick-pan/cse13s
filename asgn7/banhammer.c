@@ -101,11 +101,15 @@ int main(int argc, char *argv[]) {
         exit(1);
     }
 
-    LinkedList *badwords = ll_create(false);
-    LinkedList *oldwords = ll_create(false);
+    LinkedList *badwords = ll_create(mtf);
+    LinkedList *oldwords = ll_create(mtf);
 
     Node *node;
     while ((word = next_word(stdin, &reg)) != NULL) {
+
+        for (uint32_t i = 0; word[i]; i++) {
+            word[i] = tolower(word[i]);
+        }
         printf("Word : %s \n", word);
 
         if (bf_probe(bf, word) == false) { //If word is already in bf: continue
@@ -136,6 +140,7 @@ int main(int argc, char *argv[]) {
         printf("Hash table load: %f%%\n", (double) 100 * ht_count(ht) / ht_size(ht));
         printf("Bloom filter load: %f%%\n", (double) 100 * bf_count(bf) / bf_size(bf));
     }
+    printf("\n");
     ll_print(badwords);
     ll_print(oldwords);
 }
