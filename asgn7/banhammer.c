@@ -82,13 +82,11 @@ int main(int argc, char *argv[]) {
     fclose(badspeaktxt);
     printf("Read badspeak.txt, now reading newspeak.txt\n");
 
-    char *old;
-    char *new;
+	char old[100];
+    char new[100];
     FILE *newspeaktxt = fopen("newspeak.txt", "r");
-    while (fscanf(newspeaktxt, "%[^\n] ", buffer) != EOF) {
-        old = strtok(buffer, " ");
+	while (fscanf(newspeaktxt, "%s %s", old,new) != EOF) {
         bf_insert(bf, old);
-        new = strtok(NULL, " ");
         ht_insert(ht, old, new);
     }
 
