@@ -5,6 +5,7 @@
 #include "bv.h"
 #include "ht.h"
 #include "ll.h"
+#include "messages.h"
 #include "node.h"
 #include "parser.h"
 #include "speck.h"
@@ -82,10 +83,10 @@ int main(int argc, char *argv[]) {
     fclose(badspeaktxt);
     printf("Read badspeak.txt, now reading newspeak.txt\n");
 
-	char old[100];
+    char old[100];
     char new[100];
     FILE *newspeaktxt = fopen("newspeak.txt", "r");
-	while (fscanf(newspeaktxt, "%s %s", old,new) != EOF) {
+    while (fscanf(newspeaktxt, "%s %s", old, new) != EOF) {
         bf_insert(bf, old);
         ht_insert(ht, old, new);
     }
@@ -132,13 +133,28 @@ int main(int argc, char *argv[]) {
             }
         }
     }
+    uint32_t badwordlen = ll_length(badwords);
+    uint32_t oldwordlen = ll_length(oldwords);
     if (stats == true) {
         printf("seeks: %lu\n\n", seeks);
         printf("Average seek length: %f\n\n", (double) links / seeks);
         printf("Hash table load: %f%%\n", (double) 100 * ht_count(ht) / ht_size(ht));
         printf("Bloom filter load: %f%%\n", (double) 100 * bf_count(bf) / bf_size(bf));
+        exit(0);
     }
-    printf("\n");
+    //Citizen is accused of thoughtcrime & requires counseling on rightspeak
+    //I give them a reprimanding mixspeak message.
+    else if (badwordlen > 0 && oldwordlen > 0) {
+        printf("%s", mixspeak_message);
+    }
+    // Citizen is solely accused of thoughtcrime. We give a badspeak message.
+    else if (badwordlen > 0 && oldwordlen == 0) {
+        printf("%s", badspeak_message);
+    }
+    // Citizen only requires counseling to correct wrongthink
+    else if (badwordlen == 0 && oldwordlen > 0) {
+        printf("%s", goodspeak_message);
+    }
     ll_print(badwords);
     ll_print(oldwords);
 }
