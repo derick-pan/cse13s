@@ -23,7 +23,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
-#define WORD "([a-zA-Z0-9]+)|([a-zA-Z0-9]+(['--]?[a-zA-Z0-9]+)*)"
+#define WORD "([a-zA-Z0-9]+)|([a-zA-Z0-9]+(['_-]?[a-zA-Z0-9]+)*)"
 uint64_t seeks = 0; // Number of seeks performed.
 uint64_t links = 0; // Number of links traversed.
 char usage[1000] = "SYNOPSIS\n\
@@ -140,14 +140,9 @@ int main(int argc, char *argv[]) {
         printf("%s", goodspeak_message);
         ll_print(oldwords);
     }
-
     regfree(&reg);
     ht_delete(&ht);
-    printf("Here1?\n");
     bf_delete(&bf);
-    printf("Here2?\n");
     ll_delete(&badwords);
-    printf("Here3?\n");
     ll_delete(&oldwords);
-    printf("Here4?\n");
 }
