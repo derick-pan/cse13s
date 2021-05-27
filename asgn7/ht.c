@@ -48,8 +48,8 @@ void ht_delete(HashTable **ht) {
         for (uint32_t i = 0; i < (*ht)->size; i++) {
             ll_delete(&(*ht)->lists[i]);
         }
-	free((*ht)->lists);
-	free(*ht);
+        free((*ht)->lists);
+        free(*ht);
         *ht = NULL;
     }
 }

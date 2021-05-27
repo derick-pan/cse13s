@@ -39,7 +39,7 @@ LinkedList *ll_create(bool mtf) {
         ll->tail = node_create(NULL, NULL);
         ll->head->next = ll->tail;
         ll->tail->next = NULL;
-		ll->head->prev = NULL;
+        ll->head->prev = NULL;
         ll->tail->prev = ll->head;
     }
     return ll;
@@ -47,20 +47,19 @@ LinkedList *ll_create(bool mtf) {
 
 //Each node in linked list should be freed using node_delete
 //then set pointer to null
-void ll_delete(LinkedList **ll){
-	if (*ll){
-		Node *current = (*ll)->head;
+void ll_delete(LinkedList **ll) {
+    if (*ll) {
+        Node *current = (*ll)->head;
 
-		while (current) {
-			Node *next = current->next;
-			node_delete(&current);
-			current = next;
-		}
-		free(*ll);
-		*ll = NULL;
-	}
+        while (current) {
+            Node *next = current->next;
+            node_delete(&current);
+            current = next;
+        }
+        free(*ll);
+        *ll = NULL;
+    }
 }
-
 
 //Return length of ll
 uint32_t ll_length(LinkedList *ll) {
@@ -101,7 +100,7 @@ void ll_insert(LinkedList *ll, char *oldspeak, char *newspeak) {
     if (ll_lookup(ll, oldspeak) != NULL) {
         return;
     }
-	ll->length++;
+    ll->length++;
     Node *node = node_create(oldspeak, newspeak);
     node->next = (ll->head)->next;
     node->prev = ll->head; //Left side of node

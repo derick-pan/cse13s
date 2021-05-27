@@ -23,6 +23,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <unistd.h>
+
 #define WORD "([a-zA-Z0-9]+)|([a-zA-Z0-9]+(['_-]?[a-zA-Z0-9]+)*)"
 uint64_t seeks = 0; // Number of seeks performed.
 uint64_t links = 0; // Number of links traversed.
@@ -51,21 +52,19 @@ int main(int argc, char *argv[]) {
         case 'm': mtf = true; break; // Move to front rule true
         case 't':
             if (optarg != NULL) {
-                hashsize = (uint32_t) optarg;
+                hashsize = strtoul(optarg, NULL, 10);
                 break;
             }
-
             exit(1);
         case 'f':
             if (optarg != NULL) {
-                bloomsize = (uint32_t) optarg;
+                bloomsize = strtoul(optarg, NULL, 10);
                 break;
             }
             exit(1);
         case '?': fprintf(stderr, "%s", usage); exit(1);
         }
     }
-
     // Part 1: Read in a list of badspeak words and add it to bloomfilter& HashTable
     char buffer[100];
     BloomFilter *bf = bf_create(bloomsize);
@@ -140,6 +139,7 @@ int main(int argc, char *argv[]) {
         printf("%s", goodspeak_message);
         ll_print(oldwords);
     }
+    clear_words();
     regfree(&reg);
     ht_delete(&ht);
     bf_delete(&bf);
