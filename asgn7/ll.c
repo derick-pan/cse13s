@@ -32,14 +32,14 @@ typedef struct LinkedList {
 LinkedList *ll_create(bool mtf) {
     LinkedList *ll = (LinkedList *) malloc(sizeof(LinkedList));
     if (ll) {
-        //printf("I'm in here\n");
         ll->mtf = mtf;
-        ll->length = sizeof(LinkedList);
+        ll->length = 0;
         //Initialized with exactly 2 sentinel nodes
         ll->head = node_create(NULL, NULL);
         ll->tail = node_create(NULL, NULL);
         ll->head->next = ll->tail;
         ll->tail->next = NULL;
+		ll->head->prev = NULL;
         ll->tail->prev = ll->head;
     }
     return ll;
@@ -47,18 +47,20 @@ LinkedList *ll_create(bool mtf) {
 
 //Each node in linked list should be freed using node_delete
 //then set pointer to null
-void ll_delete(LinkedList **ll) {
-    if (ll) {
-        Node *current = (*ll)->head->next;
-        while (current != (*ll)->tail) {
-            current = current->next;
-            node_delete(&current->prev);
-        }
-        node_delete(&(*ll)->head);
-        node_delete(&(*ll)->tail);
-        *ll = NULL;
-    }
+void ll_delete(LinkedList **ll){
+	if (*ll){
+		Node *current = (*ll)->head;
+
+		while (current) {
+			Node *next = current->next;
+			node_delete(&current);
+			current = next;
+		}
+		free(*ll);
+		*ll = NULL;
+	}
 }
+
 
 //Return length of ll
 uint32_t ll_length(LinkedList *ll) {
@@ -99,6 +101,7 @@ void ll_insert(LinkedList *ll, char *oldspeak, char *newspeak) {
     if (ll_lookup(ll, oldspeak) != NULL) {
         return;
     }
+	ll->length++;
     Node *node = node_create(oldspeak, newspeak);
     node->next = (ll->head)->next;
     node->prev = ll->head; //Left side of node
