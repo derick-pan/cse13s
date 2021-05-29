@@ -1,6 +1,6 @@
-//Derick Pan
-//dpan7
-//ht.c
+// Derick Pan
+// dpan7
+// ht.c
 #include "ht.h"
 
 #include "bf.h"
@@ -18,13 +18,15 @@
 #include <string.h>
 #include <unistd.h>
 
+//Struct is from Asgn7 documentation
 typedef struct HashTable {
-    uint64_t salt[2];
-    uint32_t size;
-    bool mtf;
-    LinkedList **lists;
+    uint64_t salt[2]; // Salt
+    uint32_t size; // Number of Indices
+    bool mtf; // Boolean for MTF or not
+    LinkedList **lists; // Array of Linked Lists Pointers
 } HashTable;
 
+//Constructor Function for Hash Table.
 HashTable *ht_create(uint32_t size, bool mtf) {
     HashTable *ht = (HashTable *) malloc(sizeof(HashTable));
     if (ht) {
@@ -54,6 +56,7 @@ void ht_delete(HashTable **ht) {
     }
 }
 
+//Return size of Hash table
 uint32_t ht_size(HashTable *ht) {
     return ht->size;
 }
@@ -67,13 +70,13 @@ Node *ht_lookup(HashTable *ht, char *oldspeak) {
     return ll_lookup(ht->lists[index], oldspeak);
 }
 
+//Insert oldspeak and newspeak into Hash Table
 void ht_insert(HashTable *ht, char *oldspeak, char *newspeak) {
     uint32_t index = hash(ht->salt, oldspeak) % ht->size;
     //if not initialized then create it
     if (!ht->lists[index]) {
         ht->lists[index] = ll_create(ht->mtf);
     }
-    //printf("Crash before insert\n");
     ll_insert(ht->lists[index], oldspeak, newspeak);
 }
 
@@ -88,6 +91,7 @@ uint32_t ht_count(HashTable *ht) {
     return count;
 }
 
+//Debug function to print out contents of Hash Table
 void ht_print(HashTable *ht) {
     for (uint32_t i = 0; i < ht->size; i++) {
         if (ht->lists[i]) {

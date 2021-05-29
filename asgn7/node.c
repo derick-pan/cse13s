@@ -1,6 +1,6 @@
-//Derick Pan
-//dpan7
-//node.c
+// Derick Pan
+// dpan7
+// node.c
 #include "node.h"
 
 #include "bf.h"
@@ -16,17 +16,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-/*
-struct Node {
-    char *oldspeak;
-    char *newspeak;
-    Node *next;
-    Node *prev;
-};*/
 
 typedef struct Node Node;
-//Each node contains a pointer to previous node and the next node in the ll
-//Function that mimics strdup()
 
 // Constructor function for Node
 Node *node_create(char *oldspeak, char *newspeak) {
@@ -61,6 +52,7 @@ void node_print(Node *n) {
     //If node contains both old and newspeak then print
     if (n->oldspeak && n->newspeak) {
         printf("%s -> %s\n", n->oldspeak, n->newspeak);
+        //Else just print oldspeak
     } else if (n->oldspeak) { //Just print oldspeak
         printf("%s\n", n->oldspeak);
     }

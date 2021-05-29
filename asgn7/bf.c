@@ -1,6 +1,6 @@
-//Derick Pan
-//dpan7
-//bf.c
+// Derick Pan
+// dpan7
+// bf.c
 #include "bf.h"
 
 #include "bv.h"
@@ -43,6 +43,7 @@ BloomFilter *bf_create(uint32_t size) {
     return bf;
 }
 
+//Destructor function for Bloom filter
 void bf_delete(BloomFilter **bf) {
     bv_delete(&(*bf)->filter);
     free(*bf);
@@ -74,7 +75,6 @@ bool bf_probe(BloomFilter *bf, char *oldspeak) {
     uint32_t first = hash(bf->primary, oldspeak) % bf_size(bf);
     uint32_t second = hash(bf->secondary, oldspeak) % bf_size(bf);
     uint32_t third = hash(bf->tertiary, oldspeak) % bf_size(bf);
-    //printf("First: %u, Second %u, Third %u \n", first, second, third);
     return (bv_get_bit(bf->filter, first) && bv_get_bit(bf->filter, second)
             && bv_get_bit(bf->filter, third));
 }
@@ -90,6 +90,7 @@ uint32_t bf_count(BloomFilter *bf) {
     return count;
 }
 
+//Debug function to print out the bloom Filter.
 void bf_print(BloomFilter *bf) {
     for (uint8_t i = 0; i < bf_size(bf); i++) {
         printf("%u", bv_get_bit(bf->filter, i));

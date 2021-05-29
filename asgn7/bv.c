@@ -1,6 +1,6 @@
-//Derick Pan
-//dpan7
-//bv.c
+// Derick Pan
+// dpan7
+// bv.c
 #include "bv.h"
 
 #include "bf.h"
@@ -22,6 +22,7 @@ typedef struct BitVector {
     uint8_t *vector; //Array of bytes.
 } BitVector;
 
+//Constructor Function for Bit Vector
 BitVector *bv_create(uint32_t length) { //Inspired by Dr.Long
     BitVector *v = (BitVector *) malloc(sizeof(BitVector));
     v->length = length;
@@ -32,6 +33,7 @@ BitVector *bv_create(uint32_t length) { //Inspired by Dr.Long
     return v;
 }
 
+//Destructor Function for Bit Vector
 void bv_delete(BitVector **v) {
     free((*v)->vector);
     free(*v);

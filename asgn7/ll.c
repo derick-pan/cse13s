@@ -1,6 +1,6 @@
-//Derick Pan
-//dpan7
-//ll.c
+// Derick Pan
+// dpan7
+// ll.c
 #include "ll.h"
 
 #include "bf.h"
@@ -23,12 +23,13 @@ uint64_t links; // Number of links traversed.
 
 //Struct is from asgn7 documentation
 typedef struct LinkedList {
-    uint32_t length;
-    Node *head;
-    Node *tail;
+    uint32_t length; // Length of Linked List
+    Node *head; // Head sentinel node
+    Node *tail; // Tail Sentinel Node
     bool mtf;
 } LinkedList;
 
+//Constructor Function
 LinkedList *ll_create(bool mtf) {
     LinkedList *ll = (LinkedList *) malloc(sizeof(LinkedList));
     if (ll) {
@@ -63,16 +64,10 @@ void ll_delete(LinkedList **ll) {
 
 //Return length of ll
 uint32_t ll_length(LinkedList *ll) {
-    int len = 0;
-    //Return the # of nodes in the linked list excluding the head and tail sentinel nodes
-    Node *current = ll->head->next;
-    while (current != ll->tail) {
-        current = current->next;
-        len++;
-    }
-    return len;
+    return ll->length;
 }
 
+//Search for a node containing oldspeak
 Node *ll_lookup(LinkedList *ll, char *oldspeak) {
     seeks += 1; //Increment the amount of linked list lookups
     Node *current = ll->head->next;
@@ -96,6 +91,7 @@ Node *ll_lookup(LinkedList *ll, char *oldspeak) {
     return NULL;
 }
 
+//Inserts a new node with oldspeak and newspeak
 void ll_insert(LinkedList *ll, char *oldspeak, char *newspeak) {
     if (ll_lookup(ll, oldspeak) != NULL) {
         return;
@@ -109,8 +105,8 @@ void ll_insert(LinkedList *ll, char *oldspeak, char *newspeak) {
     return;
 }
 
+//Prints out the linked lists excluding head and sentinel nodes.
 void ll_print(LinkedList *ll) {
-
     Node *current = ll->head->next;
     while (current != NULL) {
         node_print(current);
