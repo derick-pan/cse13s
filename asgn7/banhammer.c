@@ -67,7 +67,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Part 1: Read in a list of badspeak words and add it to bloomfilter& HashTable
-    char buffer[100]; // Buffer for reading
+    char buffer[4096]; // Buffer for reading
     BloomFilter *bf = bf_create(bloomsize); // Initialize Bloom filter
     HashTable *ht = ht_create(hashsize, mtf); // Initialize Hash Table
 
@@ -80,8 +80,8 @@ int main(int argc, char *argv[]) {
     fclose(badspeaktxt); // Close badspeak because it's no longer needed
 
     // Part 2: Read newspeak. Add old to bf, and old & new to hash
-    char old[100]; // Buffer for old words
-    char new[100]; // Buffer for new words
+    char old[4096]; // Buffer for old words
+    char new[4096]; // Buffer for new words
 
     FILE *newspeaktxt = fopen("newspeak.txt", "r"); // Open Newspeak
     while (fscanf(newspeaktxt, "%s %s", old, new) != EOF) {
