@@ -42,7 +42,7 @@ OPTIONS\n\
 int main(int argc, char *argv[]) {
     int choice;
     bool stats = false;
-    uint32_t hashsize = 10000; // Default hash table size is 10,000
+    uint32_t hashsize = 10000; // Default hash table size is 10000
     uint32_t bloomsize = 1048576; // Default Bloom filter size
     bool mtf = false;
     while ((choice = getopt(argc, argv, "hsmt:f:")) != -1) {
@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
         for (uint32_t i = 0; word[i]; i++) { // For loop to lowercase the word.
             word[i] = tolower(word[i]);
         }
-        if (bf_probe(bf, word) == false) { //If word is already in bf: continue
+        if (bf_probe(bf, word) == false) { //If word isn't in bf: continue
             continue;
         } else {
             // If Hash table does not contain word then continue

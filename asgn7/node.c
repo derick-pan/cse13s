@@ -47,7 +47,7 @@ void node_delete(Node **n) {
     *n = NULL;
 }
 
-//Following prinf statements are from Asgn7 doc
+//Following printf statements are from Asgn7 doc
 void node_print(Node *n) {
     //If node contains both old and newspeak then print
     if (n->oldspeak && n->newspeak) {

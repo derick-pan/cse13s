@@ -51,7 +51,6 @@ LinkedList *ll_create(bool mtf) {
 void ll_delete(LinkedList **ll) {
     if (*ll) {
         Node *current = (*ll)->head;
-
         while (current) {
             Node *next = current->next;
             node_delete(&current);
